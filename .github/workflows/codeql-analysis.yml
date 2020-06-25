@@ -31,6 +31,7 @@ jobs:
         languages: csharp, cpp
 
     - run: |
+       apt install -y libkrb5-dev
        ./build.sh
 
     - name: Perform CodeQL Analysis
