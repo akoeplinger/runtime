@@ -32,7 +32,9 @@ jobs:
  
     - run: sudo apt install -y libkrb5-dev liblttng-ust-dev
  
-    - run: ./build.sh
+    - run: |
+        ./build.sh
+        rm -rf artifacts
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
