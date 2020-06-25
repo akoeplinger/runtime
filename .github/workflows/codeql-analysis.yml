@@ -29,10 +29,10 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         languages: csharp, cpp
-
-    - run: |
-       apt install -y libkrb5-dev
-       ./build.sh
+ 
+    - run: sudo apt install -y libkrb5-dev
+ 
+    - run: ./build.sh
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
