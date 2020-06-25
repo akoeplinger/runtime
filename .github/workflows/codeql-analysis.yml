@@ -30,7 +30,7 @@ jobs:
       with:
         languages: csharp, cpp
  
-    - run: sudo apt install -y libkrb5-dev
+    - run: sudo apt install -y libkrb5-dev liblttng-ust-dev
  
     - run: ./build.sh
 
