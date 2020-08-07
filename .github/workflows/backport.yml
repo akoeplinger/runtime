@@ -1,0 +1,15 @@
+name: Backport PR to branch
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  backport:
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Hello
+      env:
+        SOURCE_PR_NUMBER: ${{ github.event.issue.number }}
+        TARGET_BRANCH: ${{ github.event.comment.body }}
+      run: "echo hello: $TARGET_BRANCH"
