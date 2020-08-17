@@ -13,4 +13,4 @@ jobs:
     - name: Run backport
       uses: ./eng/common/actions/backport
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        auth_token: ${{ secrets.GITHUB_TOKEN }}
