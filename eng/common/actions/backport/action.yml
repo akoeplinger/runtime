@@ -6,7 +6,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # Get target branch and check it out
+    # Get target branch
     - shell: bash
       id: targetbranch
       env:
@@ -16,8 +16,6 @@ runs:
         BRANCHNAME=$(python -c "import os,re; print(re.search('\/backport to ([a-zA-Z\d\/\.\-\_]+)', os.environ['BACKPORT_TRIGGER_BODY']).group(1))")
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
-        git checkout $BRANCHNAME
-        git clean -xdff
 
     # Post backport started comment to pull request
     - shell: bash
@@ -30,6 +28,9 @@ runs:
     - shell: bash
       id: pushbackport
       run: |
+        git checkout ${{ steps.targetbranch.outputs.branchname }}
+        git clean -xdff
+  
         # Download backport patch
         curl -sSL "${{ github.event.issue.pull_request.patch_url }}" --output changes.patch
 
