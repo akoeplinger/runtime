@@ -27,7 +27,7 @@ jobs:
          ref: ${{ steps.targetbranch.outputs.branchname }}
     - name: Download backport patch
       run: curl -sSL "${{ github.event.issue.pull_request.patch_url }}" --output changes.patch
-    - name: Apply backport patch
+    - name: Apply backport patch, push and open PR
       env:
         BACKPORT_TARGET_BRANCH: ${{ steps.targetbranch.outputs.branchname }}
       run: |
@@ -38,12 +38,9 @@ jobs:
         temp_branch="backport-pr-${{ github.event.issue.number }}-to-$BACKPORT_TARGET_BRANCH"
         git checkout -b $temp_branch
 
-        # apply the patch and prune empty commits
+        # apply the patch and push to origin
         git am changes.patch --3way --ignore-whitespace --keep-non-patch
-        git filter-branch --prune-empty -f $BACKPORT_TARGET_BRANCH..HEAD
-    - name: Push and open PR
-      env:
-        BACKPORT_TARGET_BRANCH: ${{ steps.targetbranch.outputs.branchname }}
-      run: |
-        git push --force --set-upstream
+        git push --force --set-upstream origin HEAD:$temp_branch
+        
+        # open PR
         
