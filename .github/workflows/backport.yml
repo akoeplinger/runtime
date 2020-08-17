@@ -17,7 +17,7 @@ jobs:
         BRANCHNAME=$(python -c "import os,re; print(re.search('\/backport to ([a-zA-Z\d\/\.\-\_]+)', os.environ['BACKPORT_TRIGGER_BODY']).group(1))")
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
-    - name: Post backport started comment to PR
+    - name: Post backport started comment to pull request
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -82,28 +82,30 @@ jobs:
 
         # open the PR
         hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --file pr_body.txt
-    - name: Post comment on git am error
-      if: failure() && steps.pushbackport.outputs.git_am_failed == 1
+    - name: Post error comment to pull request
+      if: failure()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # create comment body
-        cat << 'EOF' > comment_body.txt
-        @${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
+        if [[ "${{steps.pushbackport.outputs.git_am_failed }}" == "1" ]; then
+            # create comment body
+            cat << 'EOF' > comment_body.txt
+            @${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
 
-        ```shell
-        EOF
-        cat git_am_output.txt >> comment_body.txt
-        cat << 'EOF' >> comment_body.txt
-        ```
+            ```shell
+            EOF
+            cat git_am_output.txt >> comment_body.txt
+            cat << 'EOF' >> comment_body.txt
+            ```
 
-        Please backport manually!
-        EOF
+            Please backport manually!
+            EOF
+        else
+            cat << 'EOF' > comment_body.txt
+            @${{ github.event.comment.user.login }} an error occurred while backporting to ${{ steps.targetbranch.outputs.branchname }}, please check the run log for details and backport manually!
+            EOF
+        fi
 
+        # post the comment to the PR
         hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -F body=@comment_body.txt
-    - name: Post comment on general error
-      if: failure() && steps.pushbackport.outputs.git_am_failed != 1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="@${{ github.event.comment.user.login }} an error occurred while backporting to ${{ steps.targetbranch.outputs.branchname }}, please check the run log for details and backport manually!"
+
