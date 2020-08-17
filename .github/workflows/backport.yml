@@ -76,6 +76,8 @@ jobs:
         hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --message "$pr_body"
     - name: Post comment on git am error
       if: ${{ failure() && steps.pushbackport.outputs.git_am_failed == 1 }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         comment_body="${{ github.event.comment.user.login }} Backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch results in conflicts:
 
@@ -88,5 +90,7 @@ jobs:
         hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="$comment_body"
     - name: Post comment on general error
       if: ${{ failure() && steps.pushbackport.outputs.git_am_failed != 1 }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="@${{ github.event.comment.user.login }} An error occurred while backporting to ${{ steps.targetbranch.outputs.branchname }}, please backport manually!"
