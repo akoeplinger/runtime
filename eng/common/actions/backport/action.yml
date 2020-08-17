@@ -3,7 +3,8 @@ description: 'Backports a pull request to a branch using a comment'
 runs:
   using: "composite"
   steps:
-    - name: Get target branch
+    - name: Get target branch and check it out
+      shell: bash
       id: targetbranch
       env:
         BACKPORT_TRIGGER_BODY: ${{ github.event.comment.body }}
@@ -12,19 +13,17 @@ runs:
         BRANCHNAME=$(python -c "import os,re; print(re.search('\/backport to ([a-zA-Z\d\/\.\-\_]+)', os.environ['BACKPORT_TRIGGER_BODY']).group(1))")
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
+        git checkout $BRANCHNAME
 
     - name: Post backport started comment to pull request
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="Started backporting to ${{ steps.targetbranch.outputs.branchname }}: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
-    - name: Checkout repo in target branch
-      uses: actions/checkout@v2
-      with:
-         ref: ${{ steps.targetbranch.outputs.branchname }}
-
     - name: Apply backport patch and push
+      shell: bash
       id: pushbackport
       run: |
         # Download backport patch
@@ -58,6 +57,7 @@ runs:
         fi
 
     - name: Prepare pull request
+      shell: bash
       if: success() && steps.pushbackport.outputs.should_open_pull_request != 0
       run: |
         # create PR title and description
@@ -79,12 +79,14 @@ runs:
         echo "/cc $cc_users" >> pr_body.txt
 
     - name: Open pull request
+      shell: bash
       if: success() && steps.pushbackport.outputs.should_open_pull_request != 0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --file pr_body.txt
 
     - name: Prepare error comment for git am failure
+      shell: bash
       if: failure() && steps.pushbackport.outputs.git_am_failed == 1
       run: |
         cat << 'EOF' > comment_body.txt
@@ -100,6 +102,7 @@ runs:
         EOF
 
     - name: Prepare error comment for unknown failure
+      shell: bash
       if: failure() && steps.pushbackport.outputs.git_am_failed != 1
       run: |
         cat << 'EOF' > comment_body.txt
@@ -107,6 +110,7 @@ runs:
         EOF
 
     - name: Post error comment to pull request
+      shell: bash
       if: failure()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
