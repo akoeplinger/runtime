@@ -61,34 +61,42 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # create PR title and description
-        pr_body="[${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}
-
-        Backport of #${{ github.event.issue.number }} to ${{ steps.targetbranch.outputs.branchname }}.
-
-        /cc @${{ github.event.comment.user.login }}"
-
+        # figure out who to tag on the PR
+        cc_users="@${{ github.event.comment.user.login }}"
+        
         # append PR author if different from user who issued the backport command
         if [[ "${{ github.event.comment.user.login }}" != "${{ github.event.issue.user.login }}" ]]; then
           cc_users="$cc_users @${{ github.event.issue.user.login }}"
         fi
+        
+        # create PR title and description
+        cat << EOF > pr_body.txt
+        [${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}
+
+        Backport of #${{ github.event.issue.number }} to ${{ steps.targetbranch.outputs.branchname }}
+        
+        /cc $cc_users
+        EOF
 
         # open the PR
-        hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --message "$pr_body"
+        hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --file pr_body.txt
     - name: Post comment on git am error
       if: ${{ failure() && steps.pushbackport.outputs.git_am_failed == 1 }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        comment_body="@${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
+        # create comment body
+        cat << EOF > comment_body.txt
+        @${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
 
-        \`\`\`
+        ```
         $(cat git_am_output.txt)
-        \`\`\`
+        ```
 
-        Please backport manually!"
+        Please backport manually!
+        EOF
 
-        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="$comment_body"
+        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body=@comment_body.txt
     - name: Post comment on general error
       if: ${{ failure() && steps.pushbackport.outputs.git_am_failed != 1 }}
       env:
