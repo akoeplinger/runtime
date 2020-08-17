@@ -13,11 +13,11 @@ jobs:
       env:
         BACKPORT_TRIGGER_BODY: ${{ github.event.comment.body }}
       run: |
-        # extract the target branch name containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
-        BRANCHNAME=$(echo '{}' | jq --raw-output 'env.BACKPORT_TRIGGER_BODY | match("\\/backport to ([a-zA-Z\\d\\/\\.\\-\\_]+)").captures[0].string')
+        # extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
+        BRANCHNAME=$(python -c "import os,re; print(re.search('\/backport to ([a-zA-Z\d\/\.\-\_]+)', os.environ['BACKPORT_TRIGGER_BODY']).group(1))")
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
-    - name: Post comment to PR
+    - name: Post backport started comment to PR
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -48,10 +48,11 @@ jobs:
         git am --3way --ignore-whitespace --keep-non-patch changes.patch >> git_am_output.txt 2>&1 || git_am_failed=1
         cat git_am_output.txt
         echo "::set-output name=git_am_failed::$git_am_failed"
+
         if [ $git_am_failed != 0 ]; then
           echo "::error::git am failed, most likely due to a merge conflict." && exit 1
         else
-          # push to origin
+          # push changes to origin
           git push --force --set-upstream origin HEAD:$temp_branch
         fi
     - name: Open pull request
@@ -76,7 +77,7 @@ jobs:
         if [[ "${{ github.event.comment.user.login }}" != "${{ github.event.issue.user.login }}" ]]; then
           cc_users="$cc_users @${{ github.event.issue.user.login }}"
         fi
-        
+
         echo "/cc $cc_users" >> pr_body.txt
 
         # open the PR
