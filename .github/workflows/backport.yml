@@ -81,9 +81,9 @@ jobs:
       run: |
         comment_body="${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch results in conflicts:
 
-        ```
+        \`\`\`
         $(cat git_am_output.txt)
-        ```
+        \`\`\`
 
         Please backport manually!"
 
