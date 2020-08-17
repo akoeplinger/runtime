@@ -41,13 +41,22 @@ jobs:
         git checkout -b $temp_branch
         echo "::set-output name=branch_exists_remote_status::$(git ls-remote --exit-code --heads origin $temp_branch > /dev/null)$?"
 
-        # apply the patch and push to origin
-        git am changes.patch --3way --ignore-whitespace --keep-non-patch
+        # apply the patch
+        git_am_failed=0
+        git am changes.patch --3way --ignore-whitespace --keep-non-patch > git_am_output.txt 2>&1 || git_am_failed=1
+        cat git_am_output.txt
+        echo "::set-output name=git_am_failed::$git_am_failed"
+        if [ $git_am_failed != 0 ]; then
+          echo "::error::git am failed, most likely due to a merge conflict."
+          exit 1
+        done
+
+        # push to origin
         git push --force --set-upstream origin HEAD:$temp_branch
     - name: Open pull request
       # skip opening PR if the branch already exists since that means it was opened
       # by an earlier backport and force pushing to the branch updates the existing PR
-      if: steps.pushbackport.outputs.branch_exists_remote_status != 0
+      if: steps.pushbackport.outputs.branch_exists_remote_status != 0 && steps.pushbackport.outputs.git_am_failed != 1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -65,3 +74,19 @@ jobs:
 
         # open the PR
         hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --message "$pr_body"
+    - name: Post comment on git am error
+      if: ${{ failure() && steps.pushbackport.outputs.git_am_failed == 1 }}
+      run: |
+        comment_body="${{ github.event.comment.user.login }} Backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch results in conflicts:
+
+        ```
+        $(cat git_am_output.txt)
+        ```
+
+        Please backport manually!"
+
+        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="$comment_body"
+    - name: Post comment on general error
+      if: ${{ failure() && steps.pushbackport.outputs.git_am_failed != 1 }}
+      run: |
+        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="@${{ github.event.comment.user.login }} An error occurred while backporting to ${{ steps.targetbranch.outputs.branchname }}, please backport manually!"
