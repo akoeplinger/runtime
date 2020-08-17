@@ -6,7 +6,7 @@ on:
 jobs:
   backport:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: $github
       run: echo "$GITHUB_CONTEXT"
@@ -25,15 +25,17 @@ jobs:
       uses: actions/checkout@v2
       with:
          ref: ${{ steps.targetbranch.outputs.branchname }}
-    - name: Download backport patch
-      run: curl -sSL "${{ github.event.issue.pull_request.patch_url }}" --output changes.patch
     - name: Apply backport patch, push and open PR
       env:
         BACKPORT_TARGET_BRANCH: ${{ steps.targetbranch.outputs.branchname }}
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        
+        # Download backport patch
+        curl -sSL "${{ github.event.issue.pull_request.patch_url }}" --output changes.patch
+
+        # configure git
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+
         # create temporary backport branch
         temp_branch="backport-pr-${{ github.event.issue.number }}-to-$BACKPORT_TARGET_BRANCH"
         git checkout -b $temp_branch
@@ -43,4 +45,4 @@ jobs:
         git push --force --set-upstream origin HEAD:$temp_branch
         
         # open PR
-        
+        hub pull-request -b $BACKPORT_TARGET_BRANCH -m "Backport PR"
