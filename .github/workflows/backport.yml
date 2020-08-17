@@ -49,7 +49,7 @@ jobs:
         if [ $git_am_failed != 0 ]; then
           echo "::error::git am failed, most likely due to a merge conflict."
           exit 1
-        done
+        fi
 
         # push to origin
         git push --force --set-upstream origin HEAD:$temp_branch
