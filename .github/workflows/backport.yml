@@ -96,7 +96,7 @@ jobs:
         Please backport manually!
         EOF
 
-        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body=@comment_body.txt
+        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -F body=@comment_body.txt
     - name: Post comment on general error
       if: ${{ failure() && steps.pushbackport.outputs.git_am_failed != 1 }}
       env:
