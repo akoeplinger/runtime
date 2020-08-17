@@ -41,9 +41,11 @@ jobs:
         git checkout -b $temp_branch
         echo "::set-output name=branch_exists_remote_status::$(git ls-remote --exit-code --heads origin $temp_branch > /dev/null)$?"
 
-        # apply the patch
+        # apply the patch and check whether it worked
         git_am_failed=0
-        git am changes.patch --3way --ignore-whitespace --keep-non-patch > git_am_output.txt 2>&1 || git_am_failed=1
+        echo '$ git am changes.patch --3way --ignore-whitespace --keep-non-patch' > git_am_output.txt
+        echo '' >> git_am_output.txt
+        git am changes.patch --3way --ignore-whitespace --keep-non-patch >> git_am_output.txt 2>&1 || git_am_failed=1
         cat git_am_output.txt
         echo "::set-output name=git_am_failed::$git_am_failed"
         if [ $git_am_failed != 0 ]; then
