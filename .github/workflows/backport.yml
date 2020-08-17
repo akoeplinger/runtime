@@ -70,11 +70,11 @@ jobs:
         fi
         
         # create PR title and description
-        cat << EOF > pr_body.txt
+        cat << 'EOF' > pr_body.txt
         [${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}
 
         Backport of #${{ github.event.issue.number }} to ${{ steps.targetbranch.outputs.branchname }}
-        
+
         /cc $cc_users
         EOF
 
@@ -86,11 +86,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # create comment body
-        cat << EOF > comment_body.txt
+        cat << 'EOF' > comment_body.txt
         @${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
 
         ```shell
-        $(cat git_am_output.txt)
+        EOF
+        cat git_am_output.txt >> comment_body.txt
+        cat << 'EOF' >> comment_body.txt
         ```
 
         Please backport manually!
