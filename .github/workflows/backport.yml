@@ -17,7 +17,8 @@ jobs:
       env:
         BACKPORT_TRIGGER_BODY: ${{ github.event.comment.body }}
       run: |
-        BRANCHNAME=$(echo "$BACKPORT_TRIGGER_BODY" | sed -r 's/\/backport to ([a-zA-Z\.\d\/\-\_]+)/\1/g')
+        # extract the branch name containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
+        BRANCHNAME=$(echo '{}' | jq --raw-output 'env.BACKPORT_TRIGGER_BODY | match("\\/backport to ([a-zA-Z\\d\\/\\.\\-\\_]+)").captures[0].string')
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
     - name: Checkout repo at target branch
