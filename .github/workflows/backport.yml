@@ -8,10 +8,6 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
     runs-on: ubuntu-20.04
     steps:
-    - name: $github
-      run: echo "$GITHUB_CONTEXT"
-      env:
-       GITHUB_CONTEXT: ${{ toJson(github) }}
     - name: Get target branch
       id: targetbranch
       env:
@@ -27,7 +23,7 @@ jobs:
          ref: ${{ steps.targetbranch.outputs.branchname }}
     - name: Apply backport patch, push and open PR
       env:
-        BACKPORT_TARGET_BRANCH: ${{ steps.targetbranch.outputs.branchname }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         # Download backport patch
         curl -sSL "${{ github.event.issue.pull_request.patch_url }}" --output changes.patch
@@ -37,7 +33,7 @@ jobs:
         git config user.email "github-actions@github.com"
 
         # create temporary backport branch
-        temp_branch="backport-pr-${{ github.event.issue.number }}-to-$BACKPORT_TARGET_BRANCH"
+        temp_branch="backport/pr-${{ github.event.issue.number }}-to-${{ steps.targetbranch.outputs.branchname }}"
         git checkout -b $temp_branch
 
         # apply the patch and push to origin
@@ -45,4 +41,4 @@ jobs:
         git push --force --set-upstream origin HEAD:$temp_branch
         
         # open PR
-        hub pull-request -b $BACKPORT_TARGET_BRANCH -m "Backport PR"
+        hub pull-request -b ${{ steps.targetbranch.outputs.branchname }} -m "Backport PR"
