@@ -17,7 +17,7 @@ jobs:
         BRANCHNAME=$(echo '{}' | jq --raw-output 'env.BACKPORT_TRIGGER_BODY | match("\\/backport to ([a-zA-Z\\d\\/\\.\\-\\_]+)").captures[0].string')
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
-    - name: Checkout repo at target branch
+    - name: Checkout repo in target branch
       uses: actions/checkout@v2
       with:
          ref: ${{ steps.targetbranch.outputs.branchname }}
