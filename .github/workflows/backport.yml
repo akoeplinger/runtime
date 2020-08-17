@@ -64,7 +64,7 @@ jobs:
         # create PR title and description
         pr_body="[${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}
 
-        Backport of #${{ github.event.issue.number }}.
+        Backport of #${{ github.event.issue.number }} to ${{ steps.targetbranch.outputs.branchname }}.
 
         /cc @${{ github.event.comment.user.login }}"
 
