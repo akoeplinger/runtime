@@ -40,7 +40,14 @@ jobs:
         git am changes.patch --3way --ignore-whitespace --keep-non-patch
         git push --force --set-upstream origin HEAD:$temp_branch
     - name: Open pull request
+      # skip opening PR if the branch already exists since that means it was opened by an earlier backport and force pushing to the branch updates the existing PR
       if: steps.pushbackport.outputs.branch_exists_remote_status != 0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: hub pull-request -b ${{ steps.targetbranch.outputs.branchname }} -m "Backport PR"
+      run: |
+        cc_users="@${{ github.event.comment.user.login }}"
+        if [[ "${{ github.event.comment.user.login }}" != "${{ github.event.issue.user.login }}" ]]; then
+          cc_users="$cc_users @${{ github.event.issue.user.login }}"
+        fi
+
+        gh pr create --base ${{ steps.targetbranch.outputs.branchname }} --title "[${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}" --body "Backport of #${{ github.event.issue.number }}.\n\n/cc $cc_users"
