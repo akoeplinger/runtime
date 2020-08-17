@@ -47,7 +47,7 @@ jobs:
         cat git_am_output.txt
         echo "::set-output name=git_am_failed::$git_am_failed"
         if [ $git_am_failed != 0 ]; then
-          echo "::error::git am failed, most likely due to a merge conflict."
+          echo "::error::git am failed, most likely due to a merge conflict." && exit 1
         else
           # push to origin
           git push --force --set-upstream origin HEAD:$temp_branch
