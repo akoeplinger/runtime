@@ -17,6 +17,11 @@ jobs:
         BRANCHNAME=$(echo '{}' | jq --raw-output 'env.BACKPORT_TRIGGER_BODY | match("\\/backport to ([a-zA-Z\\d\\/\\.\\-\\_]+)").captures[0].string')
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
+    - name: Post comment to PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="Started backport to ${{ steps.targetbranch.outputs.branchname }}: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
     - name: Checkout repo in target branch
       uses: actions/checkout@v2
       with:
