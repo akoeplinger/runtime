@@ -93,4 +93,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="@${{ github.event.comment.user.login }} An error occurred while backporting to ${{ steps.targetbranch.outputs.branchname }}, please backport manually!"
+        hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="@${{ github.event.comment.user.login }} An error occurred while backporting to ${{ steps.targetbranch.outputs.branchname }}, please check the run log for details and backport manually!"
