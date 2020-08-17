@@ -17,6 +17,7 @@ runs:
         echo "Backport target branch: $BRANCHNAME"
         echo "::set-output name=branchname::$BRANCHNAME"
         git checkout $BRANCHNAME
+        git clean -xdff
 
     # Post backport started comment to pull request
     - shell: bash
