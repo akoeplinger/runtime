@@ -729,7 +729,7 @@ namespace System
         // These just wrap calls to Normalization class
         public bool IsNormalized()
         {
-            return IsNormalized(NormalizationForm.FormC);
+            return true;
         }
 
         public bool IsNormalized(NormalizationForm normalizationForm)
