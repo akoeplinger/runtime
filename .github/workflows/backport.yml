@@ -8,8 +8,16 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
     runs-on: ubuntu-latest
     steps:
-    - name: Hello
+    - name: $github
+      run: echo "$GITHUB_CONTEXT"
       env:
-        SOURCE_PR_NUMBER: ${{ github.event.issue.number }}
-        TARGET_BRANCH: ${{ github.event.comment.body }}
-      run: "echo hello: $TARGET_BRANCH"
+       GITHUB_CONTEXT: ${{ toJson(github) }}
+    - name: Get target branch
+      id: targetbranch
+      env:
+        BACKPORT_TRIGGER_BODY: ${{ toJson(github.event.comment.body) }}
+      run: echo "::set-output name=branchname::$(echo $BACKPORT_TRIGGER_BODY | sed 's/\/backport to (\S*)/\1/g')"
+    - name: Checkout repo at target branch
+      uses: actions/checkout@v2
+      with:
+         ref: ${{ steps.targetbranch.outputs.branchname }}
