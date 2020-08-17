@@ -43,9 +43,9 @@ jobs:
 
         # apply the patch and check whether it worked
         git_am_failed=0
-        echo '$ git am changes.patch --3way --ignore-whitespace --keep-non-patch' > git_am_output.txt
+        echo '$ git am --3way --ignore-whitespace --keep-non-patch changes.patch' > git_am_output.txt
         echo '' >> git_am_output.txt
-        git am changes.patch --3way --ignore-whitespace --keep-non-patch >> git_am_output.txt 2>&1 || git_am_failed=1
+        git am --3way --ignore-whitespace --keep-non-patch changes.patch >> git_am_output.txt 2>&1 || git_am_failed=1
         cat git_am_output.txt
         echo "::set-output name=git_am_failed::$git_am_failed"
         if [ $git_am_failed != 0 ]; then
