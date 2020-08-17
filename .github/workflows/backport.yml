@@ -16,7 +16,10 @@ jobs:
       id: targetbranch
       env:
         BACKPORT_TRIGGER_BODY: ${{ github.event.comment.body }}
-      run: echo "::set-output name=branchname::$(echo $BACKPORT_TRIGGER_BODY | sed -r 's/\/backport to (\S*)/\1/g')"
+      run: |
+        BRANCHNAME=$(echo $BACKPORT_TRIGGER_BODY | sed -r 's/\/backport to (\S*)/\1/g')
+        echo "Backport target branch: $BRANCHNAME"
+        echo "::set-output name=branchname::$BRANCHNAME"
     - name: Checkout repo at target branch
       uses: actions/checkout@v2
       with:
