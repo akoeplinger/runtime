@@ -89,7 +89,7 @@ jobs:
         cat << EOF > comment_body.txt
         @${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
 
-        ```
+        ```shell
         $(cat git_am_output.txt)
         ```
 
