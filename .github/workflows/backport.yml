@@ -40,7 +40,8 @@ jobs:
         git am changes.patch --3way --ignore-whitespace --keep-non-patch
         git push --force --set-upstream origin HEAD:$temp_branch
     - name: Open pull request
-      # skip opening PR if the branch already exists since that means it was opened by an earlier backport and force pushing to the branch updates the existing PR
+      # skip opening PR if the branch already exists since that means it was opened
+      # by an earlier backport and force pushing to the branch updates the existing PR
       if: steps.pushbackport.outputs.branch_exists_remote_status != 0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
