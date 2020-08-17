@@ -3,7 +3,6 @@ description: 'Backports a pull request to a branch using a comment'
 inputs:
   token:
     description: 'The token used to authenticate to GitHub'
-    default: ${{ secrets.GITHUB_TOKEN }}
 runs:
   using: "composite"
   steps:
