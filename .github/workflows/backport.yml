@@ -21,9 +21,8 @@ jobs:
       uses: actions/checkout@v2
       with:
          ref: ${{ steps.targetbranch.outputs.branchname }}
-    - name: Apply backport patch, push and open PR
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Apply backport patch and push
+      id: pushbackport
       run: |
         # Download backport patch
         curl -sSL "${{ github.event.issue.pull_request.patch_url }}" --output changes.patch
@@ -35,10 +34,13 @@ jobs:
         # create temporary backport branch
         temp_branch="backport/pr-${{ github.event.issue.number }}-to-${{ steps.targetbranch.outputs.branchname }}"
         git checkout -b $temp_branch
+        echo "::set-output name=branch_exists_remote_status::$(git ls-remote --exit-code --heads origin $temp_branch > /dev/null)$?"
 
         # apply the patch and push to origin
         git am changes.patch --3way --ignore-whitespace --keep-non-patch
         git push --force --set-upstream origin HEAD:$temp_branch
-        
-        # open PR
-        hub pull-request -b ${{ steps.targetbranch.outputs.branchname }} -m "Backport PR"
+    - name: Open pull request
+      if: steps.pushbackport.outputs.branch_exists_remote_status != 0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: hub pull-request -b ${{ steps.targetbranch.outputs.branchname }} -m "Backport PR"
