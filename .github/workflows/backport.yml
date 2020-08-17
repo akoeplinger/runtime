@@ -87,7 +87,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        if [[ "${{steps.pushbackport.outputs.git_am_failed }}" == "1" ]; then
+        if [[ "${{steps.pushbackport.outputs.git_am_failed }}" == "1" ]]; then
             # create comment body
             cat << 'EOF' > comment_body.txt
             @${{ github.event.comment.user.login }} backporting to ${{ steps.targetbranch.outputs.branchname }} failed, the patch most likely resulted in conflicts:
