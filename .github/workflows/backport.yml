@@ -46,9 +46,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        # figure out who to tag on the backport PR
         cc_users="@${{ github.event.comment.user.login }}"
         if [[ "${{ github.event.comment.user.login }}" != "${{ github.event.issue.user.login }}" ]]; then
           cc_users="$cc_users @${{ github.event.issue.user.login }}"
         fi
 
-        gh pr create --base ${{ steps.targetbranch.outputs.branchname }} --title "[${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}" --body "Backport of #${{ github.event.issue.number }}.\n\n/cc $cc_users"
+        # open the PR
+        hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --message "[${{ steps.targetbranch.outputs.branchname }}] ${{ github.event.issue.title }}\nBackport of #${{ github.event.issue.number }}.\n\n/cc $cc_users"
