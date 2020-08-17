@@ -8,5 +8,7 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
     runs-on: ubuntu-20.04
     steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
     - name: Run backport
-      uses: akoeplinger/runtime/eng/common/actions/backport@master
+      uses: ./eng/common/actions/backport
