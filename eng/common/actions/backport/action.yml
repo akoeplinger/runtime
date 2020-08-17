@@ -1,13 +1,13 @@
 name: 'PR Backporter PR to branch'
 description: 'Backports a pull request to a branch using a comment'
 inputs:
-  token:
+  auth_token:
     description: 'The token used to authenticate to GitHub'
 runs:
   using: "composite"
   steps:
-    - name: Get target branch and check it out
-      shell: bash
+    # Get target branch and check it out
+    - shell: bash
       id: targetbranch
       env:
         BACKPORT_TRIGGER_BODY: ${{ github.event.comment.body }}
@@ -18,15 +18,15 @@ runs:
         echo "::set-output name=branchname::$BRANCHNAME"
         git checkout $BRANCHNAME
 
-    - name: Post backport started comment to pull request
-      shell: bash
+    # Post backport started comment to pull request
+    - shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.token }}
+        GITHUB_TOKEN: ${{ inputs.auth_token }}
       run: |
         hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -f body="Started backporting to ${{ steps.targetbranch.outputs.branchname }}: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
 
-    - name: Apply backport patch and push
-      shell: bash
+    # Apply backport patch and push
+    - shell: bash
       id: pushbackport
       run: |
         # Download backport patch
@@ -85,7 +85,7 @@ runs:
 #      shell: bash
 #      if: success() && steps.pushbackport.outputs.should_open_pull_request != 0
 #      env:
-#        GITHUB_TOKEN: ${{ inputs.token }}
+#        GITHUB_TOKEN: ${{ inputs.auth_token }}
 #      run: hub pull-request --base ${{ steps.targetbranch.outputs.branchname }} --file pr_body.txt
 #
 #    - name: Prepare error comment for git am failure
@@ -116,5 +116,5 @@ runs:
 #      shell: bash
 #      if: failure()
 #      env:
-#        GITHUB_TOKEN: ${{ inputs.token }}
+#        GITHUB_TOKEN: ${{ inputs.auth_token }}
 #      run: hub api repos/$GITHUB_REPOSITORY/issues/${{ github.event.issue.number }}/comments -F body=@comment_body.txt
