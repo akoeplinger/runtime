@@ -32,12 +32,12 @@ jobs:
         git config user.name github-actions
         git config user.email github-actions@github.com
         
-        temp_branch="backport-pr-${{ github.event.issue.number }})-to-${{ steps.targetbranch.outputs.branchname }}"
-        git checkout -b temp_branch
+        temp_branch="backport-pr-${{ github.event.issue.number }}-to-${{ steps.targetbranch.outputs.branchname }}"
+        git checkout -b $temp_branch
 
         echo "Applying git patch" >> output.log
         if [ git am changes.patch --3way --ignore-whitespace --keep-non-patch >> output.log 2>&1 ]; then
           echo Success
         fi
     - name: Print output
-      run: cat $output.log || true
+      run: cat output.log || true
