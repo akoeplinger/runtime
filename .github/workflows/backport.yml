@@ -48,11 +48,10 @@ jobs:
         echo "::set-output name=git_am_failed::$git_am_failed"
         if [ $git_am_failed != 0 ]; then
           echo "::error::git am failed, most likely due to a merge conflict."
-          exit 1
+        else
+          # push to origin
+          git push --force --set-upstream origin HEAD:$temp_branch
         fi
-
-        # push to origin
-        git push --force --set-upstream origin HEAD:$temp_branch
     - name: Open pull request
       # skip opening PR if the branch already exists since that means it was opened
       # by an earlier backport and force pushing to the branch updates the existing PR
