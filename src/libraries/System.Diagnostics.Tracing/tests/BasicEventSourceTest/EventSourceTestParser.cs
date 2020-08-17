@@ -328,7 +328,7 @@ using Address = System.UInt64;
 //                source.UnregisterEventTemplate(value, 30, ProviderGuid);
 //            }
 //        }
-//        public event Action<EmptyTraceData> LogTransferNoOpcode !CONFLICT!
+//        public event Action<EmptyTraceData> LogTransferNoOpcode
 //        {
 //            add
 //            {
