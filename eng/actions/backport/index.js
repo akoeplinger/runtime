@@ -20,8 +20,8 @@ async function run() {
     const auth_token = core.getInput('auth_token');
     const octokit = github.getOctokit(auth_token)
     const run_id = github.run_id;
-    const repo_owner = github.context.repo.owner;
-    const repo_name = github.context.repo.name;
+    const repo_owner = github.context.payload.repository.owner.login;
+    const repo_name = github.context.payload.repository.name;
     const pr_number = github.context.payload.issue.number;
 
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
