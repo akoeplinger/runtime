@@ -2,13 +2,13 @@ async function run() {
   const util = require('util');
   const exec = util.promisify(require('child_process').exec);
 
-  console.log(`Installing dependencies`);
-  const { npm_stdout, npm_stderr } = await exec("npm install --no-package-lock @actions/core @actions/github");
-  if (npm_stderr) {
-      console.error(`npm-install stderr: ${npm_stderr}`);
+  console.log(`Installing npm dependencies`);
+  const { stdout, stderr } = await exec("npm install --no-package-lock @actions/core @actions/github");
+  if (stderr) {
+      console.error(`npm-install stderr: ${stderr}`);
       return;
   }
-  console.log(`npm-install stdout: ${npm_stdout}`);
+  console.log(`npm-install stdout: ${stdout}`);
 
   const core = require('@actions/core');
   const github = require('@actions/github');
