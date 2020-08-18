@@ -1,3 +1,8 @@
+function ActionException(failureMessage, postToGitHub = true) {
+  this.failureMessage = failureMessage;
+  this.postToGitHub = postToGitHub;
+}
+
 async function run() {
   const util = require('util');
   const jsExec = util.promisify(require('child_process').exec);
@@ -12,11 +17,10 @@ async function run() {
   const github = require('@actions/github');
   const exec = require('@actions/exec');
 
-  if (github.context.eventName !== 'issue_comment') throw "Error: This action only works on issue_comment events.";
+  if (github.context.eventName !== 'issue_comment') throw new ActionException("Error: This action only works on issue_comment events.", false);
 
   try {
-    const auth_token = core.getInput('auth_token');
-    const octokit = github.getOctokit(auth_token)
+    octokit = github.getOctokit(core.getInput('auth_token'))
     const run_id = process.env.GITHUB_RUN_ID;
     const repo_owner = github.context.payload.repository.owner.login;
     const repo_name = github.context.payload.repository.name;
@@ -26,7 +30,7 @@ async function run() {
     console.log(`Extracting target branch`);
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
     const target_branch = regex.exec(github.context.payload.comment.body)[1];
-    if (target_branch == null) throw "Error: No backport branch found.";
+    if (target_branch == null) throw new ActionException("Error: No backport branch found in the trigger phrase.");
     console.log(`Backport target branch: ${target_branch}`);
 
     // Post backport started comment to pull request
@@ -59,7 +63,7 @@ async function run() {
     // download and apply patch
     await exec.exec(`curl -sSL "${github.context.payload.issue.pull_request.patch_url}" --output changes.patch`);
 
-    const git_am_command = 'git am --3way --ignore-whitespace --keep-non-patch changes.patch';
+    const git_am_command = 'agit am --3way --ignore-whitespace --keep-non-patch changes.patch';
     let git_am_output = `$ ${git_am_command}\n\n`;
     let git_am_failed = false;
     try {
@@ -73,16 +77,32 @@ async function run() {
       git_am_failed = true;
     }
 
-    console.log(git_am_output);
-
     if (git_am_failed) {
-      throw "Error: git am failed, most likely due to a merge conflict.";
+      const git_am_failed_body = `@${github.context.payload.comment.user.login} backporting to ${target_branch} failed, the patch most likely resulted in conflicts:\n\n\`\`\`shell\n${git_am_output}\n\`\`\`\n\nPlease backport manually!`;
+      await octokit.issues.createComment({
+        owner: repo_owner,
+        repo: repo_name,
+        issue_number: pr_number,
+        body: git_am_failed_body
+      });
+      throw new ActionException("Error: git am failed, most likely due to a merge conflict.", false);
     }
     else {
       await exec.exec(`git push --force --set-upstream origin HEAD:${temp_branch}`);
     }
   } catch (error) {
     core.setFailed(error);
+
+    // post failure to GitHub comment
+    if (error.failureMessage !== undefined && error.postToGitHub === true) {
+      const unknown_error_body = `@${github.context.payload.comment.user.login} an error occurred while backporting to ${target_branch}, please check the run log for details and backport manually!\n\n${error.failureMessage}`;
+      await octokit.issues.createComment({
+        owner: repo_owner,
+        repo: repo_name,
+        issue_number: pr_number,
+        body: unknown_error_body
+      });
+    }
   }
 }
 
