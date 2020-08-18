@@ -62,7 +62,11 @@ async function run() {
     // skip opening PR if the branch already exists on the origin remote since that means it was opened
     // by an earlier backport and force pushing to the branch updates the existing PR
     let should_open_pull_request = true;
-    try { should_open_pull_request = await exec.exec(`git ls-remote --exit-code --heads origin ${temp_branch}`) == 0; } catch { }
+    try {
+      await exec.exec(`git ls-remote --exit-code --heads origin ${temp_branch}`);
+      console.log("Backport temp branch already exists, will skip opening PR.")
+      should_open_pull_request = false;
+    } catch { }
 
     // download and apply patch
     await exec.exec(`curl -sSL "${github.context.payload.issue.pull_request.patch_url}" --output changes.patch`);
@@ -101,11 +105,10 @@ async function run() {
 
     // prepate the GitHub PR details
     const backport_pr_title = `[${target_branch}] ${github.context.payload.issue.title}`;
-    const backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}`;
-    let cc_users = `/cc@${comment_user}`;
+    let backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}\n\n/cc@${comment_user}`;
 
     // append PR author if different from user who issued the backport command
-    if ( comment_user != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
+    if (comment_user != github.context.payload.issue.user.login) backport_pr_description += ` @${github.context.payload.issue.user.login}`;
 
     // open the GitHub PR
     await octokit.pulls.create({
