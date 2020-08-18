@@ -111,7 +111,7 @@ async function run() {
     let backport_pr_description = core.getInput('pr_description_template');
 
     // get users to cc (append PR author if different from user who issued the backport command)
-    let cc_users = `/cc @${comment_user}`;
+    let cc_users = `@${comment_user}`;
     if (comment_user != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
 
     // replace the special placeholder tokens with values
