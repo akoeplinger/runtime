@@ -19,15 +19,15 @@ async function run() {
 
   if (github.context.eventName !== 'issue_comment') throw "Error: This action only works on issue_comment events.";
 
+  const run_id = process.env.GITHUB_RUN_ID;
+  const repo_owner = github.context.payload.repository.owner.login;
+  const repo_name = github.context.payload.repository.name;
+  const pr_number = github.context.payload.issue.number;
+
   let octokit = github.getOctokit(core.getInput('auth_token'));
   let target_branch = "";
 
   try {
-    const run_id = process.env.GITHUB_RUN_ID;
-    const repo_owner = github.context.payload.repository.owner.login;
-    const repo_name = github.context.payload.repository.name;
-    const pr_number = github.context.payload.issue.number;
-
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
