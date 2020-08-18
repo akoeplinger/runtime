@@ -1,5 +1,5 @@
-function BackportException(backportFailureMessage, postToGitHub = true) {
-  this.backportFailureMessage = backportFailureMessage;
+function BackportException(message, postToGitHub = true) {
+  this.message = message;
   this.postToGitHub = postToGitHub;
 }
 
@@ -19,8 +19,10 @@ async function run() {
 
   if (github.context.eventName !== 'issue_comment') throw "Error: This action only works on issue_comment events.";
 
+  let octokit = github.getOctokit(core.getInput('auth_token'));
+  let target_branch = "";
+
   try {
-    octokit = github.getOctokit(core.getInput('auth_token'))
     const run_id = process.env.GITHUB_RUN_ID;
     const repo_owner = github.context.payload.repository.owner.login;
     const repo_name = github.context.payload.repository.name;
@@ -29,7 +31,7 @@ async function run() {
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
-    const target_branch = regex.exec(github.context.payload.comment.body)[1];
+    target_branch = regex.exec(github.context.payload.comment.body)[1];
     if (target_branch == null) throw new BackportException("Error: No backport branch found in the trigger phrase.");
     try { await exec.exec(`git ls-remote --exit-code --heads origin ${target_branch}`) } catch { throw new BackportException(`Error: The specified backport target branch ${target_branch} wasn't found in the repo.`); }
     console.log(`Backport target branch: ${target_branch}`);
@@ -116,23 +118,18 @@ async function run() {
 
     console.log("Successfully opened the GitHub PR.");
   } catch (error) {
-    if (error.backportFailureMessage !== undefined) {
-      // we have our own "known" exception with a custom message
-      core.setFailed(error.backportFailureMessage);
 
+    core.setFailed(error);
+
+    if (error.postToGitHub === undefined || error.postToGitHub == true) {
       // post failure to GitHub comment
-      if (error.postToGitHub === true) {
-        const unknown_error_body = `@${github.context.payload.comment.user.login} an error occurred while backporting to ${target_branch}, please check the run log for details!\n\n${error.backportFailureMessage}`;
-        await octokit.issues.createComment({
-          owner: repo_owner,
-          repo: repo_name,
-          issue_number: pr_number,
-          body: unknown_error_body
-        });
-      }
-    } else {
-      // generic exception
-      core.setFailed(error);
+      const unknown_error_body = `@${github.context.payload.comment.user.login} an error occurred while backporting to ${target_branch}, please check the run log for details!\n\n${error.message}`;
+      await octokit.issues.createComment({
+        owner: repo_owner,
+        repo: repo_name,
+        issue_number: pr_number,
+        body: unknown_error_body
+      });
     }
   }
 }
