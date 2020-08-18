@@ -115,15 +115,15 @@ async function run() {
     if (comment_user != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
 
     // replace the special placeholder tokens with values
-    backport_pr_title = backport_pr_title.replaceAll('%target_branch%', () => target_branch);
-    backport_pr_title = backport_pr_title.replaceAll('%source_pr_title%', () => github.context.payload.issue.title);
-    backport_pr_title = backport_pr_title.replaceAll('%source_pr_number%', () => github.context.payload.issue.number);
-    backport_pr_title = backport_pr_title.replaceAll('%cc_users%', () => cc_users);
+    backport_pr_title = backport_pr_title.replace(/%target_branch%/g, target_branch);
+    backport_pr_title = backport_pr_title.replace(/%source_pr_title%/g, github.context.payload.issue.title);
+    backport_pr_title = backport_pr_title.replace(/%source_pr_number%/g, github.context.payload.issue.number);
+    backport_pr_title = backport_pr_title.replace(/%cc_users%/g, cc_users);
 
-    backport_pr_description = backport_pr_description.replaceAll('%target_branch%', () => target_branch);
-    backport_pr_description = backport_pr_description.replaceAll('%source_pr_title%', () => github.context.payload.issue.title);
-    backport_pr_description = backport_pr_description.replaceAll('%source_pr_number%', () => github.context.payload.issue.number);
-    backport_pr_description = backport_pr_description.replaceAll('%cc_users%', () => cc_users);
+    backport_pr_description = backport_pr_description.replace(/%target_branch%/g, target_branch);
+    backport_pr_description = backport_pr_description.replace(/%source_pr_title%/g, github.context.payload.issue.title);
+    backport_pr_description = backport_pr_description.replace(/%source_pr_number%/g, github.context.payload.issue.number);
+    backport_pr_description = backport_pr_description.replace(/%cc_users%/g, cc_users);
 
     // open the GitHub PR
     await octokit.pulls.create({
