@@ -8,7 +8,7 @@ async function run() {
   const jsExec = util.promisify(require('child_process').exec);
 
   console.log(`Installing npm dependencies`);
-  const { stdout, stderr } = await jsExec("npm install @actions/core @actions/github @actions/exec");
+  const { stdout, stderr } = await jsExec('npm install @actions/core @actions/github @actions/exec');
   console.log(`npm-install stderr:\n\n${stderr}`);
   console.log(`npm-install stdout:\n\n${stdout}`);
   console.log(`Finished installing npm dependencies`);
@@ -17,7 +17,7 @@ async function run() {
   const github = require('@actions/github');
   const exec = require('@actions/exec');
 
-  if (github.context.eventName !== 'issue_comment') throw "Error: This action only works on issue_comment events.";
+  if (github.context.eventName !== 'issue_comment') throw 'Error: This action only works on issue_comment events.';
 
   const run_id = process.env.GITHUB_RUN_ID;
   const repo_owner = github.context.payload.repository.owner.login;
@@ -26,14 +26,14 @@ async function run() {
   const comment_user = github.context.payload.comment.user.login;
 
   let octokit = github.getOctokit(core.getInput('auth_token'));
-  let target_branch = "";
+  let target_branch = '';
 
   try {
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
     target_branch = regex.exec(github.context.payload.comment.body)[1];
-    if (target_branch == null) throw new BackportException("Error: No backport branch found in the trigger phrase.");
+    if (target_branch == null) throw new BackportException('Error: No backport branch found in the trigger phrase.');
     try { await exec.exec(`git ls-remote --exit-code --heads origin ${target_branch}`) } catch { throw new BackportException(`Error: The specified backport target branch ${target_branch} wasn't found in the repo.`); }
     console.log(`Backport target branch: ${target_branch}`);
 
@@ -46,7 +46,7 @@ async function run() {
       body: backport_start_body
     });
 
-    console.log("Applying backport patch");
+    console.log('Applying backport patch');
 
     await exec.exec(`git fetch origin ${target_branch}`);
     await exec.exec(`git checkout ${target_branch}`);
@@ -94,7 +94,7 @@ async function run() {
         issue_number: pr_number,
         body: git_am_failed_body
       });
-      throw new BackportException("Error: git am failed, most likely due to a merge conflict.", false);
+      throw new BackportException('Error: git am failed, most likely due to a merge conflict.', false);
     }
     else {
       // push the temp branch to the repository
@@ -102,16 +102,28 @@ async function run() {
     }
 
     if (!should_open_pull_request) {
-      console.log("Backport temp branch already exists, skipping opening a PR.");
+      console.log('Backport temp branch already exists, skipping opening a PR.');
       return;
     }
 
     // prepate the GitHub PR details
-    const backport_pr_title = `[${target_branch}] ${github.context.payload.issue.title}`;
-    let backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}\n\n/cc @${comment_user}`;
+    let backport_pr_title = core.getInput('pr_title_template');
+    let backport_pr_description = core.getInput('pr_description_template');
 
-    // append PR author if different from user who issued the backport command
-    if (comment_user != github.context.payload.issue.user.login) backport_pr_description += ` @${github.context.payload.issue.user.login}`;
+    // get users to cc (append PR author if different from user who issued the backport command)
+    let cc_users = `/cc @${comment_user}`;
+    if (comment_user != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
+
+    // replace the special placeholder tokens with values
+    backport_pr_title = backport_pr_title.replaceAll('%target_branch%', () => target_branch);
+    backport_pr_title = backport_pr_title.replaceAll('%source_pr_title%', () => github.context.payload.issue.title);
+    backport_pr_title = backport_pr_title.replaceAll('%source_pr_number%', () => github.context.payload.issue.number);
+    backport_pr_title = backport_pr_title.replaceAll('%cc_users%', () => cc_users);
+
+    backport_pr_description = backport_pr_description.replaceAll('%target_branch%', () => target_branch);
+    backport_pr_description = backport_pr_description.replaceAll('%source_pr_title%', () => github.context.payload.issue.title);
+    backport_pr_description = backport_pr_description.replaceAll('%source_pr_number%', () => github.context.payload.issue.number);
+    backport_pr_description = backport_pr_description.replaceAll('%cc_users%', () => cc_users);
 
     // open the GitHub PR
     await octokit.pulls.create({
@@ -123,7 +135,7 @@ async function run() {
       base: target_branch
     });
 
-    console.log("Successfully opened the GitHub PR.");
+    console.log('Successfully opened the GitHub PR.');
   } catch (error) {
 
     core.setFailed(error);
