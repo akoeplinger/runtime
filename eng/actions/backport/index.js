@@ -35,14 +35,13 @@ async function run() {
     const backport_start_body = `Started backporting to ${target_branch}: https://github.com/${repo_owner}/${repo_name}/actions/runs/${run_id}`;
 
     await octokit.issues.createComment({
-      repo_owner,
-      repo_name,
-      pr_number,
-      backport_start_body
+      owner: repo_owner,
+      repo: repo_name,
+      issue_number: pr_number,
+      body: backport_start_body
     });
   } catch (error) {
-    core.setFailed(error.message);
-    console.log(error.request);
+    core.setFailed(error);
   }
 }
 
