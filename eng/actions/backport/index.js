@@ -3,7 +3,7 @@ async function run() {
   const exec = util.promisify(require('child_process').exec);
 
   console.log(`Installing npm dependencies`);
-  const { stdout, stderr } = await exec("npm install -g @actions/core @actions/github");
+  const { stdout, stderr } = await exec("sudo npm install -g @actions/core @actions/github");
   console.log(`npm-install stderr: ${stderr}`);
   console.log(`npm-install stdout: ${stdout}`);
   console.log(`Finished installing npm dependencies`);
