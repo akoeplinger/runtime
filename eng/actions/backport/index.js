@@ -17,7 +17,7 @@ async function run() {
   const github = require('@actions/github');
   const exec = require('@actions/exec');
 
-  if (github.context.eventName !== 'issue_comment') throw new BackportException("Error: This action only works on issue_comment events.", false);
+  if (github.context.eventName !== 'issue_comment') throw "Error: This action only works on issue_comment events.";
 
   try {
     octokit = github.getOctokit(core.getInput('auth_token'))
@@ -90,8 +90,31 @@ async function run() {
       throw new BackportException("Error: git am failed, most likely due to a merge conflict.", false);
     }
     else {
+      // push the temp branch to the repository
       await exec.exec(`git push --force --set-upstream origin HEAD:${temp_branch}`);
     }
+
+    if (!should_open_pull_request) return;
+
+    // prepate the GitHub PR details
+    const backport_pr_title = `[${target_branch}] ${github.context.payload.issue.title}`;
+    const backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}`;
+    let cc_users = `/cc@${github.context.payload.comment.user.login}`;
+
+    // append PR author if different from user who issued the backport command
+    if ( github.context.payload.comment.user.login != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
+
+    // open the GitHub PR
+    await octokit.pulls.create({
+      owner: repo_owner,
+      repo: repo_name,
+      title: backport_pr_title,
+      body: backport_pr_description,
+      head: target_branch,
+      base: temp_branch
+    });
+
+    console.log("Successfully opened the GitHub PR.");
   } catch (error) {
     if (error.backportFailureMessage !== undefined) {
       // we have our own "known" exception with a custom message
@@ -99,7 +122,7 @@ async function run() {
 
       // post failure to GitHub comment
       if (error.postToGitHub === true) {
-        const unknown_error_body = `@${github.context.payload.comment.user.login} an error occurred while backporting to ${target_branch}, please check the run log for details and backport manually!\n\n${error.backportFailureMessage}`;
+        const unknown_error_body = `@${github.context.payload.comment.user.login} an error occurred while backporting to ${target_branch}, please check the run log for details!\n\n${error.backportFailureMessage}`;
         await octokit.issues.createComment({
           owner: repo_owner,
           repo: repo_name,
