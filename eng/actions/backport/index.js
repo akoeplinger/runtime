@@ -1,7 +1,7 @@
 const execSync = require('child_process').execSync;
 
 console.log(`Installing npm dependencies`);
-const npm_stdout = execSync("sudo npm install -g @actions/core @actions/github");
+const npm_stdout = execSync("npm install @actions/core @actions/github");
 console.log(`npm-install stdout: ${npm_stdout}`);
 console.log(`Finished installing npm dependencies`);
 
