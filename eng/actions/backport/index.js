@@ -22,7 +22,7 @@ async function run() {
     const run_id = github.run_id;
     const repo_owner = github.context.repo.owner;
     const repo_name = github.context.repo.name;
-    const pr_number = github.context.issue.number;
+    const pr_number = github.context.payload.issue.number;
 
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
