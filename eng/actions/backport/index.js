@@ -64,7 +64,7 @@ async function run() {
 
     console.log("Applying backport patch");
 
-    await exec.exec(`git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules origin ${target_branch} ${pr_source_ref}`);
+    await exec.exec(`git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules origin ${target_branch}`);
     await exec.exec(`git checkout ${target_branch}`);
     await exec.exec(`git clean -xdff`);
 
