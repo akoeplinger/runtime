@@ -63,7 +63,7 @@ async function run() {
     let git_am_output = `$ ${git_am_command}\n\n`;
     let git_am_failed = false;
     try {
-      await exec.exec(git_am_command, {
+      await exec.exec(git_am_command, [], {
         listeners: {
           stdout: function stdout(data) { git_am_output += data; },
           stderr: function stderr(data) { git_am_output += data; }
