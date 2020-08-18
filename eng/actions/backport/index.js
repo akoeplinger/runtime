@@ -73,7 +73,8 @@ async function run() {
           stderr: function stderr(data) { git_am_output += data; }
         }
       });
-    } catch {
+    } catch (error) {
+      git_am_output += error;
       git_am_failed = true;
     }
 
