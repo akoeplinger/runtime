@@ -14,9 +14,6 @@ async function run() {
 
   if (github.context.eventName !== 'issue_comment') throw "Error: This action only works on issue_comment events.";
 
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-
   try {
     const auth_token = core.getInput('auth_token');
     const octokit = github.getOctokit(auth_token)
@@ -60,7 +57,7 @@ async function run() {
     try { should_open_pull_request = await exec.exec(`git ls-remote --exit-code --heads origin ${temp_branch}`) == 0; } catch { }
 
     // download and apply patch
-    await exec.exec(`curl -sSL "${github.context.payload.pull_request.patch_url}" --output changes.patch`);
+    await exec.exec(`curl -sSL "${github.context.payload.issue.pull_request.patch_url}" --output changes.patch`);
 
     const git_am_command = 'git am --3way --ignore-whitespace --keep-non-patch changes.patch';
     let git_am_output = `$ ${git_am_command}\n\n`;
