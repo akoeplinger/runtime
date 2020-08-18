@@ -1,4 +1,4 @@
-const child_process = require("child_process");
+const { child_process } = require("child_process");
 
 console.log(`Installing dependencies`);
 child_process("npm install @actions/core @actions/github", (error, stdout, stderr) => {
