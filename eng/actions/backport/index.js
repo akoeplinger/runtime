@@ -32,6 +32,18 @@ async function run() {
   let target_branch = "";
 
   try {
+    // verify the comment user is a repo collaborator
+    try {
+      await octokit.repos.checkCollaborator({
+        owner: repo_owner,
+        repo: repo_name,
+        username: comment_user
+      });
+      console.log(`Verified ${comment_user} is a repo collaborator.`);
+    } catch {
+      throw new BackportException(`Error: @${comment_user} is not a repo collaborator, backporting is not allowed.`);
+    }
+
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
