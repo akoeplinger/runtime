@@ -1,23 +1,26 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 function BackportException(message, postToGitHub = true) {
   this.message = message;
   this.postToGitHub = postToGitHub;
 }
 
 async function run() {
-  const util = require('util');
-  const jsExec = util.promisify(require('child_process').exec);
+  const util = require("util");
+  const jsExec = util.promisify(require("child_process").exec);
 
-  console.log(`Installing npm dependencies`);
-  const { stdout, stderr } = await jsExec('npm install @actions/core @actions/github @actions/exec');
-  console.log(`npm-install stderr:\n\n${stderr}`);
-  console.log(`npm-install stdout:\n\n${stdout}`);
-  console.log(`Finished installing npm dependencies`);
+  console.log("Installing npm dependencies");
+  const { stdout, stderr } = await jsExec("npm install @actions/core @actions/github @actions/exec");
+  console.log("npm-install stderr:\n\n" + stderr);
+  console.log("npm-install stdout:\n\n" + stdout);
+  console.log("Finished installing npm dependencies");
 
-  const core = require('@actions/core');
-  const github = require('@actions/github');
-  const exec = require('@actions/exec');
+  const core = require("@actions/core");
+  const github = require("@actions/github");
+  const exec = require("@actions/exec");
 
-  if (github.context.eventName !== 'issue_comment') throw 'Error: This action only works on issue_comment events.';
+  if (github.context.eventName !== "issue_comment") throw "Error: This action only works on issue_comment events.";
 
   const run_id = process.env.GITHUB_RUN_ID;
   const repo_owner = github.context.payload.repository.owner.login;
@@ -25,15 +28,15 @@ async function run() {
   const pr_number = github.context.payload.issue.number;
   const comment_user = github.context.payload.comment.user.login;
 
-  let octokit = github.getOctokit(core.getInput('auth_token'));
-  let target_branch = '';
+  let octokit = github.getOctokit(core.getInput("auth_token"));
+  let target_branch = "";
 
   try {
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
     target_branch = regex.exec(github.context.payload.comment.body)[1];
-    if (target_branch == null) throw new BackportException('Error: No backport branch found in the trigger phrase.');
+    if (target_branch == null) throw new BackportException("Error: No backport branch found in the trigger phrase.");
     try { await exec.exec(`git ls-remote --exit-code --heads origin ${target_branch}`) } catch { throw new BackportException(`Error: The specified backport target branch ${target_branch} wasn't found in the repo.`); }
     console.log(`Backport target branch: ${target_branch}`);
 
@@ -46,7 +49,7 @@ async function run() {
       body: backport_start_body
     });
 
-    console.log('Applying backport patch');
+    console.log("Applying backport patch");
 
     await exec.exec(`git fetch origin ${target_branch}`);
     await exec.exec(`git checkout ${target_branch}`);
@@ -71,7 +74,7 @@ async function run() {
     // download and apply patch
     await exec.exec(`curl -sSL "${github.context.payload.issue.pull_request.patch_url}" --output changes.patch`);
 
-    const git_am_command = 'git am --3way --ignore-whitespace --keep-non-patch changes.patch';
+    const git_am_command = "git am --3way --ignore-whitespace --keep-non-patch changes.patch";
     let git_am_output = `$ ${git_am_command}\n\n`;
     let git_am_failed = false;
     try {
@@ -94,7 +97,7 @@ async function run() {
         issue_number: pr_number,
         body: git_am_failed_body
       });
-      throw new BackportException('Error: git am failed, most likely due to a merge conflict.', false);
+      throw new BackportException("Error: git am failed, most likely due to a merge conflict.", false);
     }
     else {
       // push the temp branch to the repository
@@ -102,13 +105,13 @@ async function run() {
     }
 
     if (!should_open_pull_request) {
-      console.log('Backport temp branch already exists, skipping opening a PR.');
+      console.log("Backport temp branch already exists, skipping opening a PR.");
       return;
     }
 
     // prepate the GitHub PR details
-    let backport_pr_title = core.getInput('pr_title_template');
-    let backport_pr_description = core.getInput('pr_description_template');
+    let backport_pr_title = core.getInput("pr_title_template");
+    let backport_pr_description = core.getInput("pr_description_template");
 
     // get users to cc (append PR author if different from user who issued the backport command)
     let cc_users = `@${comment_user}`;
@@ -137,7 +140,7 @@ async function run() {
       base: target_branch
     });
 
-    console.log('Successfully opened the GitHub PR.');
+    console.log("Successfully opened the GitHub PR.");
   } catch (error) {
 
     core.setFailed(error);
