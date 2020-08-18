@@ -1,10 +1,3 @@
-async function runCommandAndAssertOk(exec, command) {
-  const exit_code = await exec.exec(command);
-  if (exit_code !== 0) {
-    throw `Error: Running '${command}' exited with ${exit_code}.`;
-  }
-}
-
 async function run() {
   const util = require('util');
   const jsExec = util.promisify(require('child_process').exec);
@@ -34,14 +27,13 @@ async function run() {
 
     // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
     console.log(`Extracting target branch`);
-    var regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
+    const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
     const target_branch = regex.exec(github.context.payload.comment.body)[1];
     if (target_branch == null) throw "Error: No backport branch found.";
     console.log(`Backport target branch: ${target_branch}`);
 
     // Post backport started comment to pull request
     const backport_start_body = `Started backporting to ${target_branch}: https://github.com/${repo_owner}/${repo_name}/actions/runs/${run_id}`;
-
     await octokit.issues.createComment({
       owner: repo_owner,
       repo: repo_name,
@@ -51,33 +43,46 @@ async function run() {
 
     console.log("Applying backport patch");
 
-    await runCommandAndAssertOk(exec, `git checkout ${target_branch}`);
-    await runCommandAndAssertOk(exec, `git clean -xdff`);
+    await exec.exec(`git checkout ${target_branch}`);
+    await exec.exec(`git clean -xdff`);
 
     // configure git
-    await runCommandAndAssertOk(exec, `git config user.name "github-actions"`);
-    await runCommandAndAssertOk(exec, `git config user.email "github-actions@github.com"`);
+    await exec.exec(`git config user.name "github-actions"`);
+    await exec.exec(`git config user.email "github-actions@github.com"`);
 
     // create temporary backport branch
     const temp_branch = `backport/pr-${pr_number}-to-${target_branch}`;
-    await runCommandAndAssertOk(exec, `git checkout -b ${temp_branch}`);
+    await exec.exec(`git checkout -b ${temp_branch}`);
 
     // skip opening PR if the branch already exists on the origin remote since that means it was opened
     // by an earlier backport and force pushing to the branch updates the existing PR
-    const should_open_pull_request = await exec.exec(`git ls-remote --exit-code --heads origin ${temp_branch} > /dev/null`) != 0;
+    let should_open_pull_request = true;
+    try { should_open_pull_request = await exec.exec(`git ls-remote --exit-code --heads origin ${temp_branch}`) == 0; } catch { }
 
     // download and apply patch
-    await runCommandAndAssertOk(exec, `curl -sSL "${github.context.payload.pull_request.patch_url}" --output changes.patch`);
-    await runCommandAndAssertOk(exec, `echo '$ git am --3way --ignore-whitespace --keep-non-patch changes.patch' > git_am_output.txt`);
-    await runCommandAndAssertOk(exec, `echo '' >> git_am_output.txt`);
-    const git_am_failed = await exec.exec(`git am --3way --ignore-whitespace --keep-non-patch changes.patch >> git_am_output.txt 2>&1`) != 0;
-    await runCommandAndAssertOk(exec, `cat git_am_output.txt`);
+    await exec.exec(`curl -sSL "${github.context.payload.pull_request.patch_url}" --output changes.patch`);
 
-    if (git_am_failed) {
-      throw "Error: git am failed, most likely due to a merge conflict."
+    const git_am_command = 'git am --3way --ignore-whitespace --keep-non-patch changes.patch';
+    let git_am_output = `$ ${git_am_command}\n\n`;
+    let git_am_failed = false;
+    try {
+      await exec.exec(git_am_command, {
+        listeners: {
+          stdout: function stdout(data) { git_am_output += data; },
+          stderr: function stderr(data) { git_am_output += data; }
+        }
+      });
+    } catch {
+      git_am_failed = true;
+    }
+
+    console.log(git_am_output);
+
+    if (git_am_failed) {
+      throw "Error: git am failed, most likely due to a merge conflict.";
     }
     else {
-      await runCommandAndAssertOk(exec, `git push --force --set-upstream origin HEAD:${temp_branch}`);
+      await exec.exec(`git push --force --set-upstream origin HEAD:${temp_branch}`);
     }
   } catch (error) {
     core.setFailed(error);
