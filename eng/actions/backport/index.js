@@ -108,7 +108,7 @@ async function run() {
 
     // prepate the GitHub PR details
     const backport_pr_title = `[${target_branch}] ${github.context.payload.issue.title}`;
-    let backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}\n\n/cc@${comment_user}`;
+    let backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}\n\n/cc @${comment_user}`;
 
     // append PR author if different from user who issued the backport command
     if (comment_user != github.context.payload.issue.user.login) backport_pr_description += ` @${github.context.payload.issue.user.login}`;
