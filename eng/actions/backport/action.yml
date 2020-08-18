@@ -10,8 +10,8 @@ inputs:
     description: 'The template used for the PR description. Special placeholder tokens that will be replaced with a value: %target_branch%, %source_pr_title%, %source_pr_number%, %cc_users%.'
     default: |
       Backport of #%source_pr_number% to %target_branch%
-      
-      /cc %cc_users%'
+
+      /cc %cc_users%
 
 runs:
   using: 'node12'
