@@ -26,6 +26,7 @@ async function run() {
   const repo_owner = github.context.payload.repository.owner.login;
   const repo_name = github.context.payload.repository.name;
   const pr_number = github.context.payload.issue.number;
+  const pr_source_ref = process.env.GITHUB_REF;
   const comment_user = github.context.payload.comment.user.login;
 
   let octokit = github.getOctokit(core.getInput("auth_token"));
@@ -63,7 +64,7 @@ async function run() {
 
     console.log("Applying backport patch");
 
-    await exec.exec(`git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin ${target_branch}`);
+    await exec.exec(`git -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules origin ${target_branch} ${pr_source_ref}`);
     await exec.exec(`git checkout ${target_branch}`);
     await exec.exec(`git clean -xdff`);
 
