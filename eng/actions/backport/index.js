@@ -41,7 +41,8 @@ async function run() {
       backport_start_body
     });
   } catch (error) {
-    core.setFailed(error);
+    core.setFailed(error.message);
+    console.log(error.request);
   }
 }
 
