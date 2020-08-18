@@ -48,7 +48,7 @@ async function run() {
 
     console.log("Applying backport patch");
 
-    await exec.exec(`git fetch ${target_branch}`);
+    await exec.exec(`git fetch origin ${target_branch}`);
     await exec.exec(`git checkout ${target_branch}`);
     await exec.exec(`git clean -xdff`);
 
