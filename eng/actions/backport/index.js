@@ -4,8 +4,8 @@ async function run() {
 
   console.log(`Installing npm dependencies`);
   const { stdout, stderr } = await exec("npm install @actions/core @actions/github");
-  console.log(`npm-install stderr: ${stderr}`);
-  console.log(`npm-install stdout: ${stdout}`);
+  console.log(`npm-install stderr:\n\n${stderr}`);
+  console.log(`npm-install stdout:\n\n${stdout}`);
   console.log(`Finished installing npm dependencies`);
 
   const core = require('@actions/core');
@@ -38,7 +38,7 @@ async function run() {
       backport_start_body
     });
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }
 
