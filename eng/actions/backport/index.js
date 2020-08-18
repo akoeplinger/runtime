@@ -1,17 +1,13 @@
-const { exec } = require("child_process");
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 console.log(`Installing dependencies`);
-exec("npm install @actions/core @actions/github", (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
+const { npm_stdout, npm_stderr } = await exec("npm install --no-package-lock @actions/core @actions/github");
+if (npm_stderr) {
+    console.error(`npm-install stderr: ${npm_stderr}`);
+    return;
+}
+console.log(`npm-install stdout: ${npm_stdout}`);
 
 const core = require('@actions/core');
 const github = require('@actions/github');
