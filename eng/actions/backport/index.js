@@ -1,3 +1,7 @@
+const child_process = require("child_process");
+
+child_process("npm install @actions/core @actions/github");
+
 const core = require('@actions/core');
 const github = require('@actions/github');
 
