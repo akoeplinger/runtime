@@ -31,6 +31,7 @@ async function run() {
     const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
     const target_branch = regex.exec(github.context.payload.comment.body)[1];
     if (target_branch == null) throw new BackportException("Error: No backport branch found in the trigger phrase.");
+    try { await exec.exec(`git ls-remote --exit-code --heads origin ${target_branch}`) } catch { throw new BackportException(`Error: The specified backport target branch ${target_branch} wasn't found in the repo.`); }
     console.log(`Backport target branch: ${target_branch}`);
 
     // Post backport started comment to pull request
