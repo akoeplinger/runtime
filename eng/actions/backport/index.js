@@ -64,7 +64,6 @@ async function run() {
     let should_open_pull_request = true;
     try {
       await exec.exec(`git ls-remote --exit-code --heads origin ${temp_branch}`);
-      console.log("Backport temp branch already exists, will skip opening PR.")
       should_open_pull_request = false;
     } catch { }
 
@@ -101,7 +100,10 @@ async function run() {
       await exec.exec(`git push --force --set-upstream origin HEAD:${temp_branch}`);
     }
 
-    if (!should_open_pull_request) return;
+    if (!should_open_pull_request) {
+      console.log("Backport temp branch already exists, skipping opening a PR.");
+      return;
+    }
 
     // prepate the GitHub PR details
     const backport_pr_title = `[${target_branch}] ${github.context.payload.issue.title}`;
