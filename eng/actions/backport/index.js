@@ -1,6 +1,17 @@
 const child_process = require("child_process");
 
-child_process("npm install @actions/core @actions/github");
+console.log(`Installing dependencies`);
+child_process("npm install @actions/core @actions/github", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
+});
 
 const core = require('@actions/core');
 const github = require('@actions/github');
