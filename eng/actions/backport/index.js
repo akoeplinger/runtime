@@ -23,6 +23,7 @@ async function run() {
   const repo_owner = github.context.payload.repository.owner.login;
   const repo_name = github.context.payload.repository.name;
   const pr_number = github.context.payload.issue.number;
+  const comment_user = github.context.payload.comment.user.login;
 
   let octokit = github.getOctokit(core.getInput('auth_token'));
   let target_branch = "";
@@ -101,10 +102,10 @@ async function run() {
     // prepate the GitHub PR details
     const backport_pr_title = `[${target_branch}] ${github.context.payload.issue.title}`;
     const backport_pr_description = `Backport of #${github.context.payload.issue.number} to ${target_branch}`;
-    let cc_users = `/cc@${github.context.payload.comment.user.login}`;
+    let cc_users = `/cc@${comment_user}`;
 
     // append PR author if different from user who issued the backport command
-    if ( github.context.payload.comment.user.login != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
+    if ( comment_user != github.context.payload.issue.user.login) cc_users += ` @${github.context.payload.issue.user.login}`;
 
     // open the GitHub PR
     await octokit.pulls.create({
@@ -112,8 +113,8 @@ async function run() {
       repo: repo_name,
       title: backport_pr_title,
       body: backport_pr_description,
-      head: target_branch,
-      base: temp_branch
+      head: temp_branch,
+      base: target_branch
     });
 
     console.log("Successfully opened the GitHub PR.");
@@ -123,7 +124,7 @@ async function run() {
 
     if (error.postToGitHub === undefined || error.postToGitHub == true) {
       // post failure to GitHub comment
-      const unknown_error_body = `@${github.context.payload.comment.user.login} an error occurred while backporting to ${target_branch}, please check the run log for details!\n\n${error.message}`;
+      const unknown_error_body = `@${comment_user} an error occurred while backporting to ${target_branch}, please check the run log for details!\n\n${error.message}`;
       await octokit.issues.createComment({
         owner: repo_owner,
         repo: repo_name,
