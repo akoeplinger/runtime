@@ -13,6 +13,9 @@ async function run() {
 
   if (github.context.eventName !== 'issue_comment') throw "This action only works on issue_comment events.";
 
+  const payload = JSON.stringify(github.context.payload, undefined, 2)
+  console.log(`The event payload: ${payload}`);
+
   try {
     const auth_token = core.getInput('auth_token');
     const octokit = github.getOctokit(auth_token)
