@@ -1,8 +1,13 @@
-name: 'PR Backporter PR to branch'
+name: 'PR Backporter'
 description: 'Backports a pull request to a branch using a comment'
 inputs:
   auth_token:
-    description: 'The token used to authenticate to GitHub'
+    description: 'The token used to authenticate to GitHub.'
+runs:
+  using: 'node12'
+  main: 'index.js'
+
+
 runs:
   using: "composite"
   steps:

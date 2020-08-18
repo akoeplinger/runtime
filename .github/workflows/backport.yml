@@ -11,6 +11,6 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v2
     - name: Run backport
-      uses: ./eng/common/actions/backport
+      uses: ./eng/actions/backport
       with:
         auth_token: ${{ secrets.GITHUB_TOKEN }}
