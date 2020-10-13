@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 
 namespace System.Xml
 {
@@ -17,9 +18,32 @@ namespace System.Xml
             }
             else
             {
-                // This code should be changed if HttpClient ever gets real synchronous methods.  For now,
-                // we just use the asynchronous methods and block waiting for them to complete.
-                return GetNonFileStreamAsync(uri, credentials, proxy).GetAwaiter().GetResult();
+                return GetNonFileStream(uri, credentials, proxy);
+            }
+        }
+
+        private Stream GetNonFileStream(Uri uri, ICredentials? credentials, IWebProxy? proxy)
+        {
+            var handler = new HttpClientHandler();
+            using (var client = new HttpClient(handler))
+            {
+                if (credentials != null)
+                {
+                    handler.Credentials = credentials;
+                }
+                if (proxy != null)
+                {
+                    handler.Proxy = proxy;
+                }
+
+                var request = new HttpRequestMessage(HttpMethod.Get, uri);
+                using (Stream respStream = client.Send(request).Content.ReadAsStream())
+                {
+                    var result = new MemoryStream();
+                    respStream.CopyTo(result);
+                    result.Position = 0;
+                    return result;
+                }
             }
         }
     }
