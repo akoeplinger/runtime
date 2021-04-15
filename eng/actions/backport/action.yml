@@ -1,6 +1,10 @@
 name: 'PR Backporter'
 description: 'Backports a pull request to a branch using the "/backport to <branch>" comment'
 inputs:
+  action:
+    description: 'Either extract-branch or run-backport.'
+  target_branch:
+    description: 'Backport target branch, optional if using the extract-branch action.'
   auth_token:
     description: 'The token used to authenticate to GitHub.'
   pr_title_template:

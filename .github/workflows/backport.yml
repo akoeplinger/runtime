@@ -8,11 +8,22 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
     runs-on: ubuntu-20.04
     steps:
+    - name: Extract backport target branch
+      id: target-branch-extractor
+      uses: ./eng/actions/backport
+      with:
+        action: extract-branch
+        auth_token: ${{ secrets.GITHUB_TOKEN }}
     - name: Checkout repo
       uses: actions/checkout@v2
+      with:
+        ref: ${{ steps.target-branch-extractor.outputs.EXTRACTED_TARGET_BRANCH }}
+        fetch-depth: 0
     - name: Run backport
       uses: ./eng/actions/backport
       with:
+        action: run-backport
+        target_branch: ${{ steps.target-branch-extractor.outputs.EXTRACTED_TARGET_BRANCH }}
         auth_token: ${{ secrets.GITHUB_TOKEN }}
         pr_description_template: |
           Backport of #%source_pr_number% to %target_branch%

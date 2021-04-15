@@ -29,27 +29,38 @@ async function run() {
   const pr_source_ref = process.env.GITHUB_REF;
   const comment_user = github.context.payload.comment.user.login;
 
-  let octokit = github.getOctokit(core.getInput("auth_token"));
-  let target_branch = "";
+  let octokit = github.getOctokit(core.getInput("auth_token", { required: true }));
+  let action = core.getInput("action", { required: true });
+  const target_branch_required = action == "run-backport";
+  let target_branch = core.getInput("target_branch", { required: target_branch_required });
 
   try {
-    // verify the comment user is a repo collaborator
-    try {
-      await octokit.repos.checkCollaborator({
-        owner: repo_owner,
-        repo: repo_name,
-        username: comment_user
-      });
-      console.log(`Verified ${comment_user} is a repo collaborator.`);
-    } catch {
-      throw new BackportException(`Error: @${comment_user} is not a repo collaborator, backporting is not allowed.`);
+    if (action == "extract-branch") {
+      // verify the comment user is a repo collaborator
+      try {
+        await octokit.repos.checkCollaborator({
+          owner: repo_owner,
+          repo: repo_name,
+          username: comment_user
+        });
+        console.log(`Verified ${comment_user} is a repo collaborator.`);
+      } catch {
+        throw new BackportException(`Error: @${comment_user} is not a repo collaborator, backporting is not allowed.`);
+      }
+
+      // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
+      console.log(`Extracting target branch`);
+      const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
+      extracted_target_branch = regex.exec(github.context.payload.comment.body)[1];
+      if (extracted_target_branch == null) throw new BackportException("Error: No backport branch found in the trigger phrase.");
+
+      core.setOutput('EXTRACTED_TARGET_BRANCH', extracted_target_branch);
+
+      return;
+    } else if (action != "run-backport") {
+      throw new BackportException("Error: Unknown action.");
     }
 
-    // extract the target branch name from the trigger phrase containing these characters: a-z, A-Z, digits, forward slash, dot, hyphen, underscore
-    console.log(`Extracting target branch`);
-    const regex = /\/backport to ([a-zA-Z\d\/\.\-\_]+)/;
-    target_branch = regex.exec(github.context.payload.comment.body)[1];
-    if (target_branch == null) throw new BackportException("Error: No backport branch found in the trigger phrase.");
     try { await exec.exec(`git ls-remote --exit-code --heads origin ${target_branch}`) } catch { throw new BackportException(`Error: The specified backport target branch ${target_branch} wasn't found in the repo.`); }
     console.log(`Backport target branch: ${target_branch}`);
 
@@ -64,8 +75,6 @@ async function run() {
 
     console.log("Applying backport patch");
 
-    await exec.exec(`git -c protocol.version=2 fetch --no-tags --progress --no-recurse-submodules origin ${target_branch} ${pr_source_ref}`);
-    await exec.exec(`git checkout ${target_branch}`);
     await exec.exec(`git clean -xdff`);
 
     // configure git
