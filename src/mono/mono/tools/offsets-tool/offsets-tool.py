@@ -84,11 +84,11 @@ class OffsetsTool:
 
 		if "wasm" in args.abi:
 			require_emscipten_path (args)
-			self.sys_includes = [args.emscripten_path + "/system/include", args.emscripten_path + "/system/include/libc", args.emscripten_path + "/system/lib/libc/musl/arch/emscripten"]
 			if platform.system() == "Windows":
 				self.sys_includes += [args.emscripten_path + "/system/lib/libc/musl/include", args.emscripten_path + "/system/lib/libc/musl/arch/generic"]
 			self.target = Target ("TARGET_WASM", None, [])
 			self.target_args += ["-target", args.abi]
+			self.target_args += ["-I", args.emscripten_path + "/cache/sysroot/include"]
 
 		# Linux
 		elif "arm-linux-gnueabihf" == args.abi:

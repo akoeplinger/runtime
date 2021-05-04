@@ -471,7 +471,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         public void CanSetValuesAndReloadValues()
         {
             WriteTestFiles();
@@ -514,7 +514,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         public async Task ReloadOnChangeWorksAfterError()
         {
             _fileSystem.WriteFile("reload.json", @"{""JsonKey1"": ""JsonValue1""}");
@@ -545,7 +545,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         public async Task TouchingFileWillReload()
         {
             _fileSystem.WriteFile("reload.json", @"{""JsonKey1"": ""JsonValue1""}");
@@ -582,7 +582,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         public async Task CreatingOptionalFileInNonExistentDirectoryWillReload()
         {
             var directory = Path.GetRandomFileName();
@@ -616,7 +616,7 @@ IniKey1=IniValue2");
         }
 
         [Theory]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         [InlineData(false)]
         [InlineData(true)]
         public async Task DeletingFilesThatRedefineKeysWithReload(bool optional)
@@ -697,7 +697,7 @@ IniKey1=IniValue2");
         }
         
         [Theory]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         [InlineData(false)]
         [InlineData(true)]
         public async Task DeletingFileWillReload(bool optional)
@@ -736,7 +736,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         public async Task CreatingWritingDeletingCreatingFileWillReload()
         {
             var config = CreateBuilder()
@@ -919,7 +919,7 @@ IniKey1=IniValue2");
         }
 
         [Fact]
-        [ActiveIssue("File watching is flaky (particularly on non windows. https://github.com/dotnet/runtime/issues/33992")]
+        [ActiveIssue("https://github.com/dotnet/runtime/issues/33992")] // File watching is flaky (particularly on non windows.
         public async Task TouchingFileWillReloadForUserSecrets()
         {
             string userSecretsId = "Test";

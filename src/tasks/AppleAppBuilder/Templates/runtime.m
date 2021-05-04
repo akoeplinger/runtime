@@ -274,7 +274,7 @@ mono_ios_runtime_init (void)
     mono_install_assembly_preload_hook (assembly_preload_hook, NULL);
     mono_install_load_aot_data_hook (load_aot_data, free_aot_data, NULL);
     mono_install_unhandled_exception_hook (unhandled_exception_handler, NULL);
-    mono_trace_set_log_handler (log_callback, NULL);
+    //mono_trace_set_log_handler (log_callback, NULL);
     mono_set_signal_chaining (TRUE);
     mono_set_crash_chaining (TRUE);
 

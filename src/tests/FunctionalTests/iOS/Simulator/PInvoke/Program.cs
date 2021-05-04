@@ -30,8 +30,11 @@ public static class Program
             invoke_external_native_api(unmanagedPtr);
         }
         Console.WriteLine("Done!");
-        await Task.Delay(5000);
+        var t = new AutoResetEvent (false);
+        var rv = t.WaitOne (30000);
+        Console.WriteLine (rv);
 
+        await Task.Delay(0);
         return counter;
     }
 }
