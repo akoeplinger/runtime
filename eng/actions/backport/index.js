@@ -37,7 +37,9 @@ async function run() {
         username: comment_user
       });
       console.log(`Verified ${comment_user} is a repo collaborator.`);
-    } catch {
+    } catch (error) {
+        
+      console.log(error);
       throw new BackportException(`Error: @${comment_user} is not a repo collaborator, backporting is not allowed.`);
     }
 
@@ -136,7 +138,7 @@ async function run() {
 
     console.log("Successfully opened the GitHub PR.");
   } catch (error) {
-
+    console.log(error);
     core.setFailed(error);
 
     if (error.postToGitHub === undefined || error.postToGitHub == true) {
