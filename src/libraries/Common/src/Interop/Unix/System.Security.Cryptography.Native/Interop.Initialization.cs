@@ -19,6 +19,14 @@ internal static partial class Interop
         }
     }
 
+    internal static partial class AndroidCrypto
+    {
+        static AndroidCrypto()
+        {
+            CryptoInitializer.Initialize();
+        }
+    }
+
     internal static partial class OpenSsl
     {
         static OpenSsl()

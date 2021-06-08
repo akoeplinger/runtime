@@ -595,3 +595,5 @@ ARGS_NON_NULL(1, 3) static inline jobjectArray make_java_object_array (JNIEnv *e
     CheckJNIExceptions(env);
     abort();
 }
+
+PALEXPORT int32_t CryptoNative_EnsureOpenSslInitialized(void);

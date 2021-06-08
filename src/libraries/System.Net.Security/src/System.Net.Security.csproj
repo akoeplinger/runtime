@@ -348,6 +348,8 @@
   <ItemGroup Condition="'$(UseAndroidCrypto)' == 'true'">
     <Compile Include="$(CommonPath)Interop\Android\Interop.Libraries.cs"
              Link="Common\Interop\Android\Interop.Libraries.cs" />
+    <Compile Include="$(CommonPath)Interop\Unix\System.Security.Cryptography.Native\Interop.Initialization.cs"
+             Link="Common\Interop\Unix\System.Security.Cryptography.Native\Interop.Initialization.cs" />
     <Compile Include="$(CommonPath)Interop\Android\Interop.JObjectLifetime.cs"
              Link="Common\Interop\Android\Interop.JObjectLifetime.cs" />
     <Compile Include="$(CommonPath)Interop\Android\System.Security.Cryptography.Native.Android\Interop.Ssl.cs"

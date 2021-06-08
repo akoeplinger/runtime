@@ -104,6 +104,8 @@
   <ItemGroup Condition="'$(UseAndroidCrypto)' == 'true'">
     <Compile Include="X509StoreMutableTests.Android.cs" />
     <Compile Include="RevocationTests\DynamicRevocationTests.Android.cs" />
+    <Compile Include="$(CommonPath)Interop\Unix\System.Security.Cryptography.Native\Interop.Initialization.cs"
+             Link="Common\Interop\Unix\System.Security.Cryptography.Native\Interop.Initialization.cs" />
     <Compile Include="$(CommonPath)Interop\Android\System.Security.Cryptography.Native.Android\Interop.X509.cs"
              Link="Common\Interop\Android\System.Security.Cryptography.Native.Android\Interop.X509.cs" />
     <Compile Include="$(CommonPath)Interop\Android\System.Security.Cryptography.Native.Android\Interop.X509Chain.cs"

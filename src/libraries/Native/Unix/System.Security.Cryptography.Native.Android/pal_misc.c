@@ -4,11 +4,6 @@
 #include "pal_misc.h"
 #include "pal_jni.h"
 
-int32_t CryptoNative_EnsureOpenSslInitialized()
-{
-    return 0;
-}
-
 int32_t CryptoNative_GetRandomBytes(uint8_t* buff, int32_t len)
 {
     // JNI requires `buff` to be not NULL when passed to `{Get,Set}ByteArrayRegion`

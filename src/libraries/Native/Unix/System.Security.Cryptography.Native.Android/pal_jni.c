@@ -594,7 +594,7 @@ jfieldID GetField(JNIEnv *env, bool isStatic, jclass klass, const char* name, co
     return fid;
 }
 
-static void DetatchThreadFromJNI(void* unused)
+static void DetachThreadFromJNI(void* unused)
 {
     LOG_DEBUG("Detaching thread from JNI");
     (void)unused;
@@ -607,7 +607,7 @@ static pthread_once_t threadLocalEnvInitKey = PTHREAD_ONCE_INIT;
 static void
 make_key()
 {
-    (void) pthread_key_create(&threadLocalEnvKey, &DetatchThreadFromJNI);
+    (void) pthread_key_create(&threadLocalEnvKey, &DetachThreadFromJNI);
 }
 
 JNIEnv* GetJNIEnv()
@@ -641,8 +641,16 @@ JNI_OnLoad(JavaVM *vm, void *reserved)
     gJvm = vm;
 
     JNIEnv* env = GetJNIEnv();
+    assert(env);
 
-    // cache some classes and methods while we're in the thread-safe JNI_OnLoad
+    return JNI_VERSION_1_6;
+}
+
+int32_t CryptoNative_EnsureOpenSslInitialized()
+{
+    JNIEnv* env = GetJNIEnv();
+
+    // cache some classes and methods while we're in the thread-safe CryptoNative_EnsureOpenSslInitialized
     g_ByteArrayInputStreamClass =   GetClassGRef(env, "java/io/ByteArrayInputStream");
     g_ByteArrayInputStreamCtor =    GetMethod(env, false, g_ByteArrayInputStreamClass, "<init>", "([B)V");
     g_ByteArrayInputStreamReset =    GetMethod(env, false, g_ByteArrayInputStreamClass, "reset", "()V");
@@ -1014,5 +1022,5 @@ JNI_OnLoad(JavaVM *vm, void *reserved)
     g_KeyAgreementDoPhase        = GetMethod(env, false, g_KeyAgreementClass, "doPhase", "(Ljava/security/Key;Z)Ljava/security/Key;");
     g_KeyAgreementGenerateSecret = GetMethod(env, false, g_KeyAgreementClass, "generateSecret", "()[B");
 
-    return JNI_VERSION_1_6;
+    return 0;
 }
