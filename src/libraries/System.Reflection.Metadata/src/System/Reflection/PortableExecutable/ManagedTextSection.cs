@@ -154,7 +154,7 @@ namespace System.Reflection.PortableExecutable
                 DebugDataSize;
         }
 
-        private const int CorHeaderSize =
+        internal const int CorHeaderSize =
             sizeof(int) +    // header size
             sizeof(short) +  // major runtime version
             sizeof(short) +  // minor runtime version
@@ -166,7 +166,7 @@ namespace System.Reflection.PortableExecutable
             sizeof(long) +   // code manager table directory
             sizeof(long) +   // vtable fixups directory
             sizeof(long) +   // export address table jumps directory
-            sizeof(long);   // managed-native header directory
+            sizeof(long);    // managed-native header directory
 
         public int OffsetToILStream => SizeOfImportAddressTable + CorHeaderSize;
 

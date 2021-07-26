@@ -34,23 +34,25 @@ namespace System.Reflection.Metadata.Ecma335
 
         // #US heap
         private const int UserStringHeapSizeLimit = 0x01000000;
-        private readonly Dictionary<string, UserStringHandle> _userStrings = new Dictionary<string, UserStringHandle>(256);
-        private readonly HeapBlobBuilder _userStringBuilder = new HeapBlobBuilder(4 * 1024);
+        private readonly Dictionary<string, UserStringHandle>? _userStrings;
+        private readonly HeapBlobBuilder _userStringHeapBuilder;
         private readonly int _userStringHeapStartOffset;
 
         // #String heap
-        private readonly Dictionary<string, StringHandle> _strings = new Dictionary<string, StringHandle>(256);
+        private readonly Dictionary<string, StringHandle>? _strings;
+        private HeapBlobBuilder? _stringHeapBuilder;
         private readonly int _stringHeapStartOffset;
         private int _stringHeapCapacity = 4 * 1024;
 
         // #Blob heap
-        private readonly Dictionary<ImmutableArray<byte>, BlobHandle> _blobs = new Dictionary<ImmutableArray<byte>, BlobHandle>(1024, ByteSequenceComparer.Instance);
+        private readonly Dictionary<ImmutableArray<byte>, BlobHandle>? _blobs;
+        private readonly HeapBlobBuilder? _blobHeapBuilder;
         private readonly int _blobHeapStartOffset;
         private int _blobHeapSize;
 
         // #GUID heap
-        private readonly Dictionary<Guid, GuidHandle> _guids = new Dictionary<Guid, GuidHandle>();
-        private readonly HeapBlobBuilder _guidBuilder = new HeapBlobBuilder(16); // full metadata has just a single guid
+        private readonly Dictionary<Guid, GuidHandle>? _guids;
+        private readonly HeapBlobBuilder _guidHeapBuilder;
 
         /// <summary>
         /// Creates a builder for metadata tables and heaps.
@@ -111,14 +113,23 @@ namespace System.Reflection.Metadata.Ecma335
                 throw new ArgumentException(SR.Format(SR.ValueMustBeMultiple, BlobUtilities.SizeOfGuid), nameof(guidHeapStartOffset));
             }
 
+            _strings = new Dictionary<string, StringHandle>(256);
+            _userStrings = new Dictionary<string, UserStringHandle>(256);
+            _userStringHeapBuilder = new HeapBlobBuilder(4 * 1024);
+            _stringHeapBuilder = null;
+            _blobHeapBuilder = null;
+            _blobs = new Dictionary<ImmutableArray<byte>, BlobHandle>(1024, ByteSequenceComparer.Instance);
+            _guids = new Dictionary<Guid, GuidHandle>();
+            _guidHeapBuilder = new HeapBlobBuilder(16); // full metadata has just a single guid
+
             // Add zero-th entry to all heaps, even in EnC delta.
             // We don't want generation-relative handles to ever be IsNil.
             // In both full and delta metadata all nil heap handles should have zero value.
             // There should be no blob handle that references the 0 byte added at the
             // beginning of the delta blob.
-            _userStringBuilder.WriteByte(0);
+            _userStringHeapBuilder.WriteByte(0);
 
-            _blobs.Add(ImmutableArray<byte>.Empty, default(BlobHandle));
+            _blobs.Add(ImmutableArray<byte>.Empty, default);
             _blobHeapSize = 1;
 
             // When EnC delta is applied #US, #String and #Blob heaps are appended.
@@ -129,8 +140,47 @@ namespace System.Reflection.Metadata.Ecma335
             _blobHeapStartOffset = blobHeapStartOffset;
 
             // Unlike other heaps, #Guid heap in EnC delta is zero-padded.
-            _guidBuilder.WriteBytes(0, guidHeapStartOffset);
+            _guidHeapBuilder.WriteBytes(0, guidHeapStartOffset);
         }
+
+        private MetadataBuilder(MetadataReader reader, int methodBodyStreamRva, int mappedFieldDataStreamRva, bool clearMethodBodies)
+        {
+            static unsafe HeapBlobBuilder createHeapBuilder(MemoryBlock block)
+            {
+                var builder = new HeapBlobBuilder(block.Length);
+                builder.WriteBytes(block.Pointer, block.Length);
+                return builder;
+            }
+
+            _strings = null;
+            _userStrings = null;
+            _blobs = null;
+            _guids = null;
+
+            _userStringHeapBuilder = createHeapBuilder(reader.UserStringHeap.Block);
+            _stringHeapBuilder = createHeapBuilder(reader.StringHeap.Block);
+            _blobHeapBuilder = createHeapBuilder(reader.BlobHeap.Block);
+            _guidHeapBuilder = createHeapBuilder(reader.GuidHeap.Block);
+
+            _assemblyRow = reader.AssemblyTable.GetRow();
+            _moduleRow = reader.ModuleTable.GetRow();
+
+            reader.MethodDefTable.CopyTo(_methodDefTable, methodBodyStreamRva, clearMethodBodies);
+            reader.FieldTable.CopyTo(_fieldTable);
+            reader.FieldRvaTable.CopyTo(_fieldRvaTable, mappedFieldDataStreamRva);
+            reader.ParamTable.CopyTo(_paramTable);
+            reader.MemberRefTable.CopyTo(_memberRefTable);
+            reader.CustomAttributeTable.CopyTo(_customAttributeTable);
+            reader.AssemblyRefTable.CopyTo(_assemblyRefTable);
+
+            // TODO: more tables
+        }
+
+        public static MetadataBuilder CreateFrom(MetadataReader reader)
+            => new MetadataBuilder(reader, 0, 0, true);
+
+        public static MetadataBuilder CreateFrom(MetadataReader reader, int methodBodyStreamRva, int mappedFieldDataStreamRva)
+            => new MetadataBuilder(reader, methodBodyStreamRva, mappedFieldDataStreamRva, false);
 
         /// <summary>
         /// Sets the capacity of the specified table.
@@ -157,7 +207,7 @@ namespace System.Reflection.Metadata.Ecma335
                     break;
 
                 case HeapIndex.Guid:
-                    _guidBuilder.SetCapacity(byteCount);
+                    _guidHeapBuilder.SetCapacity(byteCount);
                     break;
 
                 case HeapIndex.String:
@@ -165,7 +215,7 @@ namespace System.Reflection.Metadata.Ecma335
                     break;
 
                 case HeapIndex.UserString:
-                    _userStringBuilder.SetCapacity(byteCount);
+                    _userStringHeapBuilder.SetCapacity(byteCount);
                     break;
 
                 default:
@@ -175,7 +225,9 @@ namespace System.Reflection.Metadata.Ecma335
         }
 
         // internal for testing
-        internal int SerializeHandle(ImmutableArray<int> map, StringHandle handle) => map[handle.GetWriterVirtualIndex()];
+        internal int SerializeHandle(ImmutableArray<int> map, StringHandle handle)
+            => map.IsDefault ? handle.GetHeapOffset() : map[handle.GetWriterVirtualIndex()];
+
         internal int SerializeHandle(BlobHandle handle) => handle.GetHeapOffset();
         internal int SerializeHandle(GuidHandle handle) => handle.Index;
         internal int SerializeHandle(UserStringHandle handle) => handle.GetHeapOffset();
@@ -225,6 +277,12 @@ namespace System.Reflection.Metadata.Ecma335
             if (value.IsDefault)
             {
                 Throw.ArgumentNull(nameof(value));
+            }
+
+            if (_blobs == null)
+            {
+                // TODO: We can allow this - as soon as a new blob is added we can hydrate _blobs fom _blobHeapBuilder
+                Throw.InvalidOperation("Can't add new blobs to a builder created from a reader");
             }
 
             BlobHandle handle;
@@ -379,6 +437,11 @@ namespace System.Reflection.Metadata.Ecma335
                 return default(GuidHandle);
             }
 
+            if (_guids == null)
+            {
+                Throw.InvalidOperation("Can't add new guids to a builder created from a reader");
+            }
+
             GuidHandle result;
             if (_guids.TryGetValue(guid, out result))
             {
@@ -387,7 +450,7 @@ namespace System.Reflection.Metadata.Ecma335
 
             result = GetNewGuidHandle();
             _guids.Add(guid, result);
-            _guidBuilder.WriteGuid(guid);
+            _guidHeapBuilder.WriteGuid(guid);
             return result;
         }
 
@@ -401,7 +464,7 @@ namespace System.Reflection.Metadata.Ecma335
         public ReservedBlob<GuidHandle> ReserveGuid()
         {
             var handle = GetNewGuidHandle();
-            var content = _guidBuilder.ReserveBytes(BlobUtilities.SizeOfGuid);
+            var content = _guidHeapBuilder.ReserveBytes(BlobUtilities.SizeOfGuid);
             return new ReservedBlob<GuidHandle>(handle, content);
         }
 
@@ -415,7 +478,7 @@ namespace System.Reflection.Metadata.Ecma335
             // Metadata Spec:
             // The Guid heap is an array of GUIDs, each 16 bytes wide.
             // Its first element is numbered 1, its second 2, and so on.
-            return GuidHandle.FromIndex((_guidBuilder.Count >> 4) + 1);
+            return GuidHandle.FromIndex((_guidHeapBuilder.Count >> 4) + 1);
         }
 
         /// <summary>
@@ -431,10 +494,16 @@ namespace System.Reflection.Metadata.Ecma335
                 Throw.ArgumentNull(nameof(value));
             }
 
+            if (_strings == null)
+            {
+                // TODO: We can allow this - as soon as a new string is added we can hydrate _strings fom _stringHeapBuilder
+                Throw.InvalidOperation("Can't add new strings to a builder created from a reader");
+            }
+
             StringHandle handle;
             if (value.Length == 0)
             {
-                handle = default(StringHandle);
+                handle = default;
             }
             else if (!_strings.TryGetValue(value, out handle))
             {
@@ -466,7 +535,7 @@ namespace System.Reflection.Metadata.Ecma335
 
             var handle = GetNewUserStringHandle();
             int encodedLength = BlobUtilities.GetUserStringByteLength(length);
-            var reservedUserString = _userStringBuilder.ReserveBytes(BlobWriterImpl.GetCompressedIntegerSize(encodedLength) + encodedLength);
+            var reservedUserString = _userStringHeapBuilder.ReserveBytes(BlobWriterImpl.GetCompressedIntegerSize(encodedLength) + encodedLength);
             return new ReservedBlob<UserStringHandle>(handle, reservedUserString);
         }
 
@@ -487,13 +556,18 @@ namespace System.Reflection.Metadata.Ecma335
                 Throw.ArgumentNull(nameof(value));
             }
 
+            if (_userStrings == null)
+            {
+                Throw.InvalidOperation("Can't add new user strings to a builder created from a reader");
+            }
+
             UserStringHandle handle;
             if (!_userStrings.TryGetValue(value, out handle))
             {
                 handle = GetNewUserStringHandle();
 
                 _userStrings.Add(value, handle);
-                _userStringBuilder.WriteUserString(value);
+                _userStringHeapBuilder.WriteUserString(value);
             }
 
             return handle;
@@ -501,7 +575,7 @@ namespace System.Reflection.Metadata.Ecma335
 
         private UserStringHandle GetNewUserStringHandle()
         {
-            int offset = _userStringHeapStartOffset + _userStringBuilder.Count;
+            int offset = _userStringHeapStartOffset + _userStringHeapBuilder.Count;
 
             // Native metadata emitter allows strings to exceed the heap size limit as long
             // as the index is within the limits (see https://github.com/dotnet/roslyn/issues/9852)
@@ -592,9 +666,18 @@ namespace System.Reflection.Metadata.Ecma335
         internal void WriteHeapsTo(BlobBuilder builder, BlobBuilder stringHeap)
         {
             WriteAligned(stringHeap, builder);
-            WriteAligned(_userStringBuilder, builder);
-            WriteAligned(_guidBuilder, builder);
-            WriteAlignedBlobHeap(builder);
+            WriteAligned(_userStringHeapBuilder, builder);
+            WriteAligned(_guidHeapBuilder, builder);
+
+            if (_blobs != null)
+            {
+                WriteAlignedBlobHeap(builder);
+            }
+            else
+            {
+                Debug.Assert(_blobHeapBuilder != null);
+                WriteAligned(_blobHeapBuilder, builder);
+            }
         }
 
         private void WriteAlignedBlobHeap(BlobBuilder builder)
@@ -609,6 +692,12 @@ namespace System.Reflection.Metadata.Ecma335
             // the entries by heap position before running this loop.
 
             int startOffset = _blobHeapStartOffset;
+
+            if (_blobs == null)
+            {
+                Throw.InvalidOperation("blobs shouldn't be null");
+            }
+
             foreach (var entry in _blobs)
             {
                 int heapOffset = entry.Value.GetHeapOffset();

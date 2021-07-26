@@ -95,17 +95,41 @@ namespace System.Reflection.PortableExecutable
             SizeOfHeapCommit = sizeOfHeapCommit;
         }
 
-        public static PEHeaderBuilder CreateExecutableHeader()
+        private PEHeaderBuilder(PEHeader peHeader, CoffHeader coffHeader)
+            : this(
+                machine: coffHeader.Machine,
+                sectionAlignment: peHeader.SectionAlignment,
+                fileAlignment: peHeader.FileAlignment,
+                imageBase: peHeader.ImageBase,
+                majorLinkerVersion: peHeader.MajorLinkerVersion,
+                minorLinkerVersion: peHeader.MinorLinkerVersion,
+                majorOperatingSystemVersion: peHeader.MajorOperatingSystemVersion,
+                minorOperatingSystemVersion: peHeader.MinorOperatingSystemVersion,
+                majorImageVersion: peHeader.MajorImageVersion,
+                minorImageVersion: peHeader.MinorImageVersion,
+                majorSubsystemVersion: peHeader.MajorSubsystemVersion,
+                minorSubsystemVersion: peHeader.MinorSubsystemVersion,
+                subsystem: peHeader.Subsystem,
+                dllCharacteristics: peHeader.DllCharacteristics,
+                imageCharacteristics: coffHeader.Characteristics,
+                sizeOfStackReserve: peHeader.SizeOfStackReserve,
+                sizeOfStackCommit: peHeader.SizeOfStackCommit,
+                sizeOfHeapReserve: peHeader.SizeOfHeapReserve,
+                sizeOfHeapCommit: peHeader.SizeOfHeapCommit)
         {
-            return new PEHeaderBuilder(imageCharacteristics: Characteristics.ExecutableImage);
         }
+
+        public static PEHeaderBuilder CreateExecutableHeader()
+            => new PEHeaderBuilder(imageCharacteristics : Characteristics.ExecutableImage);
 
         public static PEHeaderBuilder CreateLibraryHeader()
-        {
-            return new PEHeaderBuilder(imageCharacteristics: Characteristics.ExecutableImage | Characteristics.Dll);
-        }
+            => new PEHeaderBuilder(imageCharacteristics: Characteristics.ExecutableImage | Characteristics.Dll);
 
-        internal bool Is32Bit => Machine != Machine.Amd64 && Machine != Machine.IA64 && Machine != Machine.Arm64;
+        public static PEHeaderBuilder CreateFrom(PEHeader header, CoffHeader coffHeader)
+            => new PEHeaderBuilder(header, coffHeader);
+
+        internal bool Is32Bit
+            => Machine != Machine.Amd64 && Machine != Machine.IA64 && Machine != Machine.Arm64;
 
         internal int ComputeSizeOfPEHeaders(int sectionCount) =>
             PEBuilder.DosHeaderSize +

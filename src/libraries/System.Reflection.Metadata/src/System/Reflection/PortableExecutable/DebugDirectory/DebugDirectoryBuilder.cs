@@ -26,6 +26,18 @@ namespace System.Reflection.PortableExecutable
             _dataBuilder = new BlobBuilder();
         }
 
+        public static DebugDirectoryBuilder CreateFrom(PEReader peReader)
+        {
+            var builder = new DebugDirectoryBuilder();
+            var peImage = peReader.GetEntireImage();
+            foreach (var entry in peReader.ReadDebugDirectory())
+            {
+                builder.AddEntry(peImage, entry);
+            }
+
+            return builder;
+        }
+
         internal void AddEntry(DebugDirectoryEntryType type, uint version, uint stamp, int dataSize)
         {
             _entries.Add(new Entry()
@@ -35,6 +47,21 @@ namespace System.Reflection.PortableExecutable
                 Type = type,
                 DataSize = dataSize,
             });
+        }
+
+        /// <summary>
+        /// Adds an entry.
+        /// </summary>
+        /// <param name="peImage">PE image.</param>
+        /// <param name="entry">Entry.</param>
+        public void AddEntry(PEMemoryBlock peImage, DebugDirectoryEntry entry)
+        {
+            unsafe
+            {
+                _dataBuilder.WriteBytes(peImage.Pointer + entry.DataPointer, entry.DataSize);
+            }
+
+            AddEntry(entry.Type, ((uint)entry.MinorVersion << 16) | entry.MajorVersion, entry.Stamp, entry.DataSize);
         }
 
         /// <summary>

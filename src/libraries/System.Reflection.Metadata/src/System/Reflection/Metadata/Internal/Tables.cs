@@ -1,6 +1,7 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection.Internal;
 
@@ -67,6 +68,18 @@ namespace System.Reflection.Metadata.Ecma335
         {
             Debug.Assert(NumberOfRows > 0);
             return GuidHandle.FromIndex(this.Block.PeekHeapReference(_EnCBaseIdOffset, _IsGUIDHeapRefSizeSmall));
+        }
+
+        internal MetadataBuilder.ModuleRow GetRow()
+        {
+            return new MetadataBuilder.ModuleRow
+            {
+                Generation = Block.PeekUInt16(_GenerationOffset),
+                Name = StringHandle.FromOffset(Block.PeekHeapReference(_NameOffset, _IsStringHeapRefSizeSmall)),
+                ModuleVersionId = GuidHandle.FromIndex(Block.PeekHeapReference(_MVIdOffset, _IsGUIDHeapRefSizeSmall)),
+                EncId = GuidHandle.FromIndex(Block.PeekHeapReference(_EnCIdOffset, _IsGUIDHeapRefSizeSmall)),
+                EncBaseId = GuidHandle.FromIndex(Block.PeekHeapReference(_EnCBaseIdOffset, _IsGUIDHeapRefSizeSmall)),
+            };
         }
     }
 
@@ -363,6 +376,20 @@ namespace System.Reflection.Metadata.Ecma335
             int rowOffset = (handle.RowId - 1) * this.RowSize;
             return BlobHandle.FromOffset(this.Block.PeekHeapReference(rowOffset + _SignatureOffset, _IsBlobHeapRefSizeSmall));
         }
+
+        internal void CopyTo(List<MetadataBuilder.FieldDefRow> rows)
+        {
+            rows.Capacity = NumberOfRows;
+            for (int rowOffset = 0, tableSize = NumberOfRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                rows.Add(new MetadataBuilder.FieldDefRow
+                {
+                    Flags = Block.PeekUInt16(rowOffset + _FlagsOffset),
+                    Name = StringHandle.FromOffset(Block.PeekHeapReference(rowOffset + _NameOffset, _IsStringHeapRefSizeSmall)),
+                    Signature = BlobHandle.FromOffset(Block.PeekHeapReference(rowOffset + _SignatureOffset, _IsBlobHeapRefSizeSmall)),
+                });
+            }
+        }
     }
 
     internal readonly struct MethodPtrTableReader
@@ -473,6 +500,44 @@ namespace System.Reflection.Metadata.Ecma335
             int rowOffset = (handle.RowId - 1) * this.RowSize;
             return (MethodImplAttributes)this.Block.PeekUInt16(rowOffset + _ImplFlagsOffset);
         }
+
+        internal int FindMinimalMethodBodyRva()
+        {
+            if (NumberOfRows == 0)
+            {
+                return -1;
+            }
+
+            int result = int.MaxValue;
+            for (int offset = _RvaOffset, tableSize = NumberOfRows * RowSize; offset < tableSize; offset += RowSize)
+            {
+                var rva = Block.PeekInt32(offset);
+                if (rva > 0 && rva < result)
+                {
+                    result = rva;
+                }
+            }
+
+            return result;
+        }
+
+        internal void CopyTo(List<MetadataBuilder.MethodRow> rows, int methodBodyStreamRva, bool clearMethodBodies)
+        {
+            rows.Capacity = NumberOfRows;
+            for (int rowOffset = 0, tableSize = NumberOfRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                var rva = Block.PeekInt32(rowOffset + _RvaOffset);
+                rows.Add(new MetadataBuilder.MethodRow
+                {
+                    Flags = Block.PeekUInt16(rowOffset + _FlagsOffset),
+                    ImplFlags = Block.PeekUInt16(rowOffset + _ImplFlagsOffset),
+                    Name = StringHandle.FromOffset(Block.PeekHeapReference(rowOffset + _NameOffset, _IsStringHeapRefSizeSmall)),
+                    Signature = BlobHandle.FromOffset(Block.PeekHeapReference(rowOffset + _SignatureOffset, _IsBlobHeapRefSizeSmall)),
+                    BodyOffset = clearMethodBodies ? -1 : (rva == 0) ? 0 : rva - methodBodyStreamRva,
+                    ParamList = Block.PeekReference(rowOffset + _ParamListOffset, _IsParamRefSizeSmall)
+                });
+            }
+        }
     }
 
     internal readonly struct ParamPtrTableReader
@@ -546,6 +611,20 @@ namespace System.Reflection.Metadata.Ecma335
         {
             int rowOffset = (handle.RowId - 1) * this.RowSize;
             return StringHandle.FromOffset(this.Block.PeekHeapReference(rowOffset + _NameOffset, _IsStringHeapRefSizeSmall));
+        }
+
+        internal void CopyTo(List<MetadataBuilder.ParamRow> rows)
+        {
+            rows.Capacity = NumberOfRows;
+            for (int rowOffset = 0, tableSize = NumberOfRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                rows.Add(new MetadataBuilder.ParamRow
+                {
+                    Flags = Block.PeekUInt16(rowOffset + _FlagsOffset),
+                    Name = StringHandle.FromOffset(Block.PeekHeapReference(rowOffset + _NameOffset, _IsStringHeapRefSizeSmall)),
+                    Sequence = Block.PeekUInt16(rowOffset + _SequenceOffset),
+                });
+            }
         }
     }
 
@@ -671,6 +750,20 @@ namespace System.Reflection.Metadata.Ecma335
         {
             int rowOffset = (handle.RowId - 1) * this.RowSize;
             return MemberRefParentTag.ConvertToHandle(this.Block.PeekTaggedReference(rowOffset + _ClassOffset, _IsMemberRefParentRefSizeSmall));
+        }
+
+        internal void CopyTo(List<MetadataBuilder.MemberRefRow> rows)
+        {
+            rows.Capacity = NumberOfRows;
+            for (int rowOffset = 0, tableSize = NumberOfRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                rows.Add(new MetadataBuilder.MemberRefRow
+                {
+                    Class = unchecked((int)Block.PeekTaggedReference(rowOffset + _ClassOffset, _IsMemberRefParentRefSizeSmall)),
+                    Name = StringHandle.FromOffset(Block.PeekHeapReference(rowOffset + _NameOffset, _IsStringHeapRefSizeSmall)),
+                    Signature = BlobHandle.FromOffset(Block.PeekHeapReference(rowOffset + _SignatureOffset, _IsBlobHeapRefSizeSmall)),
+                });
+            }
         }
     }
 
@@ -808,6 +901,20 @@ namespace System.Reflection.Metadata.Ecma335
         {
             int rowOffset = (handle.RowId - 1) * this.RowSize;
             return BlobHandle.FromOffset(this.Block.PeekHeapReference(rowOffset + _ValueOffset, _IsBlobHeapRefSizeSmall));
+        }
+
+        internal void CopyTo(List<MetadataBuilder.CustomAttributeRow> rows)
+        {
+            rows.Capacity = NumberOfRows;
+            for (int rowOffset = 0, tableSize = NumberOfRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                rows.Add(new MetadataBuilder.CustomAttributeRow
+                {
+                    Parent = unchecked((int)Block.PeekTaggedReference(rowOffset + _ParentOffset, _IsHasCustomAttributeRefSizeSmall)),
+                    Type = unchecked((int)Block.PeekTaggedReference(rowOffset + _TypeOffset, _IsCustomAttributeTypeRefSizeSmall)),
+                    Value = BlobHandle.FromOffset(Block.PeekHeapReference(rowOffset + _ValueOffset, _IsBlobHeapRefSizeSmall)),
+                });
+            }
         }
 
         internal void GetAttributeRange(EntityHandle parentHandle, out int firstImplRowId, out int lastImplRowId)
@@ -1744,7 +1851,7 @@ namespace System.Reflection.Metadata.Ecma335
         }
     }
 
-    internal readonly struct FieldRVATableReader
+    internal readonly struct FieldRvaTableReader
     {
         internal readonly int NumberOfRows;
         private readonly bool _IsFieldTableRowRefSizeSmall;
@@ -1753,7 +1860,7 @@ namespace System.Reflection.Metadata.Ecma335
         internal readonly int RowSize;
         internal readonly MemoryBlock Block;
 
-        internal FieldRVATableReader(
+        internal FieldRvaTableReader(
             int numberOfRows,
             bool declaredSorted,
             int fieldTableRowRefSize,
@@ -1777,6 +1884,39 @@ namespace System.Reflection.Metadata.Ecma335
         {
             int rowOffset = (rowId - 1) * this.RowSize;
             return Block.PeekInt32(rowOffset + _RvaOffset);
+        }
+
+        internal void CopyTo(List<MetadataBuilder.FieldRvaRow> rows, int mappedFieldDataStreamRva)
+        {
+            rows.Capacity = NumberOfRows;
+            for (int rowOffset = 0, tableSize = NumberOfRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                rows.Add(new MetadataBuilder.FieldRvaRow
+                {
+                    Offset = Block.PeekInt32(rowOffset + _RvaOffset) - mappedFieldDataStreamRva,
+                    Field = Block.PeekReference(rowOffset + _FieldOffset, _IsFieldTableRowRefSizeSmall),
+                });
+            }
+        }
+
+        internal int FindMinimalRva()
+        {
+            if (NumberOfRows == 0)
+            {
+                return 0;
+            }
+
+            int result = int.MaxValue;
+            for (int offset = _RvaOffset, tableSize = NumberOfRows * RowSize; offset < tableSize; offset += RowSize)
+            {
+                var rva = Block.PeekInt32(offset);
+                if (rva < result)
+                {
+                    result = rva;
+                }
+            }
+
+            return result;
         }
 
         internal int FindFieldRvaRowId(int fieldDefRowId)
@@ -1943,6 +2083,23 @@ namespace System.Reflection.Metadata.Ecma335
             Debug.Assert(NumberOfRows == 1);
             return StringHandle.FromOffset(this.Block.PeekHeapReference(_CultureOffset, _IsStringHeapRefSizeSmall));
         }
+
+        internal MetadataBuilder.AssemblyRow GetRow()
+        {
+            return new MetadataBuilder.AssemblyRow
+            {
+                HashAlgorithm = Block.PeekUInt32(_HashAlgIdOffset),
+                Version = new Version(
+                    Block.PeekUInt16(_MajorVersionOffset),
+                    Block.PeekUInt16(_MinorVersionOffset),
+                    Block.PeekUInt16(_BuildNumberOffset),
+                    Block.PeekUInt16(_RevisionNumberOffset)),
+                Flags = Block.PeekUInt32(_FlagsOffset),
+                AssemblyKey = BlobHandle.FromOffset(Block.PeekHeapReference(_PublicKeyOffset, _IsBlobHeapRefSizeSmall)),
+                AssemblyName = StringHandle.FromOffset(Block.PeekHeapReference(_NameOffset, _IsStringHeapRefSizeSmall)),
+                AssemblyCulture = StringHandle.FromOffset(Block.PeekHeapReference(_CultureOffset, _IsStringHeapRefSizeSmall)),
+            };
+        }
     }
 
     internal readonly struct AssemblyProcessorTableReader
@@ -2076,6 +2233,27 @@ namespace System.Reflection.Metadata.Ecma335
         {
             int rowOffset = (rowId - 1) * this.RowSize;
             return BlobHandle.FromOffset(this.Block.PeekHeapReference(rowOffset + _HashValueOffset, _IsBlobHeapRefSizeSmall));
+        }
+
+        internal void CopyTo(List<MetadataBuilder.AssemblyRefTableRow> rows)
+        {
+            rows.Capacity = NumberOfNonVirtualRows;
+            for (int rowOffset = 0, tableSize = NumberOfNonVirtualRows * RowSize; rowOffset < tableSize; rowOffset += RowSize)
+            {
+                rows.Add(new MetadataBuilder.AssemblyRefTableRow
+                {
+                    Version = new Version(
+                    Block.PeekUInt16(rowOffset + _MajorVersionOffset),
+                    Block.PeekUInt16(rowOffset + _MinorVersionOffset),
+                    Block.PeekUInt16(rowOffset + _BuildNumberOffset),
+                    Block.PeekUInt16(rowOffset + _RevisionNumberOffset)),
+                    PublicKeyToken = BlobHandle.FromOffset(Block.PeekHeapReference(rowOffset + _PublicKeyOrTokenOffset, _IsBlobHeapRefSizeSmall)),
+                    Name = StringHandle.FromOffset(Block.PeekHeapReference(rowOffset + _NameOffset, _IsStringHeapRefSizeSmall)),
+                    Culture = StringHandle.FromOffset(Block.PeekHeapReference(rowOffset + _CultureOffset, _IsStringHeapRefSizeSmall)),
+                    Flags = Block.PeekUInt32(rowOffset + _FlagsOffset),
+                    HashValue = BlobHandle.FromOffset(Block.PeekHeapReference(rowOffset + _HashValueOffset, _IsBlobHeapRefSizeSmall)),
+                });
+            }
         }
     }
 

@@ -14,52 +14,52 @@ namespace System.Reflection.Metadata.Ecma335
         private const byte MetadataFormatMinorVersion = 0;
 
         // type system table rows:
-        private struct AssemblyRefTableRow { public Version Version; public BlobHandle PublicKeyToken; public StringHandle Name; public StringHandle Culture; public uint Flags; public BlobHandle HashValue; }
-        private struct ModuleRow { public ushort Generation; public StringHandle Name; public GuidHandle ModuleVersionId; public GuidHandle EncId; public GuidHandle EncBaseId; }
-        private struct AssemblyRow { public uint HashAlgorithm; public Version Version; public ushort Flags; public BlobHandle AssemblyKey; public StringHandle AssemblyName; public StringHandle AssemblyCulture; }
-        private struct ClassLayoutRow { public ushort PackingSize; public uint ClassSize; public int Parent; }
-        private struct ConstantRow { public byte Type; public int Parent; public BlobHandle Value; }
-        private struct CustomAttributeRow { public int Parent; public int Type; public BlobHandle Value; }
-        private struct DeclSecurityRow { public ushort Action; public int Parent; public BlobHandle PermissionSet; }
-        private struct EncLogRow { public int Token; public byte FuncCode; }
-        private struct EncMapRow { public int Token; }
-        private struct EventRow { public ushort EventFlags; public StringHandle Name; public int EventType; }
-        private struct EventMapRow { public int Parent; public int EventList; }
-        private struct ExportedTypeRow { public uint Flags; public int TypeDefId; public StringHandle TypeName; public StringHandle TypeNamespace; public int Implementation; }
-        private struct FieldLayoutRow { public int Offset; public int Field; }
-        private struct FieldMarshalRow { public int Parent; public BlobHandle NativeType; }
-        private struct FieldRvaRow { public int Offset; public int Field; }
-        private struct FieldDefRow { public ushort Flags; public StringHandle Name; public BlobHandle Signature; }
-        private struct FileTableRow { public uint Flags; public StringHandle FileName; public BlobHandle HashValue; }
-        private struct GenericParamConstraintRow { public int Owner; public int Constraint; }
-        private struct GenericParamRow { public ushort Number; public ushort Flags; public int Owner; public StringHandle Name; }
-        private struct ImplMapRow { public ushort MappingFlags; public int MemberForwarded; public StringHandle ImportName; public int ImportScope; }
-        private struct InterfaceImplRow { public int Class; public int Interface; }
-        private struct ManifestResourceRow { public uint Offset; public uint Flags; public StringHandle Name; public int Implementation; }
-        private struct MemberRefRow { public int Class; public StringHandle Name; public BlobHandle Signature; }
-        private struct MethodImplRow { public int Class; public int MethodBody; public int MethodDecl; }
-        private struct MethodSemanticsRow { public ushort Semantic; public int Method; public int Association; }
-        private struct MethodSpecRow { public int Method; public BlobHandle Instantiation; }
-        private struct MethodRow { public int BodyOffset; public ushort ImplFlags; public ushort Flags; public StringHandle Name; public BlobHandle Signature; public int ParamList; }
-        private struct ModuleRefRow { public StringHandle Name; }
-        private struct NestedClassRow { public int NestedClass; public int EnclosingClass; }
-        private struct ParamRow { public ushort Flags; public ushort Sequence; public StringHandle Name; }
-        private struct PropertyMapRow { public int Parent; public int PropertyList; }
-        private struct PropertyRow { public ushort PropFlags; public StringHandle Name; public BlobHandle Type; }
-        private struct TypeDefRow { public uint Flags; public StringHandle Name; public StringHandle Namespace; public int Extends; public int FieldList; public int MethodList; }
-        private struct TypeRefRow { public int ResolutionScope; public StringHandle Name; public StringHandle Namespace; }
-        private struct TypeSpecRow { public BlobHandle Signature; }
-        private struct StandaloneSigRow { public BlobHandle Signature; }
+        internal struct AssemblyRefTableRow { public Version Version; public BlobHandle PublicKeyToken; public StringHandle Name; public StringHandle Culture; public uint Flags; public BlobHandle HashValue; }
+        internal struct ModuleRow { public ushort Generation; public StringHandle Name; public GuidHandle ModuleVersionId; public GuidHandle EncId; public GuidHandle EncBaseId; }
+        internal struct AssemblyRow { public uint HashAlgorithm; public Version Version; public uint Flags; public BlobHandle AssemblyKey; public StringHandle AssemblyName; public StringHandle AssemblyCulture; }
+        internal struct ClassLayoutRow { public ushort PackingSize; public uint ClassSize; public int Parent; }
+        internal struct ConstantRow { public byte Type; public int Parent; public BlobHandle Value; }
+        internal struct CustomAttributeRow { public int Parent; public int Type; public BlobHandle Value; }
+        internal struct DeclSecurityRow { public ushort Action; public int Parent; public BlobHandle PermissionSet; }
+        internal struct EncLogRow { public int Token; public byte FuncCode; }
+        internal struct EncMapRow { public int Token; }
+        internal struct EventRow { public ushort EventFlags; public StringHandle Name; public int EventType; }
+        internal struct EventMapRow { public int Parent; public int EventList; }
+        internal struct ExportedTypeRow { public uint Flags; public int TypeDefId; public StringHandle TypeName; public StringHandle TypeNamespace; public int Implementation; }
+        internal struct FieldLayoutRow { public int Offset; public int Field; }
+        internal struct FieldMarshalRow { public int Parent; public BlobHandle NativeType; }
+        internal struct FieldRvaRow { public int Offset; public int Field; }
+        internal struct FieldDefRow { public ushort Flags; public StringHandle Name; public BlobHandle Signature; }
+        internal struct FileTableRow { public uint Flags; public StringHandle FileName; public BlobHandle HashValue; }
+        internal struct GenericParamConstraintRow { public int Owner; public int Constraint; }
+        internal struct GenericParamRow { public ushort Number; public ushort Flags; public int Owner; public StringHandle Name; }
+        internal struct ImplMapRow { public ushort MappingFlags; public int MemberForwarded; public StringHandle ImportName; public int ImportScope; }
+        internal struct InterfaceImplRow { public int Class; public int Interface; }
+        internal struct ManifestResourceRow { public uint Offset; public uint Flags; public StringHandle Name; public int Implementation; }
+        internal struct MemberRefRow { public int Class; public StringHandle Name; public BlobHandle Signature; }
+        internal struct MethodImplRow { public int Class; public int MethodBody; public int MethodDecl; }
+        internal struct MethodSemanticsRow { public ushort Semantic; public int Method; public int Association; }
+        internal struct MethodSpecRow { public int Method; public BlobHandle Instantiation; }
+        internal struct MethodRow { public int BodyOffset; public ushort ImplFlags; public ushort Flags; public StringHandle Name; public BlobHandle Signature; public int ParamList; }
+        internal struct ModuleRefRow { public StringHandle Name; }
+        internal struct NestedClassRow { public int NestedClass; public int EnclosingClass; }
+        internal struct ParamRow { public ushort Flags; public ushort Sequence; public StringHandle Name; }
+        internal struct PropertyMapRow { public int Parent; public int PropertyList; }
+        internal struct PropertyRow { public ushort PropFlags; public StringHandle Name; public BlobHandle Type; }
+        internal struct TypeDefRow { public uint Flags; public StringHandle Name; public StringHandle Namespace; public int Extends; public int FieldList; public int MethodList; }
+        internal struct TypeRefRow { public int ResolutionScope; public StringHandle Name; public StringHandle Namespace; }
+        internal struct TypeSpecRow { public BlobHandle Signature; }
+        internal struct StandaloneSigRow { public BlobHandle Signature; }
 
         // debug table rows:
-        private struct DocumentRow { public BlobHandle Name; public GuidHandle HashAlgorithm; public BlobHandle Hash; public GuidHandle Language; }
-        private struct MethodDebugInformationRow { public int Document; public BlobHandle SequencePoints; }
-        private struct LocalScopeRow { public int Method; public int ImportScope; public int VariableList; public int ConstantList; public int StartOffset; public int Length; }
-        private struct LocalVariableRow { public ushort Attributes; public ushort Index; public StringHandle Name; }
-        private struct LocalConstantRow { public StringHandle Name; public BlobHandle Signature; }
-        private struct ImportScopeRow { public int Parent; public BlobHandle Imports; }
-        private struct StateMachineMethodRow { public int MoveNextMethod; public int KickoffMethod; }
-        private struct CustomDebugInformationRow { public int Parent; public GuidHandle Kind; public BlobHandle Value; }
+        internal struct DocumentRow { public BlobHandle Name; public GuidHandle HashAlgorithm; public BlobHandle Hash; public GuidHandle Language; }
+        internal struct MethodDebugInformationRow { public int Document; public BlobHandle SequencePoints; }
+        internal struct LocalScopeRow { public int Method; public int ImportScope; public int VariableList; public int ConstantList; public int StartOffset; public int Length; }
+        internal struct LocalVariableRow { public ushort Attributes; public ushort Index; public StringHandle Name; }
+        internal struct LocalConstantRow { public StringHandle Name; public BlobHandle Signature; }
+        internal struct ImportScopeRow { public int Parent; public BlobHandle Imports; }
+        internal struct StateMachineMethodRow { public int MoveNextMethod; public int KickoffMethod; }
+        internal struct CustomDebugInformationRow { public int Parent; public GuidHandle Kind; public BlobHandle Value; }
 
         // type system tables:
         private ModuleRow? _moduleRow;
@@ -404,7 +404,7 @@ namespace System.Reflection.Metadata.Ecma335
 
             _assemblyRow = new AssemblyRow
             {
-                Flags = unchecked((ushort)flags),
+                Flags = unchecked((uint)flags),
                 HashAlgorithm = unchecked((uint)hashAlgorithm),
                 Version = version,
                 AssemblyKey = publicKey,

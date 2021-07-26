@@ -57,6 +57,7 @@
     <Compile Include="PortableExecutable\TestStream.cs" />
     <Compile Include="TestUtilities\ByteArrayUtilities.cs" />
     <Compile Include="TestUtilities\LoaderUtilities.cs" />
+    <Compile Include="TestUtilities\PEImageCache.cs" />
     <Compile Include="TestUtilities\PinnedBlob.cs" />
     <Compile Include="TestUtilities\SigningUtilities.cs" />
     <Compile Include="TestUtilities\TestBuilders.cs" />

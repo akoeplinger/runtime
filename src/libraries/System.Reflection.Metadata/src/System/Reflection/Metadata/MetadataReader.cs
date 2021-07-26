@@ -405,7 +405,7 @@ namespace System.Reflection.Metadata
         internal ModuleRefTableReader ModuleRefTable;
         internal TypeSpecTableReader TypeSpecTable;
         internal ImplMapTableReader ImplMapTable;
-        internal FieldRVATableReader FieldRvaTable;
+        internal FieldRvaTableReader FieldRvaTable;
         internal EnCLogTableReader EncLogTable;
         internal EnCMapTableReader EncMapTable;
         internal AssemblyTableReader AssemblyTable;
@@ -698,7 +698,7 @@ namespace System.Reflection.Metadata
             this.ImplMapTable = new ImplMapTableReader(rowCounts[(int)TableIndex.ImplMap], IsDeclaredSorted(TableMask.ImplMap), GetReferenceSize(rowCounts, TableIndex.ModuleRef), memberForwardedRefSize, stringHeapRefSize, metadataTablesMemoryBlock, totalRequiredSize);
             totalRequiredSize += this.ImplMapTable.Block.Length;
 
-            this.FieldRvaTable = new FieldRVATableReader(rowCounts[(int)TableIndex.FieldRva], IsDeclaredSorted(TableMask.FieldRva), GetReferenceSize(rowCounts, TableIndex.Field), metadataTablesMemoryBlock, totalRequiredSize);
+            this.FieldRvaTable = new FieldRvaTableReader(rowCounts[(int)TableIndex.FieldRva], IsDeclaredSorted(TableMask.FieldRva), GetReferenceSize(rowCounts, TableIndex.Field), metadataTablesMemoryBlock, totalRequiredSize);
             totalRequiredSize += this.FieldRvaTable.Block.Length;
 
             this.EncLogTable = new EnCLogTableReader(rowCounts[(int)TableIndex.EncLog], metadataTablesMemoryBlock, totalRequiredSize, _metadataStreamKind);

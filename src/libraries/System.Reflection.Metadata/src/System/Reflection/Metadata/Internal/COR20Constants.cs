@@ -5,10 +5,8 @@ namespace System.Reflection.Metadata.Ecma335
 {
     internal static class COR20Constants
     {
-        internal const int SizeOfCorHeader = 72;
         internal const uint COR20MetadataSignature = 0x424A5342;
         internal const int MinimumSizeofMetadataHeader = 16;
-        internal const int SizeofStorageHeader = 4;
         internal const int MinimumSizeofStreamHeader = 8;
         internal const string StringStreamName = "#Strings";
         internal const string BlobStreamName = "#Blob";
