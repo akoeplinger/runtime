@@ -1,4 +1,4 @@
-# Don't touch this folder fooo bar baz boo bar bla asd hbh blub
+# Don't touch this folder
 
                 uuuuuuuuuuuuuuuuuuuu
               u" uuuuuuuuuuuuuuuuuu "u
