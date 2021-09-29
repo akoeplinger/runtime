@@ -1,0 +1,22 @@
+name: Comment about eng/common modifications
+on:
+  pull_request:
+    paths:
+      - 'eng/common/**'
+
+jobs:
+  backport:
+    #if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/backport to')
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Post message about eng/common modification
+      uses: actions/github-script@v3
+      with:
+        script: |
+          const message = `Modifying files in eng/common!`;
+          await github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: backport_start_body
+          });
