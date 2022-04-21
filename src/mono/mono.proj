@@ -279,6 +279,8 @@
       <_MonoCMakeArgs Include="-DCLR_CMAKE_KEEP_NATIVE_SYMBOLS=true" Condition="'$(KeepNativeSymbols)' == 'true'" />
       <_MonoCMakeArgs Condition="'$(CMakeArgs)' != ''" Include="$(CMakeArgs)"/>
       <_MonoCMakeArgs Condition="'$(MonoEnableLLVM)' == 'true'" Include="-DLLVM_PREFIX=$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)" />
+      <_MonoCMakeArgs Condition="'$(MonoEnableLLVM)' == 'true'" Include="-DENABLE_LLVM=1" />
+      <_MonoCMakeArgs Condition="'$(TargetsLinux)' == 'true'" Include="-DMONO_TARGETS_LINUX=1" />
       <_MonoCMakeArgs Condition="'$(BuildDarwinFrameworks)' == 'true'" Include="-DBUILD_DARWIN_FRAMEWORKS=1" />
       <_MonoCMakeArgs Include="-DGC_SUSPEND=$(MonoThreadSuspend)" />
       <_MonoCMakeArgs Include="-DMONO_LIB_NAME=$(MonoLibName)" />
@@ -598,7 +600,7 @@
       <_MonoCMakeArgs Include="-DSTATIC_COMPONENTS=1" />
     </ItemGroup>
     <ItemGroup>
-      <_MonoCMakeArgs Include="-DMONO_COMPONENTS_RID=$(TargetOS)-$(TargetArchitecture)" />
+      <_MonoCMakeArgs Include="-DMONO_COMPONENTS_RID=$(TargetOS.ToLower())-$(TargetArchitecture.ToLower())" />
 
       <!--
         The common infra (eng/native) uses two dimensions for platform definition: host and target
@@ -875,6 +877,9 @@
       <MonoAOTCMakeArgs Include="-DAOT_COMPONENTS=1 -DSTATIC_COMPONENTS=1;" />
       <MonoAOTCMakeArgs Condition="'$(MonoAotOffsetsFile)' != ''" Include="-DAOT_OFFSETS_FILE=&quot;$(MonoAotOffsetsFile)&quot;" />
       <MonoAOTCMakeArgs Condition="'$(MonoAOTEnableLLVM)' == 'true'" Include="-DLLVM_PREFIX=$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)" />
+      <MonoAOTCMakeArgs Condition="'$(MonoAOTEnableLLVM)' == 'true'" Include="-DENABLE_LLVM=1" />
+      <MonoAOTCMakeArgs Condition="'$(MonoAOTLLVMUseCxx11Abi)' == 'true'" Include="-DLLVM_USE_CXX11_ABI=1" />
+      <MonoAOTCMakeArgs Condition="'$(TargetsLinux)' == 'true'" Include="-DMONO_TARGETS_LINUX=1" />
       <MonoAOTCMakeArgs Include="$(_MonoAOTCFLAGSOption)" />
       <MonoAOTCMakeArgs Include="$(_MonoAOTCXXFLAGSOption)" />
       <!-- thread suspend -->

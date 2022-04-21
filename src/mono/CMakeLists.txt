@@ -591,7 +591,11 @@ endif()
 # LLVM CHECKS
 ######################################
 set(LLVM_LIBS)
-if(LLVM_PREFIX)
+if(ENABLE_LLVM)
+  if(NOT LLVM_PREFIX)
+    message(FATAL_ERROR "LLVM_PREFIX is not set.")
+  endif()
+
   if(TARGET_ARCH STREQUAL "x86_64")
     set(llvm_codegen_libs "x86codegen")
   elseif(TARGET_ARCH STREQUAL "x86")
@@ -693,7 +697,6 @@ if(LLVM_PREFIX)
     message(FATAL_ERROR "LLVM version too old.")
   endif()
 
-  set(ENABLE_LLVM 1)
   set(ENABLE_LLVM_RUNTIME 1)
   set(LLVM_LIBS ${llvm_libs} ${llvm_system_libs})
   set(LLVM_LIBDIR "${LLVM_PREFIX}/lib")
@@ -712,6 +715,17 @@ if(LLVM_PREFIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${llvm_cxxflags} -fexceptions -fno-rtti")
   endif()
   add_definitions(-DLLVM_API_VERSION=${llvm_api_version})
+
+  if(MONO_TARGETS_LINUX)
+    # Check whether to build LLVM bits with C++11 ABI
+    # yes for e.g. ARM64 Linux (since Ubuntu 16.04 has libstdc++ > 5.1)
+    # no for e.g. x64 Linux without C++11 ABI (since CentOS 7 has libstdc++ < 5.1)
+    if(LLVM_USE_CXX11_ABI)
+      add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+    else()
+      add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+    endif()
+  endif()
 endif()
 
 ######################################
