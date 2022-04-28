@@ -980,6 +980,14 @@ if(CLR_CMAKE_HOST_APPLE)
   endif()
 endif()
 
+if(TARGET_IOS OR TARGET_TVOS)
+  add_compile_options("-Wl,-application_extension")
+endif()
+
+if(TARGET_IOS OR TARGET_TVOS OR TARGET_MACCAT OR TARGET_OSX OR TARGET_BROWSER)
+  set(ENABLE_ICALL_EXPORT 1)
+endif()
+
 ### End of OS specific checks
 
 include_directories("${CLR_SRC_NATIVE_DIR}")
