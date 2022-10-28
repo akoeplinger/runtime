@@ -38,7 +38,7 @@ namespace System.Formats.Tar.Tests
                 fifo.ExtractToFile(path, overwrite: false);
                 Assert.True(File.Exists(path));
 
-                Assert.Null(reader.GetNextEntry());
+                Assert.Null(reader.GetNextEntry()); 
             }
         }
     }

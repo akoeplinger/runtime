@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using System.Runtime.InteropServices;
 
 namespace System.Collections.Tests
 {
@@ -27,6 +28,40 @@ namespace System.Collections.Tests
 
             Assert.Equal(DefaultCapactiy + 1, queue.Count);
         }
+
+        [Fact]
+        [PlatformSpecific(TestPlatforms.AnyUnix & ~TestPlatforms.LinuxBionic)]
+        public static void FailFact()
+        {
+            Console.WriteLine("Unix: " + MyTestPlatformApplies(TestPlatforms.AnyUnix));
+            Console.WriteLine("Unix not Boinic: " + MyTestPlatformApplies(TestPlatforms.AnyUnix & ~TestPlatforms.LinuxBionic));
+            Console.WriteLine(RuntimeInformation.IsOSPlatform(OSPlatform.Linux));
+            Console.WriteLine("Storgae: " + Environment.GetEnvironmentVariable("ANDROID_STORAGE"));
+
+            var platforms = TestPlatforms.AnyUnix & ~TestPlatforms.LinuxBionic;
+            Console.WriteLine("HasFlags Linux: " + platforms.HasFlag(TestPlatforms.Linux));
+            Console.WriteLine("HasFlags LinuxBionic: " + platforms.HasFlag(TestPlatforms.LinuxBionic));
+
+            Assert.True(false);
+        }
+//        
+
+
+        public static bool MyTestPlatformApplies(TestPlatforms platforms) =>
+                (platforms.HasFlag(TestPlatforms.Any)) ||
+                (platforms.HasFlag(TestPlatforms.FreeBSD) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("FREEBSD"))) ||
+                (platforms.HasFlag(TestPlatforms.LinuxBionic) && RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("ANDROID_STORAGE"))) ||
+                (platforms.HasFlag(TestPlatforms.Linux) && RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && String.IsNullOrEmpty(Environment.GetEnvironmentVariable("ANDROID_STORAGE"))) ||
+                (platforms.HasFlag(TestPlatforms.NetBSD) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("NETBSD"))) ||
+                (platforms.HasFlag(TestPlatforms.OSX) && RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) ||
+                (platforms.HasFlag(TestPlatforms.illumos) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("ILLUMOS"))) ||
+                (platforms.HasFlag(TestPlatforms.Solaris) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("SOLARIS"))) ||
+                (platforms.HasFlag(TestPlatforms.iOS) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("IOS")) && !RuntimeInformation.IsOSPlatform(OSPlatform.Create("MACCATALYST"))) ||
+                (platforms.HasFlag(TestPlatforms.tvOS) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("TVOS"))) ||
+                (platforms.HasFlag(TestPlatforms.MacCatalyst) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("MACCATALYST"))) ||
+                (platforms.HasFlag(TestPlatforms.Android) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("ANDROID"))) ||
+                (platforms.HasFlag(TestPlatforms.Browser) && RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"))) ||
+                (platforms.HasFlag(TestPlatforms.Windows) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
         [Theory]
         [InlineData(1)]

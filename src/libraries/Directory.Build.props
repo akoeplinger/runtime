@@ -122,6 +122,13 @@
     <ProjectReference Include="$(CommonTestPath)TestUtilities\TestUtilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(IsTestProject)' == 'true' and '$(SkipTestAnalyzersReference)' != 'true'">
+    <ProjectReference Include="$(CommonTestPath)TestAnalyzers\TestAnalyzers.csproj"
+                      PrivateAssets="all"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
     <EnableTestSupport>true</EnableTestSupport>
     <!-- TODO: Remove these conditions when VSTest is used in CI. -->

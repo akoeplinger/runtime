@@ -278,7 +278,6 @@ namespace System.Diagnostics.Tests
         }
 
         [ConditionalFact(typeof(RemoteExecutor), nameof(RemoteExecutor.IsSupported))]
-        [ActiveIssue("https://github.com/dotnet/runtime/issues/76140", TestPlatforms.LinuxBionic)]
         public void EnvironmentGetEnvironmentVariablesIsCaseSensitive()
         {
             var caseSensitiveEnvVars = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -302,7 +301,6 @@ namespace System.Diagnostics.Tests
         }
 
         [ConditionalFact(typeof(RemoteExecutor), nameof(RemoteExecutor.IsSupported))]
-        [ActiveIssue("https://github.com/dotnet/runtime/issues/76140", TestPlatforms.LinuxBionic)]
         public void ProcessStartInfoEnvironmentDoesNotThrowForCaseSensitiveDuplicates()
         {
             var caseSensitiveEnvVars = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -327,7 +325,6 @@ namespace System.Diagnostics.Tests
         }
 
         [ConditionalFact(typeof(RemoteExecutor), nameof(RemoteExecutor.IsSupported))]
-        [ActiveIssue("https://github.com/dotnet/runtime/issues/76140", TestPlatforms.LinuxBionic)]
         public void ProcessStartInfoEnvironmentVariablesDoesNotThrowForCaseSensitiveDuplicates()
         {
             var caseSensitiveEnvVars = new Dictionary<string, string>(StringComparer.Ordinal)
