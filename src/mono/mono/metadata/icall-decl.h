@@ -175,8 +175,6 @@ ICALL_EXPORT void ves_icall_System_Diagnostics_Tracing_NativeRuntimeEventSource_
 ICALL_EXPORT void ves_icall_System_Diagnostics_Tracing_NativeRuntimeEventSource_LogThreadPoolIOPack (intptr_t native_overlapped, intptr_t overlapped, uint16_t clr_instance_id);
 
 ICALL_EXPORT void ves_icall_Mono_RuntimeGPtrArrayHandle_GPtrArrayFree (GPtrArray *ptr_array);
-ICALL_EXPORT void ves_icall_Mono_SafeStringMarshal_GFree (void *c_str);
-ICALL_EXPORT char* ves_icall_Mono_SafeStringMarshal_StringToUtf8 (MonoString *volatile* s);
 ICALL_EXPORT MonoType* ves_icall_Mono_RuntimeClassHandle_GetTypeFromClass (MonoClass *klass);
 
 ICALL_EXPORT gpointer ves_icall_System_Threading_LowLevelLifoSemaphore_InitInternal (void);

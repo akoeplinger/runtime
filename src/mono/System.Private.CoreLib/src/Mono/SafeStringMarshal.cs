@@ -11,47 +11,26 @@
 //
 
 using System;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Mono
 {
     internal struct SafeStringMarshal : IDisposable
     {
-        private readonly string? str;
         private IntPtr marshaled_string;
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        private static extern IntPtr StringToUtf8_icall(ref string str);
-
-        public static IntPtr StringToUtf8(string str)
-        {
-            return StringToUtf8_icall(ref str);
-        }
-
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        public static extern void GFree(IntPtr ptr);
 
         public SafeStringMarshal(string? str)
         {
-            this.str = str;
-            this.marshaled_string = IntPtr.Zero;
+            marshaled_string = Marshal.StringToCoTaskMemUTF8(str);
         }
 
-        public IntPtr Value
-        {
-            get
-            {
-                if (marshaled_string == IntPtr.Zero && str != null)
-                    marshaled_string = StringToUtf8(str);
-                return marshaled_string;
-            }
-        }
+        public IntPtr Value => marshaled_string;
 
         public void Dispose()
         {
             if (marshaled_string != IntPtr.Zero)
             {
-                GFree(marshaled_string);
+                Marshal.FreeCoTaskMem(marshaled_string);
                 marshaled_string = IntPtr.Zero;
             }
         }
