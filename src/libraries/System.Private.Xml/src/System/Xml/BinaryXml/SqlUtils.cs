@@ -190,8 +190,8 @@ namespace System.Xml
             uint[] rgulNumeric = new uint[4] { m_data1, m_data2, m_data3, m_data4 };
             int culLen = m_bLen;
             Span<char> pszTmp = stackalloc char[s_NUMERIC_MAX_PRECISION + 1];   //Local Character buffer to hold
-                                                                     //the decimal digits, from the
-                                                                     //lowest significant to highest significant
+                                                                                //the decimal digits, from the
+                                                                                //lowest significant to highest significant
 
             int iDigits = 0; //Number of significant digits
             uint ulRem; //Remainder of a division by x_ulBase10, i.e.,least significant digit
@@ -446,7 +446,7 @@ namespace System.Xml
             if (yr < -9999 || yr > 9999)
                 goto Error;
             return;
-Error:
+        Error:
             throw new XmlException(SR.SqlTypes_ArithOverflow, (string?)null);
         }
 
@@ -471,7 +471,7 @@ Error:
             if (yr < -9999 || yr > 9999)
                 goto Error;
             return;
-Error:
+        Error:
             throw new XmlException(SR.SqlTypes_ArithOverflow, (string?)null);
         }
 
@@ -489,7 +489,7 @@ Error:
             if (0 > hr || hr > 23)
                 goto Error;
             return;
-Error:
+        Error:
             throw new XmlException(SR.SqlTypes_ArithOverflow, (string?)null);
         }
 

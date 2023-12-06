@@ -117,14 +117,14 @@ namespace System
         }
 
         private static string GetStringForFailFastReason(RhFailFastReason reason) => reason switch
-            {
-                RhFailFastReason.InternalError => "Runtime internal error",
-                RhFailFastReason.UnhandledException => "Unhandled exception: a managed exception was not handled before reaching unmanaged code",
-                RhFailFastReason.UnhandledExceptionFromPInvoke => "Unhandled exception: an unmanaged exception was thrown out of a managed-to-native transition",
-                RhFailFastReason.EnvironmentFailFast => "Environment.FailFast was called",
-                RhFailFastReason.AssertionFailure => "Assertion failure",
-                _ => "Unknown reason."
-            };
+        {
+            RhFailFastReason.InternalError => "Runtime internal error",
+            RhFailFastReason.UnhandledException => "Unhandled exception: a managed exception was not handled before reaching unmanaged code",
+            RhFailFastReason.UnhandledExceptionFromPInvoke => "Unhandled exception: an unmanaged exception was thrown out of a managed-to-native transition",
+            RhFailFastReason.EnvironmentFailFast => "Environment.FailFast was called",
+            RhFailFastReason.AssertionFailure => "Assertion failure",
+            _ => "Unknown reason."
+        };
 
         // Used to report exceptions that *logically* go unhandled in the Fx code.  For example, an
         // exception that escapes from a ThreadPool workitem, or from a void-returning async method.

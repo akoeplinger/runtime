@@ -80,15 +80,15 @@ namespace System.Runtime.InteropServices.JavaScript
             {
 #pragma warning disable CS0612 // Type or member is obsolete
                 res = mappedType switch
-                    {
-                        LegacyHostImplementation.MappedType.JSObject => new JSObject(jsHandle),
-                        LegacyHostImplementation.MappedType.Array => new Array(jsHandle),
-                        LegacyHostImplementation.MappedType.ArrayBuffer => new ArrayBuffer(jsHandle),
-                        LegacyHostImplementation.MappedType.DataView => new DataView(jsHandle),
-                        LegacyHostImplementation.MappedType.Function => new Function(jsHandle),
-                        LegacyHostImplementation.MappedType.Uint8Array => new Uint8Array(jsHandle),
-                        _ => throw new ArgumentOutOfRangeException(nameof(mappedType))
-                    };
+                {
+                    LegacyHostImplementation.MappedType.JSObject => new JSObject(jsHandle),
+                    LegacyHostImplementation.MappedType.Array => new Array(jsHandle),
+                    LegacyHostImplementation.MappedType.ArrayBuffer => new ArrayBuffer(jsHandle),
+                    LegacyHostImplementation.MappedType.DataView => new DataView(jsHandle),
+                    LegacyHostImplementation.MappedType.Function => new Function(jsHandle),
+                    LegacyHostImplementation.MappedType.Uint8Array => new Uint8Array(jsHandle),
+                    _ => throw new ArgumentOutOfRangeException(nameof(mappedType))
+                };
 #pragma warning restore CS0612 // Type or member is obsolete
                 JSHostImplementation.ThreadCsOwnedObjects[jsHandle] = new WeakReference<JSObject>(res, trackResurrection: true);
             }

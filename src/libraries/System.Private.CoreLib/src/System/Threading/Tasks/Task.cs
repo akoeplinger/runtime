@@ -2537,7 +2537,7 @@ namespace System.Threading.Tasks
             }
             return;
 
-            HaveTaskContinuation:
+        HaveTaskContinuation:
             if (!AddTaskContinuation(tc, addBeforeOthers: false))
             {
                 tc.Run(this, canInlineContinuationTask: false);
@@ -2595,7 +2595,7 @@ namespace System.Threading.Tasks
             }
             return;
 
-            HaveTaskContinuation:
+        HaveTaskContinuation:
             if (!AddTaskContinuation(tc, addBeforeOthers: false))
             {
                 tc.Run(this, canInlineContinuationTask: false);

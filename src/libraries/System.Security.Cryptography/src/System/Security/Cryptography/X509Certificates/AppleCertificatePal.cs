@@ -257,7 +257,8 @@ namespace System.Security.Cryptography.X509Certificates
             return policyData;
         }
 
-        public IEnumerable<X509Extension> Extensions {
+        public IEnumerable<X509Extension> Extensions
+        {
             get
             {
                 EnsureCertData();

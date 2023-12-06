@@ -267,7 +267,8 @@ namespace System.Security.Cryptography
                 throw new CryptographicException(SR.Cryptography_ECC_NamedCurvesOnly);
             }
 
-            Oid curveOid = domainParameters.Named switch {
+            Oid curveOid = domainParameters.Named switch
+            {
                 Oids.secp256r1 => Oids.secp256r1Oid,
                 Oids.secp384r1 => Oids.secp384r1Oid,
                 Oids.secp521r1 => Oids.secp521r1Oid,

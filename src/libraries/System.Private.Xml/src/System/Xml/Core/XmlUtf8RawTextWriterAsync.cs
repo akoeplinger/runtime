@@ -586,7 +586,7 @@ namespace System.Xml
                 _contentPos = 0;    // Needs to be zero, since overwriting '>' character is no longer possible
                 _cdataPos = 0;      // Needs to be zero, since overwriting ']]>' characters is no longer possible
                 _bufPos = 1;        // Buffer position starts at 1, because we need to be able to safely step back -1 in case we need to
-                                   // close an empty element or in CDATA section detection of double ]; _BUFFER[0] will always be 0
+                                    // close an empty element or in CDATA section detection of double ]; _BUFFER[0] will always be 0
             }
         }
 

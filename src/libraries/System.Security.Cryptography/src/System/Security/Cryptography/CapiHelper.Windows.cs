@@ -375,70 +375,70 @@ namespace System.Security.Cryptography
                 switch (keyParam)
                 {
                     case ClrPropertyId.CLR_EXPORTABLE:
-                    {
-                        impTypeReturn = GetProviderParameterWorker(safeProvHandle, impType, ref cb, CryptProvParam.PP_IMPTYPE);
-                        //If implementation type is not HW
-                        if (!IsFlagBitSet((uint)impTypeReturn, (uint)CryptGetProvParamPPImpTypeFlags.CRYPT_IMPL_HARDWARE))
                         {
-                            if (!CryptGetUserKey(safeProvHandle, keyNumber, out safeKeyHandle))
+                            impTypeReturn = GetProviderParameterWorker(safeProvHandle, impType, ref cb, CryptProvParam.PP_IMPTYPE);
+                            //If implementation type is not HW
+                            if (!IsFlagBitSet((uint)impTypeReturn, (uint)CryptGetProvParamPPImpTypeFlags.CRYPT_IMPL_HARDWARE))
                             {
-                                throw GetErrorCode().ToCryptographicException();
+                                if (!CryptGetUserKey(safeProvHandle, keyNumber, out safeKeyHandle))
+                                {
+                                    throw GetErrorCode().ToCryptographicException();
+                                }
+                                byte[]? permissions = null;
+                                int permissionsReturn = 0;
+                                permissions = new byte[sizeof(uint)];
+                                cb = sizeof(byte) * sizeof(uint);
+                                if (!Interop.Advapi32.CryptGetKeyParam(safeKeyHandle, Interop.Advapi32.CryptGetKeyParamFlags.KP_PERMISSIONS, permissions, ref cb, 0))
+                                {
+                                    throw GetErrorCode().ToCryptographicException();
+                                }
+                                permissionsReturn = BitConverter.ToInt32(permissions, 0);
+                                retVal = IsFlagBitSet((uint)permissionsReturn, (uint)Interop.Advapi32.CryptGetKeyParamFlags.CRYPT_EXPORT);
                             }
-                            byte[]? permissions = null;
-                            int permissionsReturn = 0;
-                            permissions = new byte[sizeof(uint)];
-                            cb = sizeof(byte) * sizeof(uint);
-                            if (!Interop.Advapi32.CryptGetKeyParam(safeKeyHandle, Interop.Advapi32.CryptGetKeyParamFlags.KP_PERMISSIONS, permissions, ref cb, 0))
+                            else
                             {
-                                throw GetErrorCode().ToCryptographicException();
+                                //Assumption HW keys are not exportable.
+                                retVal = false;
                             }
-                            permissionsReturn = BitConverter.ToInt32(permissions, 0);
-                            retVal = IsFlagBitSet((uint)permissionsReturn, (uint)Interop.Advapi32.CryptGetKeyParamFlags.CRYPT_EXPORT);
-                        }
-                        else
-                        {
-                            //Assumption HW keys are not exportable.
-                            retVal = false;
-                        }
 
-                        break;
-                    }
+                            break;
+                        }
                     case ClrPropertyId.CLR_REMOVABLE:
-                    {
-                        impTypeReturn = GetProviderParameterWorker(safeProvHandle, impType, ref cb, CryptProvParam.PP_IMPTYPE);
-                        retVal = IsFlagBitSet((uint)impTypeReturn, (uint)CryptGetProvParamPPImpTypeFlags.CRYPT_IMPL_REMOVABLE);
-                        break;
-                    }
+                        {
+                            impTypeReturn = GetProviderParameterWorker(safeProvHandle, impType, ref cb, CryptProvParam.PP_IMPTYPE);
+                            retVal = IsFlagBitSet((uint)impTypeReturn, (uint)CryptGetProvParamPPImpTypeFlags.CRYPT_IMPL_REMOVABLE);
+                            break;
+                        }
                     case ClrPropertyId.CLR_HARDWARE:
                     case ClrPropertyId.CLR_PROTECTED:
-                    {
-                        impTypeReturn = GetProviderParameterWorker(safeProvHandle, impType, ref cb, CryptProvParam.PP_IMPTYPE);
-                        retVal = IsFlagBitSet((uint)impTypeReturn, (uint)CryptGetProvParamPPImpTypeFlags.CRYPT_IMPL_HARDWARE);
-                        break;
-                    }
+                        {
+                            impTypeReturn = GetProviderParameterWorker(safeProvHandle, impType, ref cb, CryptProvParam.PP_IMPTYPE);
+                            retVal = IsFlagBitSet((uint)impTypeReturn, (uint)CryptGetProvParamPPImpTypeFlags.CRYPT_IMPL_HARDWARE);
+                            break;
+                        }
                     case ClrPropertyId.CLR_ACCESSIBLE:
-                    {
-                        retVal = CryptGetUserKey(safeProvHandle, keyNumber, out safeKeyHandle) ? true : false;
-                        break;
-                    }
+                        {
+                            retVal = CryptGetUserKey(safeProvHandle, keyNumber, out safeKeyHandle) ? true : false;
+                            break;
+                        }
                     case ClrPropertyId.CLR_UNIQUE_CONTAINER:
-                    {
-                        returnType = 1;
-                        byte[]? pb = null;
-                        impTypeReturn = GetProviderParameterWorker(safeProvHandle, pb, ref cb, CryptProvParam.PP_UNIQUE_CONTAINER);
-                        pb = new byte[cb];
-                        impTypeReturn = GetProviderParameterWorker(safeProvHandle, pb, ref cb, CryptProvParam.PP_UNIQUE_CONTAINER);
-                        // GetProviderParameterWorker allocated the null character, we want to not interpret that.
-                        Debug.Assert(cb > 0);
-                        Debug.Assert(pb[cb - 1] == 0);
-                        retStr = Encoding.ASCII.GetString(pb, 0, cb - 1);
-                        break;
-                    }
+                        {
+                            returnType = 1;
+                            byte[]? pb = null;
+                            impTypeReturn = GetProviderParameterWorker(safeProvHandle, pb, ref cb, CryptProvParam.PP_UNIQUE_CONTAINER);
+                            pb = new byte[cb];
+                            impTypeReturn = GetProviderParameterWorker(safeProvHandle, pb, ref cb, CryptProvParam.PP_UNIQUE_CONTAINER);
+                            // GetProviderParameterWorker allocated the null character, we want to not interpret that.
+                            Debug.Assert(cb > 0);
+                            Debug.Assert(pb[cb - 1] == 0);
+                            retStr = Encoding.ASCII.GetString(pb, 0, cb - 1);
+                            break;
+                        }
                     default:
-                    {
-                        Debug.Fail($"Unexpected key param {keyParam}");
-                        break;
-                    }
+                        {
+                            Debug.Fail($"Unexpected key param {keyParam}");
+                            break;
+                        }
                 }
             }
             finally

@@ -111,7 +111,7 @@ namespace System.Runtime.InteropServices
 
 #pragma warning disable 8500
 #pragma warning disable 9080
-        private static unsafe void SetInvokeArgs(ref string cookie, IntPtr *params_byref)
+        private static unsafe void SetInvokeArgs(ref string cookie, IntPtr* params_byref)
         {
             ByReference objRef = ByReference.Create(ref cookie);
             *(ByReference*)params_byref = objRef;
@@ -165,7 +165,7 @@ namespace System.Runtime.InteropServices
                 try
                 {
                     IntPtr byrefStorage = default;
-                    IntPtr *pbyrefStorage = &byrefStorage;
+                    IntPtr* pbyrefStorage = &byrefStorage;
                     SetInvokeArgs(ref cookie, pbyrefStorage);
                     result = (ICustomMarshaler?)getInstanceMethod.InternalInvoke(null, pbyrefStorage, out exc);
                 }

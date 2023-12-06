@@ -126,7 +126,7 @@ namespace System.Buffers.Text
             decodedLength = (int)((uint)length / 4 * 3) - paddingCount;
             return true;
 
-            Fail:
+        Fail:
             decodedLength = 0;
             return false;
         }

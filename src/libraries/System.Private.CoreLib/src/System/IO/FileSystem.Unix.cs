@@ -74,7 +74,7 @@ namespace System.IO
         }
 #pragma warning restore IDE0060
 
-        private static void LinkOrCopyFile (string sourceFullPath, string destFullPath)
+        private static void LinkOrCopyFile(string sourceFullPath, string destFullPath)
         {
             if (Interop.Sys.Link(sourceFullPath, destFullPath) >= 0)
                 return;
@@ -144,9 +144,9 @@ namespace System.IO
                 // Check source and destination are not the same.
                 if (sourceStat.Dev == destStat.Dev &&
                     sourceStat.Ino == destStat.Ino)
-                  {
-                      throw new IOException(SR.Format(SR.IO_CannotReplaceSameFile, sourceFullPath, destFullPath));
-                  }
+                {
+                    throw new IOException(SR.Format(SR.IO_CannotReplaceSameFile, sourceFullPath, destFullPath));
+                }
             }
 
             if (destBackupFullPath != null)

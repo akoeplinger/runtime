@@ -375,7 +375,8 @@ namespace System
                     return null;
 
             RuntimeType? t = null;
-            using (var namePtr = new Mono.SafeStringMarshal(typeName)) {
+            using (var namePtr = new Mono.SafeStringMarshal(typeName))
+            {
                 internal_from_name(
                                    namePtr.Value,
                                    ref stackMark,

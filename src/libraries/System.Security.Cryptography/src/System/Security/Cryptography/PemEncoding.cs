@@ -149,7 +149,7 @@ namespace System.Security.Cryptography
                 fields = new PemFields(labelRange, base64range, pemRange, decodedSize);
                 return true;
 
-                NextAfterLabel:
+            NextAfterLabel:
                 if (preebEndIndex <= areaOffset)
                 {
                     // We somehow ended up in a situation where we will advance
@@ -237,8 +237,8 @@ namespace System.Security.Cryptography
             // Trim starting and ending allowed white space characters
             int start = 0;
             int end = str.Length - 1;
-            for (; start < str.Length && IsWhiteSpaceCharacter(str[start]); start++);
-            for (; end > start && IsWhiteSpaceCharacter(str[end]); end--);
+            for (; start < str.Length && IsWhiteSpaceCharacter(str[start]); start++) ;
+            for (; end > start && IsWhiteSpaceCharacter(str[end]); end--) ;
 
             // Validate that the remaining characters are valid base-64 encoded data.
             if (Base64.IsValid(str.Slice(start, end + 1 - start), out base64DecodedSize))

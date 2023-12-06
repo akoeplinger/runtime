@@ -44,7 +44,7 @@ namespace System.Reflection.Emit
     [StructLayout(LayoutKind.Sequential)]
     internal sealed partial class RuntimeConstructorBuilder : ConstructorBuilder
     {
-#region Sync with MonoReflectionCtorBuilder in object-internals.h
+        #region Sync with MonoReflectionCtorBuilder in object-internals.h
         private RuntimeMethodHandle mhandle;
         private RuntimeILGenerator? ilgen;
         internal Type[]? parameters;
@@ -52,13 +52,13 @@ namespace System.Reflection.Emit
         private MethodImplAttributes iattrs;
         private int table_idx;
         private CallingConventions call_conv;
-        private RuntimeTypeBuilder  type;
+        private RuntimeTypeBuilder type;
         internal ParameterBuilder[]? pinfo;
         private CustomAttributeBuilder[]? cattrs;
         private bool init_locals = true;
         private Type[][]? paramModReq;
         private Type[][]? paramModOpt;
-#endregion
+        #endregion
 
         internal bool finished;
 

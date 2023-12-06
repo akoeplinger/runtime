@@ -187,7 +187,8 @@ namespace System.Diagnostics
                     acoContext = new ActivityCreationOptions<ActivityContext>(this, name, aco.GetContext(), kind, tags, links, ActivityIdFormat.W3C);
                 }
 
-                listeners.EnumWithFunc((ActivityListener listener, ref ActivityCreationOptions<string> data, ref ActivitySamplingResult result, ref ActivityCreationOptions<ActivityContext> dataWithContext) => {
+                listeners.EnumWithFunc((ActivityListener listener, ref ActivityCreationOptions<string> data, ref ActivitySamplingResult result, ref ActivityCreationOptions<ActivityContext> dataWithContext) =>
+                {
                     SampleActivity<string>? sampleUsingParentId = listener.SampleUsingParentId;
                     if (sampleUsingParentId != null)
                     {
@@ -257,7 +258,8 @@ namespace System.Diagnostics
             {
                 bool useCurrentActivityContext = context == default && Activity.Current != null;
                 var aco = new ActivityCreationOptions<ActivityContext>(this, name, useCurrentActivityContext ? Activity.Current!.Context : context, kind, tags, links, idFormat);
-                listeners.EnumWithFunc((ActivityListener listener, ref ActivityCreationOptions<ActivityContext> data, ref ActivitySamplingResult result, ref ActivityCreationOptions<ActivityContext> unused) => {
+                listeners.EnumWithFunc((ActivityListener listener, ref ActivityCreationOptions<ActivityContext> data, ref ActivitySamplingResult result, ref ActivityCreationOptions<ActivityContext> unused) =>
+                {
                     SampleActivity<ActivityContext>? sample = listener.Sample;
                     if (sample != null)
                     {
@@ -312,7 +314,8 @@ namespace System.Diagnostics
 
             if (s_allListeners.AddIfNotExist(listener))
             {
-                s_activeSources.EnumWithAction((source, obj) => {
+                s_activeSources.EnumWithAction((source, obj) =>
+                {
                     var shouldListenTo = ((ActivityListener)obj).ShouldListenTo;
                     if (shouldListenTo != null && shouldListenTo(source))
                     {
@@ -337,7 +340,7 @@ namespace System.Diagnostics
         internal static void DetachListener(ActivityListener listener)
         {
             s_allListeners.Remove(listener);
-            s_activeSources.EnumWithAction((source, obj) => source._listeners?.Remove((ActivityListener) obj), listener);
+            s_activeSources.EnumWithAction((source, obj) => source._listeners?.Remove((ActivityListener)obj), listener);
         }
 
         internal void NotifyActivityStart(Activity activity)

@@ -53,7 +53,7 @@ internal static partial class Interop
         [LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16)]
         internal static partial int LocaleNameToLCID(string lpName, uint dwFlags);
 
-        [LibraryImport("kernel32.dll",  SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
         internal static unsafe partial int LCMapStringEx(
                     string? lpLocaleName,
                     uint dwMapFlags,

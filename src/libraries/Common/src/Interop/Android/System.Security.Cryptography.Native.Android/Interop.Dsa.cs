@@ -95,7 +95,7 @@ internal static partial class Interop
             }
 
             SafeBignumHandle p_bn, q_bn, g_bn, y_bn, x_bn;
-            int    p_cb, q_cb, g_cb, y_cb, x_cb;
+            int p_cb, q_cb, g_cb, y_cb, x_cb;
 
             if (!GetDsaParameters(key,
                 out p_bn, out p_cb,

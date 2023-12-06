@@ -118,7 +118,7 @@ namespace System.Reflection.Metadata
             return new CustomAttributeHandleCollection(_reader, Handle);
         }
 
-#region Projections
+        #region Projections
 
         private EntityHandle GetProjectedParent()
         {
@@ -141,6 +141,6 @@ namespace System.Reflection.Metadata
             // no change
             return _reader.MemberRefTable.GetSignature(Handle);
         }
-#endregion
+        #endregion
     }
 }

@@ -566,12 +566,12 @@ namespace System.Text
         public override string BodyName =>
             CodePage switch
             {
-                932 =>   "iso-2022-jp",
-                1250 =>  "iso-8859-2",
-                1251 =>  "koi8-r",
-                1252 =>  "iso-8859-1",
-                1253 =>  "iso-8859-7",
-                1254 =>  "iso-8859-9",
+                932 => "iso-2022-jp",
+                1250 => "iso-8859-2",
+                1251 => "koi8-r",
+                1252 => "iso-8859-1",
+                1253 => "iso-8859-7",
+                1254 => "iso-8859-9",
                 50221 => "iso-2022-jp",
                 50225 => "iso-2022-kr",
                 _ => WebName,

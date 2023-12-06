@@ -225,7 +225,8 @@ namespace System.Linq.Parallel
                         }
                     }
 
-                    if (!ParallelEnumerable.SinglePartitionMode) {
+                    if (!ParallelEnumerable.SinglePartitionMode)
+                    {
                         // Before exiting the search phase, we will synchronize with others. This is a barrier.
                         _sharedBarrier.Signal();
                         _sharedBarrier.Wait(_cancellationToken);

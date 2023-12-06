@@ -392,7 +392,7 @@ namespace System.Runtime.Intrinsics
         // This is in a separate method so it can be optimized by the mono interpreter/jiterpreter
         [Intrinsic]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool EqualsFloatingPoint (Vector128<T> lhs, Vector128<T> rhs)
+        internal static bool EqualsFloatingPoint(Vector128<T> lhs, Vector128<T> rhs)
         {
             Vector128<T> result = Vector128.Equals(lhs, rhs) | ~(Vector128.Equals(lhs, lhs) | Vector128.Equals(rhs, rhs));
             return result.AsInt32() == Vector128<int>.AllBitsSet;

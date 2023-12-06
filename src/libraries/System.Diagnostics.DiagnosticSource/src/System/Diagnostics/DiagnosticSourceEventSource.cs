@@ -436,10 +436,10 @@ namespace System.Diagnostics
         [Flags]
         internal enum ActivityEvents
         {
-            None          = 0x00,
+            None = 0x00,
             ActivityStart = 0x01,
-            ActivityStop  = 0x02,
-            All           = ActivityStart | ActivityStop,
+            ActivityStop = 0x02,
+            All = ActivityStart | ActivityStop,
         }
 
         #region EventSource hooks
@@ -824,17 +824,17 @@ namespace System.Diagnostics
                     {
                         if (activitySourceName == list.SourceName)
                         {
-                                if (list.SamplingResult > specificResult)
-                                {
-                                    specificResult = list.SamplingResult;
-                                }
-
-                                if (specificResult >= ActivitySamplingResult.AllDataAndRecorded)
-                                {
-                                    return specificResult; // highest possible value
-                                }
-                                // We don't break here as we can have more than one entry with the same source name.
+                            if (list.SamplingResult > specificResult)
+                            {
+                                specificResult = list.SamplingResult;
                             }
+
+                            if (specificResult >= ActivitySamplingResult.AllDataAndRecorded)
+                            {
+                                return specificResult; // highest possible value
+                            }
+                            // We don't break here as we can have more than one entry with the same source name.
+                        }
                         else if (list.SourceName == "*")
                         {
                             if (specificResult != ActivitySamplingResult.None)
@@ -1088,7 +1088,7 @@ namespace System.Diagnostics
             internal const string c_ActivitySourcePrefix = "[AS]";
             internal string? SourceName { get; set; }
             internal string? ActivityName { get; set; }
-            internal DiagnosticSourceEventSource.ActivityEvents Events  { get; set; }
+            internal DiagnosticSourceEventSource.ActivityEvents Events { get; set; }
             internal ActivitySamplingResult SamplingResult { get; set; }
 
             #region private
@@ -1395,7 +1395,7 @@ namespace System.Diagnostics
                     /// </summary>
                     public virtual object? Fetch(object? obj) { return null; }
 
-#region private
+                    #region private
 
                     private sealed class RefTypedFetchProperty<TObject, TProperty> : PropertyFetch
                     {
@@ -1526,17 +1526,17 @@ namespace System.Diagnostics
                             return string.Join(",", (IEnumerable<ElementType>)obj);
                         }
                     }
-#endregion
+                    #endregion
                 }
 
                 private readonly string _propertyName;
                 private volatile PropertyFetch? _fetchForExpectedType;
-#endregion
+                #endregion
             }
 
             private readonly string _outputName = null!;
             private readonly PropertySpec? _fetches;
-#endregion
+            #endregion
         }
 
         /// <summary>
@@ -1549,13 +1549,13 @@ namespace System.Diagnostics
         {
             public CallbackObserver(Action<T> callback) { _callback = callback; }
 
-#region private
+            #region private
             public void OnCompleted() { }
             public void OnError(Exception error) { }
             public void OnNext(T value) { _callback(value); }
 
             private readonly Action<T> _callback;
-#endregion
+            #endregion
         }
 
         // A linked list of IObservable subscriptions (which are IDisposable).
@@ -1572,11 +1572,11 @@ namespace System.Diagnostics
             public Subscriptions? Next;
         }
 
-#endregion
+        #endregion
 
         private FilterAndTransform? _specs;                 // Transformation specifications that indicate which sources/events are forwarded.
         private FilterAndTransform? _activitySourceSpecs;   // ActivitySource Transformation specifications that indicate which sources/events are forwarded.
         private ActivityListener? _activityListener;
-#endregion
+        #endregion
     }
 }

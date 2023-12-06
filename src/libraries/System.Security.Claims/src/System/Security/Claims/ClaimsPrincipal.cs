@@ -40,7 +40,8 @@ namespace System.Security.Claims
 
             IPrincipal? threadPrincipal = Thread.CurrentPrincipal;
 
-            return threadPrincipal switch {
+            return threadPrincipal switch
+            {
                 ClaimsPrincipal claimsPrincipal => claimsPrincipal,
                 not null => new ClaimsPrincipal(threadPrincipal),
                 null => null

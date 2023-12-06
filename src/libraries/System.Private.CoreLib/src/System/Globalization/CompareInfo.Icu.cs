@@ -28,7 +28,7 @@ namespace System.Globalization
                 if (GlobalizationMode.Hybrid)
                     return;
 #endif
-                 _sortHandle = SortHandleCache.GetCachedSortHandle(interopCultureName);
+                _sortHandle = SortHandleCache.GetCachedSortHandle(interopCultureName);
             }
         }
 
@@ -189,7 +189,7 @@ namespace System.Globalization
                         *matchLengthPtr = target.Length;
                     return i;
 
-                Next: ;
+                Next:;
                 }
 
                 return -1;
@@ -291,7 +291,7 @@ namespace System.Globalization
                         *matchLengthPtr = target.Length;
                     return i;
 
-                Next: ;
+                Next:;
                 }
 
                 return -1;
@@ -409,7 +409,7 @@ namespace System.Globalization
                 if (source.Length > prefix.Length)
                 {
                     int charA = *a;
-                    if (charA >= 0x80  || HighCharTable[charA])
+                    if (charA >= 0x80 || HighCharTable[charA])
                         goto InteropCall;
                 }
 
@@ -926,10 +926,10 @@ namespace System.Globalization
 
             int sortVersion = Interop.Globalization.GetSortVersion(_sortHandle);
             return new SortVersion(sortVersion, LCID, new Guid(sortVersion, 0, 0, 0, 0, 0, 0,
-                                                             (byte) (LCID >> 24),
-                                                             (byte) ((LCID  & 0x00FF0000) >> 16),
-                                                             (byte) ((LCID  & 0x0000FF00) >> 8),
-                                                             (byte) (LCID  & 0xFF)));
+                                                             (byte)(LCID >> 24),
+                                                             (byte)((LCID & 0x00FF0000) >> 16),
+                                                             (byte)((LCID & 0x0000FF00) >> 8),
+                                                             (byte)(LCID & 0xFF)));
         }
 
         private static class SortHandleCache

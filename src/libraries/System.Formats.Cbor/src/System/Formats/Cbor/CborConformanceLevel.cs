@@ -51,7 +51,7 @@ namespace System.Formats.Cbor
 
     internal static class CborConformanceModeHelpers
     {
-        private static readonly UTF8Encoding s_utf8EncodingLax    = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: false);
+        private static readonly UTF8Encoding s_utf8EncodingLax = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: false);
         private static readonly UTF8Encoding s_utf8EncodingStrict = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 
         public static void Validate(CborConformanceMode conformanceMode)

@@ -260,7 +260,9 @@ namespace System.Buffers
             Debug.Assert(startObject == endObject);
 
             if (endIndex - startIndex < offset)
+            {
                 ThrowHelper.ThrowArgumentOutOfRangeException(exceptionArgument);
+            }
 
         // Single segment Seek
         IsSingleSegment:
@@ -296,7 +298,9 @@ namespace System.Buffers
             Debug.Assert(startObject == endObject);
 
             if (endIndex - startIndex < offset)
+            {
                 ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.offset);
+            }
 
         // Single segment Seek
         IsSingleSegment:
@@ -324,7 +328,9 @@ namespace System.Buffers
 
             // Hit the end of the segments but didn't reach the count
             if (currentSegment == null || endIndex < offset)
+            {
                 ThrowHelper.ThrowArgumentOutOfRangeException(argument);
+            }
 
         FoundSegment:
             return new SequencePosition(currentSegment, (int)offset);

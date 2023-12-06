@@ -111,15 +111,15 @@ namespace System.Text
                 fixed (byte* pBytes = &codePageDataFileHeader[0])
                 {
                     CodePageDataFileHeader* p = (CodePageDataFileHeader*)pBytes;
-                    char *pTableName = &p->TableName;
+                    char* pTableName = &p->TableName;
                     for (int i = 0; i < 16; i++)
                     {
-                            pTableName[i] = (char)BinaryPrimitives.ReverseEndianness((ushort)pTableName[i]);
+                        pTableName[i] = (char)BinaryPrimitives.ReverseEndianness((ushort)pTableName[i]);
                     }
-                    ushort *pVersion = &p->Version;
+                    ushort* pVersion = &p->Version;
                     for (int i = 0; i < 4; i++)
                     {
-                            pVersion[i] = BinaryPrimitives.ReverseEndianness(pVersion[i]);
+                        pVersion[i] = BinaryPrimitives.ReverseEndianness(pVersion[i]);
                     }
                     p->CodePageCount = BinaryPrimitives.ReverseEndianness(p->CodePageCount);
                 }
@@ -149,7 +149,7 @@ namespace System.Text
                 fixed (byte* pBytes = &codePageIndex[0])
                 {
                     CodePageIndex* p = (CodePageIndex*)pBytes;
-                    char *pCodePageName = &p->CodePageName;
+                    char* pCodePageName = &p->CodePageName;
                     for (int i = 0; i < 16; i++)
                     {
                         pCodePageName[i] = (char)BinaryPrimitives.ReverseEndianness((ushort)pCodePageName[i]);
@@ -195,10 +195,10 @@ namespace System.Text
                 fixed (byte* pBytes = &codePageHeader[0])
                 {
                     CodePageHeader* p = (CodePageHeader*)pBytes;
-                    char *pCodePageName = &p->CodePageName;
+                    char* pCodePageName = &p->CodePageName;
                     for (int i = 0; i < 16; i++)
                     {
-                            pCodePageName[i] = (char)BinaryPrimitives.ReverseEndianness((ushort)pCodePageName[i]);
+                        pCodePageName[i] = (char)BinaryPrimitives.ReverseEndianness((ushort)pCodePageName[i]);
                     }
                     p->VersionMajor = BinaryPrimitives.ReverseEndianness(p->VersionMajor);
                     p->VersionMinor = BinaryPrimitives.ReverseEndianness(p->VersionMinor);

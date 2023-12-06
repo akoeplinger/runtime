@@ -21,7 +21,7 @@ namespace System.Globalization
         internal const char HIGH_SURROGATE_END = '\udbff';
         internal const char LOW_SURROGATE_START = '\udc00';
         internal const char LOW_SURROGATE_END = '\udfff';
-        internal const int  HIGH_SURROGATE_RANGE = 0x3FF;
+        internal const int HIGH_SURROGATE_RANGE = 0x3FF;
 
         internal const int UNICODE_CATEGORY_OFFSET = 0;
         internal const int BIDI_CATEGORY_OFFSET = 1;

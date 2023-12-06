@@ -1030,7 +1030,7 @@ namespace System
 #endif
             }
 
-            ParseFailure:
+        ParseFailure:
             if (throwOnFailure)
             {
                 ThrowInvalidEmptyParseArgument();

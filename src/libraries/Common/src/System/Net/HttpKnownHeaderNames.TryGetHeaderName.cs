@@ -331,7 +331,7 @@ namespace System.Net
             name = null;
             return false;
 
-            TryMatch:
+        TryMatch:
             Debug.Assert(potentialHeader != null);
             return TryMatch(potentialHeader, key, startIndex, length, equals, out name);
         }

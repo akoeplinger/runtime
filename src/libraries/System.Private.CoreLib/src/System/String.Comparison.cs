@@ -164,18 +164,18 @@ namespace System
             DiffOffset8: a += 4; b += 4;
             DiffOffset4: a += 4; b += 4;
 #else // TARGET_64BIT
-                // Use jumps instead of falling through, since
-                // otherwise going to DiffOffset8 will involve
-                // 8 add instructions before getting to DiffNextInt
-                DiffOffset8: a += 8; b += 8; goto DiffOffset0;
-                DiffOffset6: a += 6; b += 6; goto DiffOffset0;
-                DiffOffset4: a += 2; b += 2;
-                DiffOffset2: a += 2; b += 2;
+            // Use jumps instead of falling through, since
+            // otherwise going to DiffOffset8 will involve
+            // 8 add instructions before getting to DiffNextInt
+            DiffOffset8: a += 8; b += 8; goto DiffOffset0;
+            DiffOffset6: a += 6; b += 6; goto DiffOffset0;
+            DiffOffset4: a += 2; b += 2;
+            DiffOffset2: a += 2; b += 2;
 #endif // TARGET_64BIT
 
             DiffOffset0:
-                // If we reached here, we already see a difference in the unrolled loop above
 #if TARGET_64BIT
+                // If we reached here, we already see a difference in the unrolled loop above
                 if (*(int*)a == *(int*)b)
                 {
                     a += 2; b += 2;
@@ -852,9 +852,9 @@ namespace System
             fixed (char* src = &_firstChar)
             {
                 Debug.Assert(src[this.Length] == '\0', "src[this.Length] == '\\0'");
-                Debug.Assert(((int) src) % 4 == 0, "Managed string should start at 4 bytes boundary");
+                Debug.Assert(((int)src) % 4 == 0, "Managed string should start at 4 bytes boundary");
 
-                uint* ptr = (uint*) src;
+                uint* ptr = (uint*)src;
                 int length = this.Length;
 
                 // We "normalize to lowercase" every char by ORing with 0x0020. This casts

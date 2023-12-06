@@ -163,7 +163,8 @@ namespace System.Net.NetworkInformation
                 if (OperatingSystem.IsFreeBSD() || OperatingSystem.IsMacOS())
                 {
                     // The bit is off by default on OSX & FreeBSD
-                    if (fragmentOption == PingFragmentOptions.Dont) {
+                    if (fragmentOption == PingFragmentOptions.Dont)
+                    {
                         sb.Append(" -D ");
                     }
                 }
@@ -171,9 +172,12 @@ namespace System.Net.NetworkInformation
                 {
                     // Linux has three state option with default to use PMTU.
                     // When explicit option is used we set it explicitly to one or the other.
-                    if (fragmentOption == PingFragmentOptions.Do) {
+                    if (fragmentOption == PingFragmentOptions.Do)
+                    {
                         sb.Append(" -M do ");
-                    } else {
+                    }
+                    else
+                    {
                         sb.Append(" -M dont ");
                     }
                 }

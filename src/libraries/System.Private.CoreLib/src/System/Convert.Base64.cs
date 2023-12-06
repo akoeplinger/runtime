@@ -140,7 +140,9 @@ namespace System
             sourceIndex += 4;
 
             if (srcLength != utf16.Length)
+            {
                 goto InvalidExit;
+            }
 
         DoneExit:
             consumed = sourceIndex;

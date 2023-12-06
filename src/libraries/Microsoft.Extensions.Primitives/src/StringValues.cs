@@ -221,7 +221,8 @@ namespace Microsoft.Extensions.Primitives
                 }
 #if NETCOREAPP
                 // Create the new string
-                return string.Create(length, values, (span, strings) => {
+                return string.Create(length, values, (span, strings) =>
+                {
                     int offset = 0;
                     // Skip null and empty values
                     for (int i = 0; i < strings.Length; i++)

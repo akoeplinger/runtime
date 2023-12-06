@@ -175,7 +175,8 @@ namespace System.Threading
                     }
 
                     counts = countsBeforeUpdate;
-                    if (timeoutMs != -1) {
+                    if (timeoutMs != -1)
+                    {
                         int waitMs = endWaitTicks - startWaitTicks;
                         if (waitMs >= 0 && waitMs < timeoutMs)
                             timeoutMs -= waitMs;

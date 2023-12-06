@@ -540,7 +540,7 @@ namespace System
                     == (Flags.SchemeNotCanonical | Flags.AuthorityFound))
                 {
                     idx = _syntax.SchemeName.Length;
-                    while (str[idx++] != ':');
+                    while (str[idx++] != ':') ;
                     if (idx + 1 >= _string.Length || str[idx] != '/' || str[idx + 1] != '/')
                         return false;
                 }

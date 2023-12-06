@@ -15,10 +15,10 @@ internal static class ObjectHeader
     [StructLayout(LayoutKind.Sequential)]
     private unsafe struct Header
     {
-#region Keep in sync with src/native/public/mono/metadata/details/object-types.h
+        #region Keep in sync with src/native/public/mono/metadata/details/object-types.h
         public void* vtable;
         public IntPtr synchronization; // really a LockWord
-#endregion // keep in sync with src/native/public/mono/metadata/details/object-types.h
+        #endregion // keep in sync with src/native/public/mono/metadata/details/object-types.h
     }
 
     // This is similar to QCallHandler ObjectHandleOnStack, but with a getter that let's view the
@@ -46,13 +46,13 @@ internal static class ObjectHeader
     [StructLayout(LayoutKind.Sequential)]
     private unsafe struct MonoThreadsSync
     {
-#region Keep in sync with monitor.h
+        #region Keep in sync with monitor.h
         // FIXME: volatile?
         public uint status;
         public uint nest;
         public int hash_code;
         // Note: more fields after here
-#endregion // keep in sync with monitor.h
+        #endregion // keep in sync with monitor.h
     }
 
     private static class SyncBlock
@@ -86,13 +86,13 @@ internal static class ObjectHeader
     // </summary>
     private static class MonitorStatus
     {
-#region Keep in sync with monitor.h
+        #region Keep in sync with monitor.h
         private const uint OwnerMask = 0x0000ffffu;
         private const uint EntryCountMask = 0xffff0000u;
         private const uint EntryCountWaiters = 0x80000000u;
         //private const uint EntryCountZero = 0x7fff0000u;
         //private const int EntryCountShift = 16;
-#endregion // keep in sync with monitor.h
+        #endregion // keep in sync with monitor.h
 
         public static int GetOwner(uint status) => (int)(status & OwnerMask);
         public static uint SetOwner(uint status, int owner)
@@ -109,7 +109,7 @@ internal static class ObjectHeader
     [StructLayout(LayoutKind.Sequential)]
     private struct LockWord
     {
-#region Keep in sync with monitor.h
+        #region Keep in sync with monitor.h
 
         private IntPtr _lock_word;
 
@@ -134,7 +134,7 @@ internal static class ObjectHeader
             HasHash = 1,
             Inflated = 2,
         }
-#endregion // Keep in sync with monitor.h
+        #endregion // Keep in sync with monitor.h
 
         public bool IsInflated => (_lock_word & (IntPtr)Status.Inflated) != 0;
 
@@ -251,12 +251,16 @@ internal static class ObjectHeader
 
         ObjectHeaderOnStack h = ObjectHeaderOnStack.Create(ref o);
         LockWord lw = GetLockWord(h);
-        if (lw.HasHash) {
-            if (lw.IsInflated) {
+        if (lw.HasHash)
+        {
+            if (lw.IsInflated)
+            {
                 ref MonoThreadsSync mon = ref lw.GetInflatedLock();
                 hash = SyncBlock.HashCode(ref mon);
                 return true;
-            } else {
+            }
+            else
+            {
                 hash = lw.FlatHash;
                 return true;
             }
@@ -310,7 +314,9 @@ internal static class ObjectHeader
             if (LockWordCompareExchange(h, nlw, lw) == lw.AsIntPtr)
             {
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
@@ -326,7 +332,9 @@ internal static class ObjectHeader
                 {
                     // too much recursive locking, need to inflate
                     return false;
-                } else {
+                }
+                else
+                {
                     LockWord nlw = lw.IncrementNest();
                     if (LockWordCompareExchange(h, nlw, lw) == lw.AsIntPtr)
                     {
@@ -423,9 +431,9 @@ internal static class ObjectHeader
 
     // checks that obj is locked by the current thread
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    #pragma warning disable IDE0060 // spurious "unused parameter" warning because we never use obj, just take aref to it.
+#pragma warning disable IDE0060 // spurious "unused parameter" warning because we never use obj, just take aref to it.
     public static bool TryExitChecked(object obj)
-    #pragma warning restore IDE0060
+#pragma warning restore IDE0060
     {
         ObjectHeaderOnStack h = ObjectHeaderOnStack.Create(ref obj);
         LockWord lw = GetLockWord(h);

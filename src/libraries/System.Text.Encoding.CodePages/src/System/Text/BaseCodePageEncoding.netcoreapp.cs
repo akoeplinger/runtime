@@ -22,7 +22,7 @@ namespace System.Text
                 fixed (byte* pBytes = &codePageIndex[0])
                 {
                     CodePageIndex* p = (CodePageIndex*)pBytes;
-                    char *pCodePageName = &p->CodePageName;
+                    char* pCodePageName = &p->CodePageName;
                     for (int i = 0; i < 16; i++)
                     {
                         pCodePageName[i] = (char)BinaryPrimitives.ReverseEndianness((ushort)pCodePageName[i]);
@@ -34,7 +34,7 @@ namespace System.Text
             }
         }
 
-        internal static unsafe EncodingInfo [] GetEncodings(CodePagesEncodingProvider provider)
+        internal static unsafe EncodingInfo[] GetEncodings(CodePagesEncodingProvider provider)
         {
             lock (s_streamLock)
             {
@@ -47,7 +47,7 @@ namespace System.Text
                     codePagesCount = pDataHeader->CodePageCount;
                 }
 
-                EncodingInfo [] encodingInfoList = new EncodingInfo[codePagesCount];
+                EncodingInfo[] encodingInfoList = new EncodingInfo[codePagesCount];
 
                 CodePageIndex codePageIndex = default;
                 Span<byte> pCodePageIndex = new Span<byte>(&codePageIndex, sizeof(CodePageIndex));
@@ -60,10 +60,10 @@ namespace System.Text
                     switch (codePageIndex.CodePage)
                     {
                         // Fixup some encoding names.
-                        case 950:   codePageName = "big5"; break;
+                        case 950: codePageName = "big5"; break;
                         case 10002: codePageName = "x-mac-chinesetrad"; break;
                         case 20833: codePageName = "x-ebcdic-koreanextended"; break;
-                        default:    codePageName = new string(&codePageIndex.CodePageName); break;
+                        default: codePageName = new string(&codePageIndex.CodePageName); break;
                     }
 
                     string? displayName = null;

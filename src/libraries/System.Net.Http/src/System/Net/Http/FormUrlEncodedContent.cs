@@ -14,9 +14,9 @@ namespace System.Net.Http
     {
         public FormUrlEncodedContent(
             IEnumerable<KeyValuePair<
-                #nullable disable
+#nullable disable
                 string, string
-                #nullable restore
+#nullable restore
             >> nameValueCollection)
             : base(GetContentByteArray(nameValueCollection))
         {

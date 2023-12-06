@@ -43,12 +43,12 @@ namespace System.Reflection.Emit
     [StructLayout(LayoutKind.Sequential)]
     internal sealed partial class RuntimeLocalBuilder : LocalBuilder
     {
-#region Sync with MonoReflectionLocalBuilder in object-internals.h
+        #region Sync with MonoReflectionLocalBuilder in object-internals.h
         internal Type type;
         internal bool is_pinned;
         internal ushort position;
         private string? name;
-#endregion
+        #endregion
 
         internal ILGenerator ilgen;
         private int startOffset;

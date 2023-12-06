@@ -243,7 +243,7 @@ namespace System.Numerics
 
                 Impl result;
 
-                result.X = new Vector2( c, s);
+                result.X = new Vector2(c, s);
                 result.Y = new Vector2(-s, c);
                 result.Z = Vector2.Zero;
 
@@ -297,9 +297,9 @@ namespace System.Numerics
 
                 Impl result;
 
-                result.X = new Vector2( c, s);
+                result.X = new Vector2(c, s);
                 result.Y = new Vector2(-s, c);
-                result.Z = new Vector2( x, y);
+                result.Z = new Vector2(x, y);
 
                 return result;
             }

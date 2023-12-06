@@ -9,13 +9,16 @@ namespace System.Net
         private bool _mutualAuth;
 
         public Authorization(string? token) :
-            this(token, true) { }
+            this(token, true)
+        { }
 
         public Authorization(string? token, bool finished) :
-            this(token, finished, null) { }
+            this(token, finished, null)
+        { }
 
         public Authorization(string? token, bool finished, string? connectionGroupId) :
-            this(token, finished, connectionGroupId, false) { }
+            this(token, finished, connectionGroupId, false)
+        { }
 
         internal Authorization(string? token, bool finished, string? connectionGroupId, bool mutualAuth)
         {

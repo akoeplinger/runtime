@@ -153,7 +153,8 @@ namespace System.Threading
                 throw new ArgumentOutOfRangeException(nameof(timeout));
 
             // fast path
-            if (ObjectHeader.TryEnterFast(obj)) {
+            if (ObjectHeader.TryEnterFast(obj))
+            {
                 lockTaken = true;
                 return;
             }

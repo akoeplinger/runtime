@@ -42,10 +42,10 @@ namespace System.Security.Cryptography
         }
 
         private static IntPtr GetAlgorithm(CipherMode cipherMode) => cipherMode switch
-            {
-                CipherMode.CBC => Interop.Crypto.EvpRC2Cbc(),
-                CipherMode.ECB => Interop.Crypto.EvpRC2Ecb(),
-                _ => throw new NotSupportedException(),
-            };
+        {
+            CipherMode.CBC => Interop.Crypto.EvpRC2Cbc(),
+            CipherMode.ECB => Interop.Crypto.EvpRC2Ecb(),
+            _ => throw new NotSupportedException(),
+        };
     }
 }

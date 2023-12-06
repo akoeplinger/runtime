@@ -98,7 +98,8 @@ namespace System.IO.Ports
             {
                 if (value < 0 && value != SerialPort.InfiniteTimeout)
                     throw new ArgumentOutOfRangeException(nameof(ReadTimeout), SR.ArgumentOutOfRange_Timeout);
-                if (_handle == null) {
+                if (_handle == null)
+                {
                     InternalResources.FileNotOpen();
                 }
                 _readTimeout = value;
@@ -112,7 +113,8 @@ namespace System.IO.Ports
             {
                 if (value < 0 && value != SerialPort.InfiniteTimeout)
                     throw new ArgumentOutOfRangeException(nameof(ReadTimeout), SR.ArgumentOutOfRange_Timeout);
-                if (_handle == null) {
+                if (_handle == null)
+                {
                     InternalResources.FileNotOpen();
                 }
                 _writeTimeout = value;
@@ -741,7 +743,8 @@ namespace System.IO.Ports
         {
             if (_dataReceived != null)
             {
-                ThreadPool.QueueUserWorkItem(s => {
+                ThreadPool.QueueUserWorkItem(s =>
+                {
                     var thisRef = (SerialStream)s;
                     thisRef._dataReceived?.Invoke(thisRef, new SerialDataReceivedEventArgs(SerialData.Chars));
                 }, this);
@@ -752,7 +755,8 @@ namespace System.IO.Ports
         {
             if (_pinChanged != null)
             {
-                ThreadPool.QueueUserWorkItem(s => {
+                ThreadPool.QueueUserWorkItem(s =>
+                {
                     var thisRef = (SerialStream)s;
                     thisRef._pinChanged?.Invoke(thisRef, new SerialPinChangedEventArgs(pinChanged));
                 }, this);
@@ -763,7 +767,8 @@ namespace System.IO.Ports
         {
             if (_dataReceived != null)
             {
-                ThreadPool.QueueUserWorkItem(s => {
+                ThreadPool.QueueUserWorkItem(s =>
+                {
                     var thisRef = (SerialStream)s;
                     thisRef._dataReceived?.Invoke(thisRef, new SerialDataReceivedEventArgs(SerialData.Eof));
                 }, this);

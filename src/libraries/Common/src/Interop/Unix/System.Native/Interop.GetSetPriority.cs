@@ -11,9 +11,9 @@ internal static partial class Interop
     {
         internal enum PriorityWhich : int
         {
-            PRIO_PROCESS    = 0,
-            PRIO_PGRP       = 1,
-            PRIO_USER       = 2,
+            PRIO_PROCESS = 0,
+            PRIO_PGRP = 1,
+            PRIO_USER = 2,
         }
 
         [LibraryImport(Libraries.SystemNative, EntryPoint = "SystemNative_GetPriority", SetLastError = true)]
@@ -41,9 +41,9 @@ internal static partial class Interop
             return
                 (nice < -15) ? ThreadPriorityLevel.TimeCritical :
                 (nice < -10) ? ThreadPriorityLevel.Highest :
-                (nice < -5)  ? ThreadPriorityLevel.AboveNormal :
-                (nice == 0)  ? ThreadPriorityLevel.Normal :
-                (nice <= 5)  ? ThreadPriorityLevel.BelowNormal :
+                (nice < -5) ? ThreadPriorityLevel.AboveNormal :
+                (nice == 0) ? ThreadPriorityLevel.Normal :
+                (nice <= 5) ? ThreadPriorityLevel.BelowNormal :
                 (nice <= 10) ? ThreadPriorityLevel.Lowest :
                 ThreadPriorityLevel.Idle;
         }

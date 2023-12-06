@@ -36,7 +36,8 @@ internal sealed partial class VoterNotifyShim : NotificationShimBase, ITransacti
 
     public void HeuristicDecision([MarshalAs(UnmanagedType.U4)] OletxTransactionHeuristic dwDecision, IntPtr pboidReason, uint hresult)
     {
-        NotificationType = dwDecision switch {
+        NotificationType = dwDecision switch
+        {
             OletxTransactionHeuristic.XACTHEURISTIC_ABORT => ShimNotificationType.AbortedNotify,
             OletxTransactionHeuristic.XACTHEURISTIC_COMMIT => ShimNotificationType.CommittedNotify,
             _ => ShimNotificationType.InDoubtNotify

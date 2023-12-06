@@ -11,8 +11,8 @@ internal static partial class Interop
         [Flags]
         internal enum GetNameInfoFlags : int
         {
-            NI_NAMEREQD     = 0x1,
-            NI_NUMERICHOST  = 0x2,
+            NI_NAMEREQD = 0x1,
+            NI_NUMERICHOST = 0x2,
         }
 
         [LibraryImport(Libraries.SystemNative, EntryPoint = "SystemNative_GetNameInfo")]

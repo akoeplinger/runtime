@@ -164,7 +164,7 @@ namespace System.Text.Json
             {
                 // Utilize reader validation.
                 Utf8JsonReader reader = new(utf8Json);
-                while (reader.Read());
+                while (reader.Read()) ;
                 _tokenType = reader.TokenType;
             }
 
@@ -253,7 +253,7 @@ namespace System.Text.Json
             {
                 // Utilize reader validation.
                 Utf8JsonReader reader = new(utf8Json);
-                while (reader.Read());
+                while (reader.Read()) ;
                 _tokenType = reader.TokenType;
             }
 

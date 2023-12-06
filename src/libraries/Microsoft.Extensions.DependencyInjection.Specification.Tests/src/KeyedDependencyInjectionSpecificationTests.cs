@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection.Specification
 {
     public abstract partial class KeyedDependencyInjectionSpecificationTests
     {
-        protected abstract  IServiceProvider CreateServiceProvider(IServiceCollection collection);
+        protected abstract IServiceProvider CreateServiceProvider(IServiceCollection collection);
 
         [Fact]
         public void ResolveKeyedService()
@@ -303,7 +303,7 @@ namespace Microsoft.Extensions.DependencyInjection.Specification
 
             Assert.Null(provider.GetService<IService>());
 
-            for (int i=0; i<3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 var key = "service" + i;
                 var s1 = provider.GetKeyedService<IService>(key);
@@ -535,23 +535,23 @@ namespace Microsoft.Extensions.DependencyInjection.Specification
             public IServiceProvider ServiceProvider { get; }
         }
 
-            [Fact]
-            public void SimpleServiceKeyedResolution()
-            {
-                // Arrange
-                var services = new ServiceCollection();
-                services.AddKeyedTransient<ISimpleService, SimpleService>("simple");
-                services.AddKeyedTransient<ISimpleService, AnotherSimpleService>("another");
-                services.AddTransient<SimpleParentWithDynamicKeyedService>();
-                var provider = CreateServiceProvider(services);
-                var sut = provider.GetService<SimpleParentWithDynamicKeyedService>();
+        [Fact]
+        public void SimpleServiceKeyedResolution()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+            services.AddKeyedTransient<ISimpleService, SimpleService>("simple");
+            services.AddKeyedTransient<ISimpleService, AnotherSimpleService>("another");
+            services.AddTransient<SimpleParentWithDynamicKeyedService>();
+            var provider = CreateServiceProvider(services);
+            var sut = provider.GetService<SimpleParentWithDynamicKeyedService>();
 
-                // Act
-                var result = sut!.GetService("simple");
+            // Act
+            var result = sut!.GetService("simple");
 
-                // Assert
-                Assert.True(result.GetType() == typeof(SimpleService));
-            }
+            // Assert
+            Assert.True(result.GetType() == typeof(SimpleService));
+        }
 
         public class SimpleParentWithDynamicKeyedService
         {

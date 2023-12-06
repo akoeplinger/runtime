@@ -177,49 +177,51 @@ namespace System.Security.Cryptography
             ulong kdfIterations = (ulong)iterations; // Previously asserted to be positive.
 
             using (keyHandle)
-            fixed (char* pHashAlgorithmName = hashAlgorithmName)
-            fixed (byte* pSalt = salt)
-            fixed (byte* pDestination = destination)
             {
-                Span<BCryptBuffer> buffers = stackalloc BCryptBuffer[3];
-                buffers[0].BufferType = CngBufferDescriptors.KDF_ITERATION_COUNT;
-                buffers[0].pvBuffer = (IntPtr)(&kdfIterations);
-                buffers[0].cbBuffer = sizeof(ulong);
-
-                buffers[1].BufferType = CngBufferDescriptors.KDF_SALT;
-                buffers[1].pvBuffer = (IntPtr)pSalt;
-                buffers[1].cbBuffer = salt.Length;
-
-                buffers[2].BufferType = CngBufferDescriptors.KDF_HASH_ALGORITHM;
-                buffers[2].pvBuffer = (IntPtr)pHashAlgorithmName;
-
-                // C# spec: "A char* value produced by fixing a string instance always points to a null-terminated string"
-                buffers[2].cbBuffer = checked((hashAlgorithmName.Length + 1) * sizeof(char)); // Add null terminator.
-
-                fixed (BCryptBuffer* pBuffers = buffers)
+                fixed (char* pHashAlgorithmName = hashAlgorithmName)
+                fixed (byte* pSalt = salt)
+                fixed (byte* pDestination = destination)
                 {
-                    Interop.BCrypt.BCryptBufferDesc bufferDesc;
-                    bufferDesc.ulVersion = Interop.BCrypt.BCRYPTBUFFER_VERSION;
-                    bufferDesc.cBuffers = buffers.Length;
-                    bufferDesc.pBuffers = (IntPtr)pBuffers;
+                    Span<BCryptBuffer> buffers = stackalloc BCryptBuffer[3];
+                    buffers[0].BufferType = CngBufferDescriptors.KDF_ITERATION_COUNT;
+                    buffers[0].pvBuffer = (IntPtr)(&kdfIterations);
+                    buffers[0].cbBuffer = sizeof(ulong);
 
-                    NTSTATUS deriveStatus = Interop.BCrypt.BCryptKeyDerivation(
-                        keyHandle,
-                        &bufferDesc,
-                        pDestination,
-                        destination.Length,
-                        out uint resultLength,
-                        dwFlags: 0);
+                    buffers[1].BufferType = CngBufferDescriptors.KDF_SALT;
+                    buffers[1].pvBuffer = (IntPtr)pSalt;
+                    buffers[1].cbBuffer = salt.Length;
 
-                    if (deriveStatus != NTSTATUS.STATUS_SUCCESS)
+                    buffers[2].BufferType = CngBufferDescriptors.KDF_HASH_ALGORITHM;
+                    buffers[2].pvBuffer = (IntPtr)pHashAlgorithmName;
+
+                    // C# spec: "A char* value produced by fixing a string instance always points to a null-terminated string"
+                    buffers[2].cbBuffer = checked((hashAlgorithmName.Length + 1) * sizeof(char)); // Add null terminator.
+
+                    fixed (BCryptBuffer* pBuffers = buffers)
                     {
-                        throw Interop.BCrypt.CreateCryptographicException(deriveStatus);
-                    }
+                        Interop.BCrypt.BCryptBufferDesc bufferDesc;
+                        bufferDesc.ulVersion = Interop.BCrypt.BCRYPTBUFFER_VERSION;
+                        bufferDesc.cBuffers = buffers.Length;
+                        bufferDesc.pBuffers = (IntPtr)pBuffers;
 
-                    if (destination.Length != resultLength)
-                    {
-                        Debug.Fail("PBKDF2 resultLength != destination.Length");
-                        throw new CryptographicException();
+                        NTSTATUS deriveStatus = Interop.BCrypt.BCryptKeyDerivation(
+                            keyHandle,
+                            &bufferDesc,
+                            pDestination,
+                            destination.Length,
+                            out uint resultLength,
+                            dwFlags: 0);
+
+                        if (deriveStatus != NTSTATUS.STATUS_SUCCESS)
+                        {
+                            throw Interop.BCrypt.CreateCryptographicException(deriveStatus);
+                        }
+
+                        if (destination.Length != resultLength)
+                        {
+                            Debug.Fail("PBKDF2 resultLength != destination.Length");
+                            throw new CryptographicException();
+                        }
                     }
                 }
             }

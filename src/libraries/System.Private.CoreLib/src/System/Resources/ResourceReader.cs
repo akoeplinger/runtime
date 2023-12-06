@@ -1001,9 +1001,9 @@ namespace System.Resources
                 Debug.Assert(_typeTable[typeIndex] != null, "Should have found a type!");
                 return _typeTable[typeIndex]!;
             }
-// If-defing this coud out from Resources Extensions since they will by definition always support deserialization
-// So we shouldn't attempt to wrap the original exception with a NotSupportedException since that can be misleading.
-// For that reason, the bellow code is only relevant when building CoreLib's ResourceReader.
+            // If-defing this coud out from Resources Extensions since they will by definition always support deserialization
+            // So we shouldn't attempt to wrap the original exception with a NotSupportedException since that can be misleading.
+            // For that reason, the bellow code is only relevant when building CoreLib's ResourceReader.
 #if !RESOURCES_EXTENSIONS
             // If serialization isn't supported, we convert FileNotFoundException to
             // NotSupportedException for consistency with v2. This is a corner-case, but the

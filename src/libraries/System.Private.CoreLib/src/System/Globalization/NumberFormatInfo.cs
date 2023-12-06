@@ -167,7 +167,8 @@ namespace System.Globalization
             // e.g. https://github.com/unicode-org/cldr/blob/feb602b06bd18ba7333464bd648b68292e8aa54d/common/main/sw.xml#L1001
 
             _allowHyphenDuringParsing = _negativeSign.Length == 1 &&
-                                        _negativeSign[0] switch {
+                                        _negativeSign[0] switch
+                                        {
                                             '\u2012' or         // Figure Dash
                                             '\u207B' or         // Superscript Minus
                                             '\u208B' or         // Subscript Minus

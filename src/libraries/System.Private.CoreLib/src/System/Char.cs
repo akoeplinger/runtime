@@ -1143,7 +1143,7 @@ namespace System
         //
 
         /// <inheritdoc cref="IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
-        static char IAdditionOperators<char, char, char>.operator +(char left, char right) => (char) (left + right);
+        static char IAdditionOperators<char, char, char>.operator +(char left, char right) => (char)(left + right);
 
         /// <inheritdoc cref="IAdditionOperators{TSelf, TOther, TResult}.op_Addition(TSelf, TOther)" />
         static char IAdditionOperators<char, char, char>.operator checked +(char left, char right) => checked((char)(left + right));

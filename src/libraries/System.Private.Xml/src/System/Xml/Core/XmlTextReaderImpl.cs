@@ -5394,7 +5394,7 @@ namespace System.Xml
             // skip over the text if not in full parsing mode
             if (_parsingMode != ParsingMode.Full)
             {
-                while (!ParseText(out _, out _, ref orChars));
+                while (!ParseText(out _, out _, ref orChars)) ;
                 goto IgnoredNode;
             }
 
@@ -5490,7 +5490,7 @@ namespace System.Xml
                         _stringBuilder.Length = 0;
                         if (!fullValue)
                         {
-                            while (!ParseText(out _, out _, ref orChars));
+                            while (!ParseText(out _, out _, ref orChars)) ;
                         }
                         goto IgnoredNode;
                     }
@@ -5842,7 +5842,7 @@ namespace System.Xml
             int orChars = 0;
 
             _parsingFunction = _nextParsingFunction;
-            while (!ParseText(out _, out _, ref orChars));
+            while (!ParseText(out _, out _, ref orChars)) ;
         }
 
         private void FinishReadValueChunk()
@@ -5879,7 +5879,7 @@ namespace System.Xml
             }
             if (_incReadState != IncrementalReadState.ReadContentAsBinary_End)
             {
-                while (MoveToNextContentNode(true));
+                while (MoveToNextContentNode(true)) ;
             }
         }
 
@@ -6267,7 +6267,7 @@ namespace System.Xml
                 {
                     if (_ignorePIs || _parsingMode != ParsingMode.Full)
                     {
-                        while (!ParsePIValue(out _, out _));
+                        while (!ParsePIValue(out _, out _)) ;
                         return false;
                     }
                     sb = _stringBuilder;
@@ -6494,7 +6494,7 @@ namespace System.Xml
             }
             else
             {
-                while (!ParseCDataOrComment(type, out _, out _));
+                while (!ParseCDataOrComment(type, out _, out _)) ;
             }
         }
 

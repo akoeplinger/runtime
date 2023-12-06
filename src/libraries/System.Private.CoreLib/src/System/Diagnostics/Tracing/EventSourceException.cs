@@ -17,7 +17,8 @@ namespace System.Diagnostics.Tracing
         /// Initializes a new instance of the EventSourceException class.
         /// </summary>
         public EventSourceException() :
-            base(SR.EventSource_ListenerWriteFailure) { }
+            base(SR.EventSource_ListenerWriteFailure)
+        { }
 
         /// <summary>
         /// Initializes a new instance of the EventSourceException class with a specified error message.
@@ -38,6 +39,7 @@ namespace System.Diagnostics.Tracing
         protected EventSourceException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         internal EventSourceException(Exception? innerException) :
-            base(SR.EventSource_ListenerWriteFailure, innerException) { }
+            base(SR.EventSource_ListenerWriteFailure, innerException)
+        { }
     }
 }

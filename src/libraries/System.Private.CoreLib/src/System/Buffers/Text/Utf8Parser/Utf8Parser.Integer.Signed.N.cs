@@ -72,7 +72,7 @@ namespace System.Buffers.Text
             if (source[index] != '0')
                 goto FalseExit;
 
-        FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
+            FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
             {
                 index++;
@@ -164,7 +164,7 @@ namespace System.Buffers.Text
             if (source[index] != '0')
                 goto FalseExit;
 
-        FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
+            FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
             {
                 index++;
@@ -259,7 +259,7 @@ namespace System.Buffers.Text
             if (source[index] != '0')
                 goto FalseExit;
 
-        FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
+            FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
             {
                 index++;
@@ -354,7 +354,7 @@ namespace System.Buffers.Text
             if (source[index] != '0')
                 goto FalseExit;
 
-        FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
+            FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
             {
                 index++;

@@ -264,7 +264,7 @@ namespace System.Security.Cryptography.Pkcs
 
 #if NETCOREAPP
         [Obsolete(Obsoletions.SignerInfoCounterSigMessage, DiagnosticId = Obsoletions.SignerInfoCounterSigDiagId, UrlFormat = Obsoletions.SharedUrlFormat)]
- #endif
+#endif
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void ComputeCounterSignature()
         {
@@ -504,32 +504,32 @@ namespace System.Security.Cryptography.Pkcs
             switch (signerIdentifier.Type)
             {
                 case SubjectIdentifierType.IssuerAndSerialNumber:
-                {
-                    X509IssuerSerial issuerSerial = (X509IssuerSerial)signerIdentifier.Value!;
-                    filtered = extraStore.Find(X509FindType.FindBySerialNumber, issuerSerial.SerialNumber, false);
-
-                    foreach (X509Certificate2 cert in filtered)
                     {
-                        if (cert.IssuerName.Name == issuerSerial.IssuerName)
+                        X509IssuerSerial issuerSerial = (X509IssuerSerial)signerIdentifier.Value!;
+                        filtered = extraStore.Find(X509FindType.FindBySerialNumber, issuerSerial.SerialNumber, false);
+
+                        foreach (X509Certificate2 cert in filtered)
                         {
-                            match = cert;
-                            break;
+                            if (cert.IssuerName.Name == issuerSerial.IssuerName)
+                            {
+                                match = cert;
+                                break;
+                            }
                         }
-                    }
 
-                    break;
-                }
+                        break;
+                    }
                 case SubjectIdentifierType.SubjectKeyIdentifier:
-                {
-                    filtered = extraStore.Find(X509FindType.FindBySubjectKeyIdentifier, signerIdentifier.Value!, false);
-
-                    if (filtered.Count > 0)
                     {
-                        match = filtered[0];
-                    }
+                        filtered = extraStore.Find(X509FindType.FindBySubjectKeyIdentifier, signerIdentifier.Value!, false);
 
-                    break;
-                }
+                        if (filtered.Count > 0)
+                        {
+                            match = filtered[0];
+                        }
+
+                        break;
+                    }
             }
 
             if (filtered != null)

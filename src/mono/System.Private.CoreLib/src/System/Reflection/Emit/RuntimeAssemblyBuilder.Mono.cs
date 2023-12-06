@@ -200,7 +200,7 @@ namespace System.Reflection.Emit
         //
         // AssemblyBuilder inherits from Assembly, but the runtime thinks its layout inherits from RuntimeAssembly
         //
-#region Sync with RuntimeAssembly.cs and ReflectionAssembly in object-internals.h
+        #region Sync with RuntimeAssembly.cs and ReflectionAssembly in object-internals.h
         internal IntPtr _mono_assembly;
         private LoaderAllocator? m_keepalive;
 
@@ -213,7 +213,7 @@ namespace System.Reflection.Emit
         private byte[]? public_key_token;
         private Module[]? loaded_modules;
         private uint access;
-#endregion
+        #endregion
 
         private AssemblyName aname;
         private RuntimeModuleBuilder manifest_module;

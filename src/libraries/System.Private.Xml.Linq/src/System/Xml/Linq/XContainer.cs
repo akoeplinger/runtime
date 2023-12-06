@@ -1016,59 +1016,59 @@ namespace System.Xml.Linq
                 switch (r.NodeType)
                 {
                     case XmlNodeType.Element:
-                    {
-                        XElement e = new XElement(_eCache.Get(r.NamespaceURI).GetName(r.LocalName));
-                        if (_baseUri != null && _baseUri != baseUri)
                         {
-                            e.SetBaseUri(baseUri);
-                        }
-                        if (_lineInfo != null && _lineInfo.HasLineInfo())
-                        {
-                            e.SetLineInfo(_lineInfo.LineNumber, _lineInfo.LinePosition);
-                        }
-                        if (r.MoveToFirstAttribute())
-                        {
-                            do
+                            XElement e = new XElement(_eCache.Get(r.NamespaceURI).GetName(r.LocalName));
+                            if (_baseUri != null && _baseUri != baseUri)
                             {
-                                XAttribute a = new XAttribute(_aCache.Get(r.Prefix.Length == 0 ? string.Empty : r.NamespaceURI).GetName(r.LocalName), r.Value);
-                                if (_lineInfo != null && _lineInfo.HasLineInfo())
-                                {
-                                    a.SetLineInfo(_lineInfo.LineNumber, _lineInfo.LinePosition);
-                                }
-                                e.AppendAttributeSkipNotify(a);
-                            } while (r.MoveToNextAttribute());
-                            r.MoveToElement();
-                        }
-                        _currentContainer.AddNodeSkipNotify(e);
-                        if (!r.IsEmptyElement)
-                        {
-                            _currentContainer = e;
-                            if (_baseUri != null)
-                            {
-                                _baseUri = baseUri;
+                                e.SetBaseUri(baseUri);
                             }
+                            if (_lineInfo != null && _lineInfo.HasLineInfo())
+                            {
+                                e.SetLineInfo(_lineInfo.LineNumber, _lineInfo.LinePosition);
+                            }
+                            if (r.MoveToFirstAttribute())
+                            {
+                                do
+                                {
+                                    XAttribute a = new XAttribute(_aCache.Get(r.Prefix.Length == 0 ? string.Empty : r.NamespaceURI).GetName(r.LocalName), r.Value);
+                                    if (_lineInfo != null && _lineInfo.HasLineInfo())
+                                    {
+                                        a.SetLineInfo(_lineInfo.LineNumber, _lineInfo.LinePosition);
+                                    }
+                                    e.AppendAttributeSkipNotify(a);
+                                } while (r.MoveToNextAttribute());
+                                r.MoveToElement();
+                            }
+                            _currentContainer.AddNodeSkipNotify(e);
+                            if (!r.IsEmptyElement)
+                            {
+                                _currentContainer = e;
+                                if (_baseUri != null)
+                                {
+                                    _baseUri = baseUri;
+                                }
+                            }
+                            break;
                         }
-                        break;
-                    }
                     case XmlNodeType.EndElement:
-                    {
-                        _currentContainer.content ??= string.Empty;
-                        // Store the line info of the end element tag.
-                        // Note that since we've got EndElement the current container must be an XElement
-                        XElement? e = _currentContainer as XElement;
-                        Debug.Assert(e != null, "EndElement received but the current container is not an element.");
-                        if (e != null && _lineInfo != null && _lineInfo.HasLineInfo())
                         {
+                            _currentContainer.content ??= string.Empty;
+                            // Store the line info of the end element tag.
+                            // Note that since we've got EndElement the current container must be an XElement
+                            XElement? e = _currentContainer as XElement;
+                            Debug.Assert(e != null, "EndElement received but the current container is not an element.");
+                            if (e != null && _lineInfo != null && _lineInfo.HasLineInfo())
+                            {
                                 e.SetEndElementLineInfo(_lineInfo.LineNumber, _lineInfo.LinePosition);
-                        }
-                        if (_currentContainer == rootContainer) return false;
-                        if (_baseUri != null && _currentContainer.HasBaseUri)
-                        {
+                            }
+                            if (_currentContainer == rootContainer) return false;
+                            if (_baseUri != null && _currentContainer.HasBaseUri)
+                            {
                                 _baseUri = _currentContainer.parent!.BaseUri;
+                            }
+                            _currentContainer = _currentContainer.parent!;
+                            break;
                         }
-                        _currentContainer = _currentContainer.parent!;
-                        break;
-                    }
                     case XmlNodeType.Text:
                     case XmlNodeType.SignificantWhitespace:
                     case XmlNodeType.Whitespace:

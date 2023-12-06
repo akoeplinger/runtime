@@ -775,7 +775,9 @@ namespace System.Runtime
                 goto assigningNull;
 
             if (elementType != obj.GetMethodTable())
+            {
                 goto notExactMatch;
+            }
 
         doWrite:
             InternalCalls.RhpAssignRef(ref element, obj);

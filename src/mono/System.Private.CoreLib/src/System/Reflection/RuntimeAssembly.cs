@@ -251,7 +251,8 @@ namespace System.Reflection
                 Module? resourceModule = null;
                 RuntimeAssembly? assembly = this;
                 byte* data = (byte*)GetManifestResourceInternal(new QCallAssembly(ref assembly), name, out length, ObjectHandleOnStack.Create(ref resourceModule));
-                if (data == null) {
+                if (data == null)
+                {
                     assembly = AssemblyLoadContext.OnResourceResolve(assembly!, name);
                     if (assembly != null)
                         data = (byte*)GetManifestResourceInternal(new QCallAssembly(ref assembly), name, out length, ObjectHandleOnStack.Create(ref resourceModule));

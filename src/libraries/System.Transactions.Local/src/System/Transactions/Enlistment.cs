@@ -138,7 +138,8 @@ namespace System.Transactions
 
         internal EnlistmentState State
         {
-            get {
+            get
+            {
                 Debug.Assert(_twoPhaseState != null);
                 return _twoPhaseState;
             }

@@ -375,24 +375,24 @@ namespace System
 
         public static void SetWindowSize(int width, int height)
         {
-           lock (Console.Out)
-           {
-               Interop.Sys.WinSize winsize = default;
-               winsize.Row = (ushort)height;
-               winsize.Col = (ushort)width;
-               if (Interop.Sys.SetWindowSize(in winsize) == 0)
-               {
-                   s_windowWidth = winsize.Col;
-                   s_windowHeight = winsize.Row;
-               }
-               else
-               {
-                   Interop.ErrorInfo errorInfo = Interop.Sys.GetLastErrorInfo();
-                   throw errorInfo.Error == Interop.Error.ENOTSUP ?
-                       new PlatformNotSupportedException() :
-                       Interop.GetIOException(errorInfo);
-               }
-           }
+            lock (Console.Out)
+            {
+                Interop.Sys.WinSize winsize = default;
+                winsize.Row = (ushort)height;
+                winsize.Col = (ushort)width;
+                if (Interop.Sys.SetWindowSize(in winsize) == 0)
+                {
+                    s_windowWidth = winsize.Col;
+                    s_windowHeight = winsize.Row;
+                }
+                else
+                {
+                    Interop.ErrorInfo errorInfo = Interop.Sys.GetLastErrorInfo();
+                    throw errorInfo.Error == Interop.Error.ENOTSUP ?
+                        new PlatformNotSupportedException() :
+                        Interop.GetIOException(errorInfo);
+                }
+            }
         }
 
         public static bool CursorVisible
@@ -897,7 +897,7 @@ namespace System
                     }
 
                     s_terminalHandle = !Console.IsOutputRedirected ? Interop.Sys.FileDescriptors.STDOUT_FILENO :
-                                       !Console.IsInputRedirected  ? Interop.Sys.FileDescriptors.STDIN_FILENO :
+                                       !Console.IsInputRedirected ? Interop.Sys.FileDescriptors.STDIN_FILENO :
                                        null;
 
                     // Provide the native lib with the correct code from the terminfo to transition us into
@@ -1032,7 +1032,7 @@ namespace System
             lock (Console.Out)
             {
                 int left, top;
-                if (cursorVersion != s_cursorVersion               ||  // the cursor was changed during the write by another operation
+                if (cursorVersion != s_cursorVersion ||                // the cursor was changed during the write by another operation
                     !TryGetCachedCursorPosition(out left, out top) ||  // we don't have a cursor position
                     count > InteractiveBufferSize)                     // limit the amount of bytes we are willing to inspect
                 {

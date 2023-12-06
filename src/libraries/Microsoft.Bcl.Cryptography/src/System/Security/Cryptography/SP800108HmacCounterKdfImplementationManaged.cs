@@ -68,12 +68,12 @@ namespace System.Security.Cryptography
             DeriveBytesOneShot(key, hashAlgorithm, label, label.Length, context, context.Length, destination);
         }
 
-         internal static unsafe void DeriveBytesOneShot(
-            ReadOnlySpan<byte> key,
-            HashAlgorithmName hashAlgorithm,
-            ReadOnlySpan<char> label,
-            ReadOnlySpan<char> context,
-            Span<byte> destination)
+        internal static unsafe void DeriveBytesOneShot(
+           ReadOnlySpan<byte> key,
+           HashAlgorithmName hashAlgorithm,
+           ReadOnlySpan<char> label,
+           ReadOnlySpan<char> context,
+           Span<byte> destination)
         {
             if (destination.Length == 0)
             {

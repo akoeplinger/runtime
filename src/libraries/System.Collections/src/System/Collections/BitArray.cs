@@ -372,7 +372,9 @@ namespace System.Collections
             }
 
             for (; i < (uint)count; i++)
+            {
                 thisArray[i] &= valueArray[i];
+            }
 
         Done:
             _version++;
@@ -445,7 +447,9 @@ namespace System.Collections
             }
 
             for (; i < (uint)count; i++)
+            {
                 thisArray[i] |= valueArray[i];
+            }
 
         Done:
             _version++;
@@ -519,7 +523,9 @@ namespace System.Collections
             }
 
             for (; i < (uint)count; i++)
+            {
                 thisArray[i] ^= valueArray[i];
+            }
 
         Done:
             _version++;
@@ -584,7 +590,9 @@ namespace System.Collections
             }
 
             for (; i < (uint)count; i++)
+            {
                 thisArray[i] = ~thisArray[i];
+            }
 
         Done:
             _version++;

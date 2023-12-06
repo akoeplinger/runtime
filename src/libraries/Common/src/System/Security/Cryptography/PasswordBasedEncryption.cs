@@ -40,22 +40,22 @@ namespace System.Security.Cryptography
                 case PbeEncryptionAlgorithm.Aes256Cbc:
                     return;
                 case PbeEncryptionAlgorithm.TripleDes3KeyPkcs12:
-                {
-                    if (pbeParameters.HashAlgorithm != HashAlgorithmName.SHA1)
                     {
-                        throw new CryptographicException(
-                            SR.Cryptography_UnknownHashAlgorithm,
-                            pbeParameters.HashAlgorithm.Name);
-                    }
+                        if (pbeParameters.HashAlgorithm != HashAlgorithmName.SHA1)
+                        {
+                            throw new CryptographicException(
+                                SR.Cryptography_UnknownHashAlgorithm,
+                                pbeParameters.HashAlgorithm.Name);
+                        }
 
-                    if (passwordBytes.Length > 0 && password.Length == 0)
-                    {
-                        throw AlgorithmKdfRequiresChars(
-                            encryptionAlgorithm.ToString());
-                    }
+                        if (passwordBytes.Length > 0 && password.Length == 0)
+                        {
+                            throw AlgorithmKdfRequiresChars(
+                                encryptionAlgorithm.ToString());
+                        }
 
-                    return;
-                }
+                        return;
+                    }
             }
 
             throw new CryptographicException(

@@ -2747,7 +2747,7 @@ namespace System.Xml.Serialization
                             if (member.ChoiceIdentifier.Mapping!.TypeDesc!.UseReflection)
                                 enumSource = $"p[{j}]";
                             else
-                                enumSource = $"(({mapping.Members[j].TypeDesc!.CSharpName })p[{j}])";
+                                enumSource = $"(({mapping.Members[j].TypeDesc!.CSharpName})p[{j}])";
                             break;
                         }
                     }

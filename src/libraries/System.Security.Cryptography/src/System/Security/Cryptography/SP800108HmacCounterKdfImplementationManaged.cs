@@ -77,12 +77,12 @@ namespace System.Security.Cryptography
             }
         }
 
-         internal static void DeriveBytesOneShot(
-            ReadOnlySpan<byte> key,
-            HashAlgorithmName hashAlgorithm,
-            ReadOnlySpan<char> label,
-            ReadOnlySpan<char> context,
-            Span<byte> destination)
+        internal static void DeriveBytesOneShot(
+           ReadOnlySpan<byte> key,
+           HashAlgorithmName hashAlgorithm,
+           ReadOnlySpan<char> label,
+           ReadOnlySpan<char> context,
+           Span<byte> destination)
         {
             if (destination.Length == 0)
             {

@@ -540,7 +540,7 @@ namespace System.Buffers.Text
                 }
                 else
                 {
-                    Vector128<ushort> odd =  Vector128.ShiftRightLogical(AdvSimd.Arm64.UnzipOdd(t0.AsUInt16(), t0.AsUInt16()), 6);
+                    Vector128<ushort> odd = Vector128.ShiftRightLogical(AdvSimd.Arm64.UnzipOdd(t0.AsUInt16(), t0.AsUInt16()), 6);
                     Vector128<ushort> even = Vector128.ShiftRightLogical(AdvSimd.Arm64.UnzipEven(t0.AsUInt16(), t0.AsUInt16()), 10);
                     t1 = AdvSimd.Arm64.ZipLow(even, odd);
                 }

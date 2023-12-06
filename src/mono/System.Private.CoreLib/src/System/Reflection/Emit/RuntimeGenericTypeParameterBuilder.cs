@@ -41,7 +41,7 @@ namespace System.Reflection.Emit
     [StructLayout(LayoutKind.Sequential)]
     internal sealed class RuntimeGenericTypeParameterBuilder : GenericTypeParameterBuilder
     {
-#region Sync with MonoReflectionGenericParam in object-internals.h
+        #region Sync with MonoReflectionGenericParam in object-internals.h
         private RuntimeTypeBuilder tbuilder;
         private RuntimeMethodBuilder? mbuilder;
         private string name;
@@ -50,7 +50,7 @@ namespace System.Reflection.Emit
         private Type[]? iface_constraints;
         private CustomAttributeBuilder[]? cattrs;
         private GenericParameterAttributes attrs;
-#endregion
+        #endregion
 
         [DynamicDependency(nameof(attrs))]  // Automatically keeps all previous fields too due to StructLayout
         internal RuntimeGenericTypeParameterBuilder(RuntimeTypeBuilder tbuilder, RuntimeMethodBuilder? mbuilder, string name, int index)

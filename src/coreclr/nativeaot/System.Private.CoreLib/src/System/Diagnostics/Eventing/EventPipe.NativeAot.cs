@@ -53,7 +53,7 @@ namespace System.Diagnostics.Tracing
         // These PInvokes are used by EventSource to interact with the EventPipe.
         //
 
-//        private static extern unsafe IntPtr CreateProvider(string providerName, IntPtr callbackFunc, IntPtr callbackContext);
+        //        private static extern unsafe IntPtr CreateProvider(string providerName, IntPtr callbackFunc, IntPtr callbackContext);
 
         internal static unsafe IntPtr CreateProvider(string providerName,
                     delegate* unmanaged<byte*, int, byte, long, long, Interop.Advapi32.EVENT_FILTER_DESCRIPTOR*, void*, void> callbackFunc,
@@ -78,7 +78,7 @@ namespace System.Diagnostics.Tracing
             long keywords,
             uint eventVersion,
             uint level,
-            void *pMetadata,
+            void* pMetadata,
             uint metadataLength)
         {
             return RuntimeImports.RhEventPipeInternal_DefineEvent(

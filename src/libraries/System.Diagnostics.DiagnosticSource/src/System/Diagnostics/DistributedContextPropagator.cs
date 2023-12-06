@@ -136,6 +136,6 @@ namespace System.Diagnostics
         internal const char   Semicolon          = ';';
         internal const string CommaWithSpace     = ", ";
 
-        internal static readonly char [] s_trimmingSpaceCharacters = new char[] { Space, Tab };
+        internal static readonly char[] s_trimmingSpaceCharacters = new char[] { Space, Tab };
     }
 }

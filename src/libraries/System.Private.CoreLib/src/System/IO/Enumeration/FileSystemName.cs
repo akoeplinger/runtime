@@ -366,16 +366,16 @@ namespace System.IO.Enumeration
                             }
                         }
 
-                        MatchZeroOrMore:
-                            currentMatches[currentMatch++] = currentState;
-                        MatchZero:
-                            currentMatches[currentMatch++] = currentState + 1;
-                        NextExpressionCharacter:
-                            if (++expressionOffset == expression.Length)
-                                currentMatches[currentMatch++] = maxState;
+                    MatchZeroOrMore:
+                        currentMatches[currentMatch++] = currentState;
+                    MatchZero:
+                        currentMatches[currentMatch++] = currentState + 1;
+                    NextExpressionCharacter:
+                        if (++expressionOffset == expression.Length)
+                            currentMatches[currentMatch++] = maxState;
                     } // while (expressionOffset < expression.Length)
 
-                    ExpressionFinished:
+                ExpressionFinished:
 
                     // Prevent duplication in the destination array.
                     //

@@ -19,17 +19,17 @@ namespace System
     internal enum LazyState
     {
         NoneViaConstructor = 0,
-        NoneViaFactory     = 1,
-        NoneException      = 2,
+        NoneViaFactory = 1,
+        NoneException = 2,
 
         PublicationOnlyViaConstructor = 3,
-        PublicationOnlyViaFactory     = 4,
-        PublicationOnlyWait           = 5,
-        PublicationOnlyException      = 6,
+        PublicationOnlyViaFactory = 4,
+        PublicationOnlyWait = 5,
+        PublicationOnlyException = 6,
 
         ExecutionAndPublicationViaConstructor = 7,
-        ExecutionAndPublicationViaFactory     = 8,
-        ExecutionAndPublicationException      = 9,
+        ExecutionAndPublicationViaFactory = 8,
+        ExecutionAndPublicationException = 9,
     }
 
     /// <summary>
@@ -42,11 +42,11 @@ namespace System
     /// </summary>
     internal sealed class LazyHelper
     {
-        internal static readonly LazyHelper NoneViaConstructor            = new LazyHelper(LazyState.NoneViaConstructor);
-        internal static readonly LazyHelper NoneViaFactory                = new LazyHelper(LazyState.NoneViaFactory);
+        internal static readonly LazyHelper NoneViaConstructor = new LazyHelper(LazyState.NoneViaConstructor);
+        internal static readonly LazyHelper NoneViaFactory = new LazyHelper(LazyState.NoneViaFactory);
         internal static readonly LazyHelper PublicationOnlyViaConstructor = new LazyHelper(LazyState.PublicationOnlyViaConstructor);
-        internal static readonly LazyHelper PublicationOnlyViaFactory     = new LazyHelper(LazyState.PublicationOnlyViaFactory);
-        internal static readonly LazyHelper PublicationOnlyWaitForOtherThreadToPublish       = new LazyHelper(LazyState.PublicationOnlyWait);
+        internal static readonly LazyHelper PublicationOnlyViaFactory = new LazyHelper(LazyState.PublicationOnlyViaFactory);
+        internal static readonly LazyHelper PublicationOnlyWaitForOtherThreadToPublish = new LazyHelper(LazyState.PublicationOnlyWait);
 
         internal LazyState State { get; }
 

@@ -1094,9 +1094,9 @@ namespace System.Configuration
                         utilWriter.AppendEntityRef(reader.Name);
                         break;
 
-                    // Ignore <?xml and <!DOCTYPE nodes
-                    // case XmlNodeType.XmlDeclaration:
-                    // case XmlNodeType.DocumentType:
+                        // Ignore <?xml and <!DOCTYPE nodes
+                        // case XmlNodeType.XmlDeclaration:
+                        // case XmlNodeType.DocumentType:
                 }
 
                 // put each new element on a new line

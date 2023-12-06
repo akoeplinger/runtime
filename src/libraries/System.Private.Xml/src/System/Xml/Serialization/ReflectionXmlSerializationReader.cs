@@ -1632,7 +1632,10 @@ namespace System.Xml.Serialization
                     {
                         member.Source = Wrapper;
                         [RequiresUnreferencedCode("calls SetOrAddValueToMember")]
-                        void Wrapper(object? value) { SetOrAddValueToMember(o!, value!, member.Mapping.MemberInfo!); }
+                        void Wrapper(object? value)
+                        {
+                            SetOrAddValueToMember(o!, value!, member.Mapping.MemberInfo!);
+                        }
 
                         if (mapping.Attribute.Any)
                         {

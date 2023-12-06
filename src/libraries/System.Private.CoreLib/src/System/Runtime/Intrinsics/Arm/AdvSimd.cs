@@ -2279,7 +2279,7 @@ namespace System.Runtime.Intrinsics.Arm
             /// <summary>
             ///   A64: LD1 { Vn.2D, Vn+1.2D }, [Xn]
             /// </summary>
-            public static unsafe (Vector128<long> Value1, Vector128<long> Value2) LoadVector128x2(long* address)  => LoadVector128x2(address);
+            public static unsafe (Vector128<long> Value1, Vector128<long> Value2) LoadVector128x2(long* address) => LoadVector128x2(address);
 
             /// <summary>
             ///   A64: LD1 { Vn.2D, Vn+1.2D }, [Xn]
@@ -2329,7 +2329,7 @@ namespace System.Runtime.Intrinsics.Arm
             /// <summary>
             ///   A64: LD1 { Vn.2D, Vn+1.2D, Vn+2.2D }, [Xn]
             /// </summary>
-            public static unsafe (Vector128<long> Value1, Vector128<long> Value2, Vector128<long> Value3) LoadVector128x3(long* address)  => LoadVector128x3(address);
+            public static unsafe (Vector128<long> Value1, Vector128<long> Value2, Vector128<long> Value3) LoadVector128x3(long* address) => LoadVector128x3(address);
 
             /// <summary>
             ///   A64: LD1 { Vn.2D, Vn+1.2D, Vn+2.2D }, [Xn]
@@ -2379,7 +2379,7 @@ namespace System.Runtime.Intrinsics.Arm
             /// <summary>
             ///   A64: LD1 { Vn.2D, Vn+1.2D, Vn+2.2D, Vn+3.2D }, [Xn]
             /// </summary>
-            public static unsafe (Vector128<long> Value1, Vector128<long> Value2, Vector128<long> Value3, Vector128<long> Value4) LoadVector128x4(long* address)  => LoadVector128x4(address);
+            public static unsafe (Vector128<long> Value1, Vector128<long> Value2, Vector128<long> Value3, Vector128<long> Value4) LoadVector128x4(long* address) => LoadVector128x4(address);
 
             /// <summary>
             ///   A64: LD1 { Vn.2D, Vn+1.2D, Vn+2.2D, Vn+3.2D}, [Xn]
@@ -3906,7 +3906,7 @@ namespace System.Runtime.Intrinsics.Arm
             /// </summary>
             public static unsafe void StoreSelectedScalar(short* address, (Vector128<short> value1, Vector128<short> value2, Vector128<short> value3, Vector128<short> value4) value, [ConstantExpected(Max = (byte)(7))] byte index) => StoreSelectedScalar(address, value, index);
 
-           /// <summary>
+            /// <summary>
             /// void vst4_lane_s16 (int16_t * ptr, int16x8x4_t val, const int lane)
             ///   A64: ST4 { Vt.8H, Vt+1.8H, Vt+2.8H, Vt+3.8H }[index], [Xn]
             /// </summary>
@@ -15978,7 +15978,7 @@ namespace System.Runtime.Intrinsics.Arm
         /// <summary>
         ///   A64: ST3 { Vt.4H, Vt+1.4H, Vt+2.4H }[index], [Xn]
         /// </summary>
-        public static unsafe void StoreSelectedScalar(ushort* address, (Vector64<ushort> value1, Vector64<ushort> value2,  Vector64<ushort> value3) value, [ConstantExpected(Max = (byte)(3))] byte index) => StoreSelectedScalar(address, value, index);
+        public static unsafe void StoreSelectedScalar(ushort* address, (Vector64<ushort> value1, Vector64<ushort> value2, Vector64<ushort> value3) value, [ConstantExpected(Max = (byte)(3))] byte index) => StoreSelectedScalar(address, value, index);
 
         /// <summary>
         ///   A64: ST3 { Vt.2S, Vt+1.2S, Vt+2.2S }[index], [Xn]

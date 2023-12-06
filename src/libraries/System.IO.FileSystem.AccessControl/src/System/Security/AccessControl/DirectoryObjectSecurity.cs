@@ -477,9 +477,9 @@ namespace System.Security.AccessControl
             return result;
         }
 
-#endregion
+        #endregion
 
-#region public Methods
+        #region public Methods
 
         public virtual AccessRule AccessRuleFactory(IdentityReference identityReference, int accessMask, bool isInherited, InheritanceFlags inheritanceFlags, PropagationFlags propagationFlags, AccessControlType type, Guid objectType, Guid inheritedObjectType)
         {
@@ -514,9 +514,9 @@ namespace System.Security.AccessControl
             //}
             return ModifyAudit(modification, (ObjectAuditRule)rule, out modified);
         }
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         protected void AddAccessRule(ObjectAccessRule rule)
         {
@@ -721,6 +721,6 @@ namespace System.Security.AccessControl
             return GetRules(false, includeExplicit, includeInherited, targetType);
         }
 
-#endregion
+        #endregion
     }
 }

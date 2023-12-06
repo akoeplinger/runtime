@@ -25,7 +25,7 @@ namespace System.Reflection
             _invocationFlags = constructor.ComputeAndUpdateInvocationFlags();
         }
 
-        private unsafe object? InterpretedInvoke_Method(object? obj, IntPtr *args)
+        private unsafe object? InterpretedInvoke_Method(object? obj, IntPtr* args)
         {
             object? o = ((RuntimeMethodInfo)_method).InternalInvoke(obj, args, out Exception? exc);
 
@@ -35,7 +35,7 @@ namespace System.Reflection
             return o;
         }
 
-        private unsafe object? InterpretedInvoke_Constructor(object? obj, IntPtr *args)
+        private unsafe object? InterpretedInvoke_Constructor(object? obj, IntPtr* args)
         {
             object? o = ((RuntimeConstructorInfo)_method).InternalInvoke(obj, args, out Exception? exc);
 

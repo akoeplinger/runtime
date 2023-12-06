@@ -141,7 +141,7 @@ namespace System.Diagnostics.Metrics
         internal static void ValidateTypeParameter<T>()
         {
             Type type = typeof(T);
-            if (type != typeof(byte)   && type != typeof(short) && type != typeof(int) && type != typeof(long) &&
+            if (type != typeof(byte) && type != typeof(short) && type != typeof(int) && type != typeof(long) &&
                 type != typeof(double) && type != typeof(float) && type != typeof(decimal))
             {
                 throw new InvalidOperationException(SR.Format(SR.UnsupportedType, type));

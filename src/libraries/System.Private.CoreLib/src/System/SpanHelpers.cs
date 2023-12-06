@@ -242,7 +242,7 @@ namespace System
                 i += 2;
             }
 
-            IntAligned:
+        IntAligned:
 
             // On 64-bit IntPtr.Size == 8, so we want to advance to the next 8-aligned address. If
             // (int)b % 8 is 0, 5, 6, or 7, we will already have advanced by 0, 3, 2, or 1

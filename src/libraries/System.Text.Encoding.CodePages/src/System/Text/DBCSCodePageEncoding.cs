@@ -42,15 +42,15 @@ namespace System.Text
         {
         }
 
-        internal static unsafe char ReadChar(char *pChar)
+        internal static unsafe char ReadChar(char* pChar)
         {
             if (BitConverter.IsLittleEndian)
             {
-              return *pChar;
+                return *pChar;
             }
             else
             {
-              return (char)BinaryPrimitives.ReverseEndianness((ushort)*pChar);
+                return (char)BinaryPrimitives.ReverseEndianness((ushort)*pChar);
             }
         }
 

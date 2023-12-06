@@ -26,7 +26,7 @@ namespace System.Text.Json.Serialization.Metadata
                 [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2077:UnrecognizedReflectionPattern",
                     Justification = "Cannot apply DynamicallyAccessedMembersAttribute to tuple properties.")]
 #pragma warning disable IL2077 // The suppression doesn't work for the trim analyzer: https://github.com/dotnet/roslyn/issues/59746
-                static (key) => s_sourceAccessor.CreateParameterlessConstructor(key.declaringType, (ConstructorInfo?)key.member));
+        static (key) => s_sourceAccessor.CreateParameterlessConstructor(key.declaringType, (ConstructorInfo?)key.member));
 #pragma warning restore IL2077
 
         public override Func<object, TProperty> CreateFieldGetter<TProperty>(FieldInfo fieldInfo)

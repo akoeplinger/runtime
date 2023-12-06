@@ -850,7 +850,7 @@ namespace System.Runtime.Intrinsics
         public static unsafe Vector128<byte> Create(byte e0, byte e1, byte e2, byte e3, byte e4, byte e5, byte e6, byte e7, byte e8, byte e9, byte e10, byte e11, byte e12, byte e13, byte e14, byte e15)
         {
             return Create(
-                Vector64.Create(e0, e1, e2,  e3,  e4,  e5,  e6,  e7),
+                Vector64.Create(e0, e1, e2, e3, e4, e5, e6, e7),
                 Vector64.Create(e8, e9, e10, e11, e12, e13, e14, e15)
             );
         }
@@ -948,7 +948,7 @@ namespace System.Runtime.Intrinsics
         public static unsafe Vector128<sbyte> Create(sbyte e0, sbyte e1, sbyte e2, sbyte e3, sbyte e4, sbyte e5, sbyte e6, sbyte e7, sbyte e8, sbyte e9, sbyte e10, sbyte e11, sbyte e12, sbyte e13, sbyte e14, sbyte e15)
         {
             return Create(
-                Vector64.Create(e0, e1, e2,  e3,  e4,  e5,  e6,  e7),
+                Vector64.Create(e0, e1, e2, e3, e4, e5, e6, e7),
                 Vector64.Create(e8, e9, e10, e11, e12, e13, e14, e15)
             );
         }
@@ -1894,10 +1894,10 @@ namespace System.Runtime.Intrinsics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Vector128<int> Narrow(Vector128<long> lower, Vector128<long> upper)
         {
-             return Create(
-                 Vector64.Narrow(lower._lower, lower._upper),
-                 Vector64.Narrow(upper._lower, upper._upper)
-             );
+            return Create(
+                Vector64.Narrow(lower._lower, lower._upper),
+                Vector64.Narrow(upper._lower, upper._upper)
+            );
         }
 
         /// <summary>Narrows two <see cref="Vector128{UInt16}"/> instances into one <see cref="Vector128{Byte}" />.</summary>

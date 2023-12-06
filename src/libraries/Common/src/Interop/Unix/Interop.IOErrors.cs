@@ -166,13 +166,13 @@ internal static partial class Interop
 
             default:
                 return GetIOException(errorInfo, path);
+        }
 
-            static bool ParentDirectoryExists(string fullPath)
-            {
-                string? parentPath = Path.GetDirectoryName(Path.TrimEndingDirectorySeparator(fullPath));
+        static bool ParentDirectoryExists(string fullPath)
+        {
+            string? parentPath = Path.GetDirectoryName(Path.TrimEndingDirectorySeparator(fullPath));
 
-                return Directory.Exists(parentPath);
-            }
+            return Directory.Exists(parentPath);
         }
     }
 

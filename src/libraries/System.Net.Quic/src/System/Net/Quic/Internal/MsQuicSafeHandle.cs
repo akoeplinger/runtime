@@ -52,7 +52,8 @@ internal unsafe class MsQuicSafeHandle : SafeHandle
                 SafeHandleType.Stream => MsQuicApi.Api.ApiTable->StreamClose,
                 _ => throw new ArgumentException($"Unexpected value: {safeHandleType}", nameof(safeHandleType))
             },
-            safeHandleType) { }
+            safeHandleType)
+    { }
 
     protected override bool ReleaseHandle()
     {

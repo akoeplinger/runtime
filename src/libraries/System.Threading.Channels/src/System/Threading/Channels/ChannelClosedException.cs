@@ -8,7 +8,8 @@ namespace System.Threading.Channels
     {
         /// <summary>Initializes a new instance of the <see cref="ChannelClosedException"/> class.</summary>
         public ChannelClosedException() :
-            base(SR.ChannelClosedException_DefaultMessage) { }
+            base(SR.ChannelClosedException_DefaultMessage)
+        { }
 
         /// <summary>Initializes a new instance of the <see cref="ChannelClosedException"/> class.</summary>
         /// <param name="message">The message that describes the error.</param>
@@ -17,7 +18,8 @@ namespace System.Threading.Channels
         /// <summary>Initializes a new instance of the <see cref="ChannelClosedException"/> class.</summary>
         /// <param name="innerException">The exception that is the cause of this exception.</param>
         public ChannelClosedException(Exception? innerException) :
-            base(SR.ChannelClosedException_DefaultMessage, innerException) { }
+            base(SR.ChannelClosedException_DefaultMessage, innerException)
+        { }
 
         /// <summary>Initializes a new instance of the <see cref="ChannelClosedException"/> class.</summary>
         /// <param name="message">The message that describes the error.</param>

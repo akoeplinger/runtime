@@ -8,16 +8,20 @@ using System.Linq.Expressions;
 
 namespace Microsoft.CSharp.RuntimeBinder.ComInterop
 {
-    internal sealed class TypeEnumMetaObject : DynamicMetaObject {
+    internal sealed class TypeEnumMetaObject : DynamicMetaObject
+    {
         private readonly ComTypeEnumDesc _desc;
 
         internal TypeEnumMetaObject(ComTypeEnumDesc desc, Expression expression)
-            : base(expression, BindingRestrictions.Empty, desc) {
+            : base(expression, BindingRestrictions.Empty, desc)
+        {
             _desc = desc;
         }
 
-        public override DynamicMetaObject BindGetMember(GetMemberBinder binder) {
-            if (_desc.HasMember(binder.Name)) {
+        public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
+        {
+            if (_desc.HasMember(binder.Name))
+            {
                 return new DynamicMetaObject(
                     // return (.bound $arg0).GetValue("<name>")
                     Expression.Constant(((ComTypeEnumDesc)Value).GetValue(binder.Name), typeof(object)),
@@ -28,11 +32,13 @@ namespace Microsoft.CSharp.RuntimeBinder.ComInterop
             throw new NotImplementedException();
         }
 
-        public override IEnumerable<string> GetDynamicMemberNames() {
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
             return _desc.GetMemberNames();
         }
 
-        private BindingRestrictions EnumRestrictions() {
+        private BindingRestrictions EnumRestrictions()
+        {
             return BindingRestrictions.GetTypeRestriction(
                 Expression, typeof(ComTypeEnumDesc)
             ).Merge(

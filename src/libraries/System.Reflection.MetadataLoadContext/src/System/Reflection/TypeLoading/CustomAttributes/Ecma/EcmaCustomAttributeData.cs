@@ -60,25 +60,25 @@ namespace System.Reflection.TypeLoading.Ecma
             switch (ctorHandle.Kind)
             {
                 case HandleKind.MethodDefinition:
-                {
-                    MethodDefinitionHandle mh = (MethodDefinitionHandle)ctorHandle;
-                    EcmaDefinitionType declaringType = mh.GetMethodDefinition(Reader).GetDeclaringType().ResolveTypeDef(_module);
-                    return new RoDefinitionConstructor<EcmaMethodDecoder>(declaringType, new EcmaMethodDecoder(mh, _module));
-                }
+                    {
+                        MethodDefinitionHandle mh = (MethodDefinitionHandle)ctorHandle;
+                        EcmaDefinitionType declaringType = mh.GetMethodDefinition(Reader).GetDeclaringType().ResolveTypeDef(_module);
+                        return new RoDefinitionConstructor<EcmaMethodDecoder>(declaringType, new EcmaMethodDecoder(mh, _module));
+                    }
 
                 case HandleKind.MemberReference:
-                {
-                    TypeContext typeContext = default;
-                    MemberReference mr = ((MemberReferenceHandle)ctorHandle).GetMemberReference(Reader);
-                    MethodSignature<RoType> sig = mr.DecodeMethodSignature(_module, typeContext);
-                    Type[] parameterTypes = sig.ParameterTypes.ToArray();
-                    Type declaringType = mr.Parent.ResolveTypeDefRefOrSpec(_module, typeContext);
-                    const BindingFlags bf = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.ExactBinding;
-                    ConstructorInfo? ci = declaringType.GetConstructor(bf, null, parameterTypes, null);
-                    if (ci == null)
-                        throw new MissingMethodException(SR.Format(SR.MissingCustomAttributeConstructor, declaringType));
-                    return ci;
-                }
+                    {
+                        TypeContext typeContext = default;
+                        MemberReference mr = ((MemberReferenceHandle)ctorHandle).GetMemberReference(Reader);
+                        MethodSignature<RoType> sig = mr.DecodeMethodSignature(_module, typeContext);
+                        Type[] parameterTypes = sig.ParameterTypes.ToArray();
+                        Type declaringType = mr.Parent.ResolveTypeDefRefOrSpec(_module, typeContext);
+                        const BindingFlags bf = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.ExactBinding;
+                        ConstructorInfo? ci = declaringType.GetConstructor(bf, null, parameterTypes, null);
+                        if (ci == null)
+                            throw new MissingMethodException(SR.Format(SR.MissingCustomAttributeConstructor, declaringType));
+                        return ci;
+                    }
 
                 // Constructors can not be generic methods so this should never occur. (Not to be confused with constructors on generic types and we do now
                 // support generic attributes. But that comes in as a MemberReference, not a MethodSpec.)

@@ -46,12 +46,12 @@ namespace System.Security.Cryptography
         }
 
         private static IntPtr GetAlgorithm(CipherMode cipherMode, int feedbackSizeInBytes) => cipherMode switch
-            {
-                CipherMode.CBC => Interop.Crypto.EvpDes3Cbc(),
-                CipherMode.ECB => Interop.Crypto.EvpDes3Ecb(),
-                CipherMode.CFB when feedbackSizeInBytes == 1 => Interop.Crypto.EvpDes3Cfb8(),
-                CipherMode.CFB when feedbackSizeInBytes == 8 => Interop.Crypto.EvpDes3Cfb64(),
-                _ => throw new NotSupportedException(),
-            };
+        {
+            CipherMode.CBC => Interop.Crypto.EvpDes3Cbc(),
+            CipherMode.ECB => Interop.Crypto.EvpDes3Ecb(),
+            CipherMode.CFB when feedbackSizeInBytes == 1 => Interop.Crypto.EvpDes3Cfb8(),
+            CipherMode.CFB when feedbackSizeInBytes == 8 => Interop.Crypto.EvpDes3Cfb64(),
+            _ => throw new NotSupportedException(),
+        };
     }
 }

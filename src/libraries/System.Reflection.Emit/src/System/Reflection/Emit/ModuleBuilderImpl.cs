@@ -176,7 +176,8 @@ namespace System.Reflection.Emit
             }
 
             // Now write all generic parameters in order
-            genericParams.Sort((x, y) => {
+            genericParams.Sort((x, y) =>
+            {
                 int primary = CodedIndex.TypeOrMethodDef(x._parentHandle).CompareTo(CodedIndex.TypeOrMethodDef(y._parentHandle));
                 if (primary != 0)
                     return primary;

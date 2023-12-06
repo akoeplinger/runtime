@@ -58,11 +58,11 @@ namespace System.ComponentModel.Composition
     {
         public delegate object MetadataViewFactory(IDictionary<string, object?> metadata);
 
-        public const string MetadataViewType        = "MetadataViewType";
-        public const string MetadataItemKey         = "MetadataItemKey";
-        public const string MetadataItemTargetType  = "MetadataItemTargetType";
-        public const string MetadataItemSourceType  = "MetadataItemSourceType";
-        public const string MetadataItemValue       = "MetadataItemValue";
+        public const string MetadataViewType = "MetadataViewType";
+        public const string MetadataItemKey = "MetadataItemKey";
+        public const string MetadataItemTargetType = "MetadataItemTargetType";
+        public const string MetadataItemSourceType = "MetadataItemSourceType";
+        public const string MetadataItemValue = "MetadataItemValue";
         public const string MetadataViewFactoryName = "Create";
 
         private static readonly ReadWriteLock _lock = new ReadWriteLock();

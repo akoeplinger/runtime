@@ -282,7 +282,7 @@ namespace System.Net.Sockets
                     errorCode = CloseHandle(handle);
                     break;
 
-                // For other errors, it's too dangerous to try closesocket() - it might block!
+                    // For other errors, it's too dangerous to try closesocket() - it might block!
             }
 
             return SocketPal.GetSocketErrorForErrorCode(errorCode);

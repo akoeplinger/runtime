@@ -436,19 +436,21 @@ namespace System.Runtime.CompilerServices
                 goto assigningNull;
 
             if (elementType != RuntimeHelpers.GetMethodTable(obj))
+            {
                 goto notExactMatch;
+            }
 
-            doWrite:
-                WriteBarrier(ref element, obj);
-                return;
+        doWrite:
+            WriteBarrier(ref element, obj);
+            return;
 
-            assigningNull:
-                element = null;
-                return;
+        assigningNull:
+            element = null;
+            return;
 
-            notExactMatch:
-                if (array.GetType() == typeof(object[]))
-                    goto doWrite;
+        notExactMatch:
+            if (array.GetType() == typeof(object[]))
+                goto doWrite;
 
             StelemRef_Helper(ref element, elementType, obj);
         }

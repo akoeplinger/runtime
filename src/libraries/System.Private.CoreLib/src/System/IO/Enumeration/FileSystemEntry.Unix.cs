@@ -44,8 +44,8 @@ namespace System.IO.Enumeration
             entry._status.InvalidateCaches();
 
             bool isDirectory = directoryEntry.InodeType == Interop.Sys.NodeType.DT_DIR;
-            bool isSymlink   = directoryEntry.InodeType == Interop.Sys.NodeType.DT_LNK;
-            bool isUnknown   = directoryEntry.InodeType == Interop.Sys.NodeType.DT_UNKNOWN;
+            bool isSymlink = directoryEntry.InodeType == Interop.Sys.NodeType.DT_LNK;
+            bool isUnknown = directoryEntry.InodeType == Interop.Sys.NodeType.DT_UNKNOWN;
 
             if (isDirectory)
             {

@@ -576,10 +576,10 @@ namespace System.Formats.Tar
 
             if (!OperatingSystem.IsWindows())
             {
-                 const UnixFileMode OwnershipPermissions =
-                    UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
-                    UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
-                    UnixFileMode.OtherRead | UnixFileMode.OtherWrite |  UnixFileMode.OtherExecute;
+                const UnixFileMode OwnershipPermissions =
+                   UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                   UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                   UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute;
 
                 // Restore permissions.
                 // For security, limit to ownership permissions, and respect umask (through UnixCreateMode).

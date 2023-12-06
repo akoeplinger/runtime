@@ -393,7 +393,7 @@ namespace System.Globalization
         }
 
         private const uint DigitSubstitutionMask = 0x0000FFFF;
-        private const uint ListSeparatorMask     = 0xFFFF0000;
+        private const uint ListSeparatorMask = 0xFFFF0000;
 
         private static int IcuGetDigitSubstitution(string cultureName)
         {
@@ -489,7 +489,7 @@ namespace System.Globalization
                 return Array.Empty<CultureInfo>();
             }
 
-            bool enumNeutrals   = (types & CultureTypes.NeutralCultures) != 0;
+            bool enumNeutrals = (types & CultureTypes.NeutralCultures) != 0;
             bool enumSpecifics = (types & CultureTypes.SpecificCultures) != 0;
 
             List<CultureInfo> list = new List<CultureInfo>();

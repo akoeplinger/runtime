@@ -95,10 +95,8 @@ namespace System.Security.Cryptography.X509Certificates
                     {
                         switch (item.IPAddress.GetValueOrDefault().Length)
                         {
-                            case 4:
-                                // IPv4
-                            case 16:
-                                // UPv6
+                            case 4:  // IPv4
+                            case 16: // UPv6
                                 break;
                             default:
                                 throw new CryptographicException(

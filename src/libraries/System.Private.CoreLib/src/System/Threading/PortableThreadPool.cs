@@ -24,7 +24,7 @@ namespace System.Threading
 #elif TARGET_32BIT
         private const short DefaultMaxWorkerThreadCount = 1023;
 #else
-        #error Unknown platform
+#error Unknown platform
 #endif
 
         private const int CpuUtilizationHigh = 95;

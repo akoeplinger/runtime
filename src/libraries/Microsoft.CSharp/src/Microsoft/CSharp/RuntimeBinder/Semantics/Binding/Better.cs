@@ -121,7 +121,7 @@ namespace Microsoft.CSharp.RuntimeBinder.Semantics
                 CType type2 = ta2[i];
                 BetterType nParam = BetterType.Neither;
 
-LAgain:
+            LAgain:
                 if (type1.TypeKind != type2.TypeKind)
                 {
                     if (type1 is TypeParameterType)

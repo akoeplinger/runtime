@@ -268,7 +268,8 @@ namespace System.Security.Cryptography.X509Certificates
                 // IssuerName is mutable to callers in X509Certificate. We want to be
                 // able to get the issuer even if IssuerName has been mutated, so we
                 // don't use it here.
-                return _issuer ??= UseCertInteriorData(static cert => {
+                return _issuer ??= UseCertInteriorData(static cert =>
+                {
                     return Interop.Crypto.LoadX500Name(Interop.Crypto.X509GetIssuerName(cert)).Name;
                 });
             }
@@ -281,7 +282,8 @@ namespace System.Security.Cryptography.X509Certificates
                 // SubjectName is mutable to callers in X509Certificate. We want to be
                 // able to get the subject even if SubjectName has been mutated, so we
                 // don't use it here.
-                return _subject ??= UseCertInteriorData(static cert => {
+                return _subject ??= UseCertInteriorData(static cert =>
+                {
                     return Interop.Crypto.LoadX500Name(Interop.Crypto.X509GetSubjectName(cert)).Name;
                 });
             }
@@ -303,7 +305,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return UseCertInteriorData(static cert => {
+                return UseCertInteriorData(static cert =>
+                {
                     IntPtr oidPtr = Interop.Crypto.GetX509PublicKeyAlgorithm(cert);
                     return Interop.Crypto.GetOidValue(oidPtr);
                 });
@@ -322,7 +325,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return UseCertInteriorData(static cert => {
+                return UseCertInteriorData(static cert =>
+                {
                     IntPtr keyBytesPtr = Interop.Crypto.GetX509PublicKeyBytes(cert);
                     return Interop.Crypto.GetAsn1StringBytes(keyBytesPtr);
                 });
@@ -344,7 +348,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return UseCertInteriorData(static cert => {
+                return UseCertInteriorData(static cert =>
+                {
                     IntPtr oidPtr = Interop.Crypto.GetX509SignatureAlgorithm(cert);
                     return Interop.Crypto.GetOidValue(oidPtr);
                 });
@@ -356,7 +361,8 @@ namespace System.Security.Cryptography.X509Certificates
             get
             {
 
-                return UseCertInteriorData(static cert => {
+                return UseCertInteriorData(static cert =>
+                {
                     return ExtractValidityDateTime(Interop.Crypto.GetX509NotAfter(cert));
                 });
             }
@@ -366,7 +372,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return UseCertInteriorData(static cert => {
+                return UseCertInteriorData(static cert =>
+                {
                     return ExtractValidityDateTime(Interop.Crypto.GetX509NotBefore(cert));
                 });
             }
@@ -424,7 +431,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return _subjectName ??= UseCertInteriorData(static cert => {
+                return _subjectName ??= UseCertInteriorData(static cert =>
+                {
                     return Interop.Crypto.LoadX500Name(Interop.Crypto.X509GetSubjectName(cert));
                 });
             }
@@ -434,7 +442,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return _issuerName ??= UseCertInteriorData(static cert => {
+                return _issuerName ??= UseCertInteriorData(static cert =>
+                {
                     return Interop.Crypto.LoadX500Name(Interop.Crypto.X509GetIssuerName(cert));
                 });
             }
@@ -442,7 +451,8 @@ namespace System.Security.Cryptography.X509Certificates
 
         public PolicyData GetPolicyData()
         {
-            return UseCertInteriorData(static cert => {
+            return UseCertInteriorData(static cert =>
+            {
                 PolicyData policyData = default;
 
                 int extensionCount = Interop.Crypto.X509GetExtCount(cert);
@@ -471,8 +481,8 @@ namespace System.Security.Cryptography.X509Certificates
                             policyData.CertPolicyMappings = Interop.Crypto.GetAsn1StringBytes(dataPtr);
                             break;
                         case Oids.CertPolicyConstraints:
-                        policyData.CertPolicyConstraints = Interop.Crypto.GetAsn1StringBytes(dataPtr);
-                        break;
+                            policyData.CertPolicyConstraints = Interop.Crypto.GetAsn1StringBytes(dataPtr);
+                            break;
                         case Oids.EnhancedKeyUsage:
                             policyData.EnhancedKeyUsage = Interop.Crypto.GetAsn1StringBytes(dataPtr);
                             break;
@@ -490,7 +500,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             get
             {
-                return UseCertInteriorData(static cert => {
+                return UseCertInteriorData(static cert =>
+                {
                     int extensionCount = Interop.Crypto.X509GetExtCount(cert);
                     X509Extension[] extensions = new X509Extension[extensionCount];
 

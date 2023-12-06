@@ -42,7 +42,7 @@ namespace System.Reflection.Emit
     [StructLayout(LayoutKind.Sequential)]
     internal sealed partial class RuntimeEventBuilder : EventBuilder
     {
-#region Sync with MonoReflectionEventBuilder in object-internals.h
+        #region Sync with MonoReflectionEventBuilder in object-internals.h
         internal string name;
         private Type type;
         private RuntimeTypeBuilder typeb;
@@ -53,7 +53,7 @@ namespace System.Reflection.Emit
         internal MethodBuilder[]? other_methods;
         internal EventAttributes attrs;
         private int table_idx;
-#endregion
+        #endregion
 
         [DynamicDependency(nameof(table_idx))]  // Automatically keeps all previous fields too due to StructLayout
         internal RuntimeEventBuilder(RuntimeTypeBuilder tb, string eventName, EventAttributes eventAttrs, Type eventType)

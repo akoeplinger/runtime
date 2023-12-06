@@ -202,7 +202,8 @@ namespace System.Linq.Parallel
                 }
                 finally
                 {
-                    if (!ParallelEnumerable.SinglePartitionMode) {
+                    if (!ParallelEnumerable.SinglePartitionMode)
+                    {
                         // No matter whether we exit due to an exception or normal completion, we must ensure
                         // that we signal other partitions that we have completed.  Otherwise, we can cause deadlocks.
                         _sharedBarrier.Signal();

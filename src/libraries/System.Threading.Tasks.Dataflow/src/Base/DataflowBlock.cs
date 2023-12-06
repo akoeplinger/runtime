@@ -1580,7 +1580,7 @@ namespace System.Threading.Tasks.Dataflow
             /// <summary>Gets the data to display in the debugger display attribute for this instance.</summary>
             object IDebuggerDisplay.Content { get { return DebuggerDisplayContent; } }
         }
-#endregion
+        #endregion
 
         #region Encapsulate
         /// <summary>Encapsulates a target and a source into a single propagator.</summary>

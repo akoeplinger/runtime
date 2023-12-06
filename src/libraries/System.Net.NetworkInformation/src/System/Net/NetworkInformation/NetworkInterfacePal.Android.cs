@@ -20,8 +20,8 @@ namespace System.Net.NetworkInformation
         {
             int interfaceCount = 0;
             int addressCount = 0;
-            Interop.Sys.NetworkInterfaceInfo *networkInterfaceInfo = null;
-            Interop.Sys.IpAddressInfo *addressInfo = null;
+            Interop.Sys.NetworkInterfaceInfo* networkInterfaceInfo = null;
+            Interop.Sys.IpAddressInfo* addressInfo = null;
 
             if (Interop.Sys.GetNetworkInterfaces(&interfaceCount, &networkInterfaceInfo, &addressCount, &addressInfo) != 0)
             {

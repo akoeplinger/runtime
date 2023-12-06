@@ -362,23 +362,23 @@ namespace System.Collections.Specialized
             objectsArray.RemoveAt(index);
         }
 
-#region IDictionary implementation
+        #region IDictionary implementation
         public virtual IDictionaryEnumerator GetEnumerator()
         {
             ArrayList objectsArray = EnsureObjectsArray();
             return new OrderedDictionaryEnumerator(objectsArray, OrderedDictionaryEnumerator.DictionaryEntry);
         }
-#endregion
+        #endregion
 
-#region IEnumerable implementation
+        #region IEnumerable implementation
         IEnumerator IEnumerable.GetEnumerator()
         {
             ArrayList objectsArray = EnsureObjectsArray();
             return new OrderedDictionaryEnumerator(objectsArray, OrderedDictionaryEnumerator.DictionaryEntry);
         }
-#endregion
+        #endregion
 
-#region ISerializable implementation
+        #region ISerializable implementation
         [Obsolete(Obsoletions.LegacyFormatterImplMessage, DiagnosticId = Obsoletions.LegacyFormatterImplDiagId, UrlFormat = Obsoletions.SharedUrlFormat)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -394,9 +394,9 @@ namespace System.Collections.Specialized
             objectsArray.CopyTo(serArray);
             info.AddValue(ArrayListName, serArray);
         }
-#endregion
+        #endregion
 
-#region IDeserializationCallback implementation
+        #region IDeserializationCallback implementation
         void IDeserializationCallback.OnDeserialization(object? sender)
         {
             OnDeserialization(sender);
@@ -435,7 +435,7 @@ namespace System.Collections.Specialized
                 }
             }
         }
-#endregion
+        #endregion
 
         /// <devdoc>
         /// OrderedDictionaryEnumerator works just like any other IDictionaryEnumerator, but it retrieves DictionaryEntries

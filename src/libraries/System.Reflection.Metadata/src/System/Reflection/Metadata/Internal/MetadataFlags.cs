@@ -258,7 +258,7 @@ namespace System.Reflection.Metadata.Ecma335
         // the two extra bits are actually interpreted. The extra String1,2,3 values here are
         // not used directly, but serve as a reminder that they are not available for use
         // by another handle type.
-        internal const uint String  = 0x78;
+        internal const uint String = 0x78;
         internal const uint String1 = 0x79;
         internal const uint String2 = 0x7a;
         internal const uint String3 = 0x7b;

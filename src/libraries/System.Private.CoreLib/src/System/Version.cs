@@ -218,8 +218,8 @@ namespace System
                     ThrowArgumentException("3");
                     break;
 
-                static void ThrowArgumentException(string failureUpperBound) =>
-                    throw new ArgumentException(SR.Format(SR.ArgumentOutOfRange_Bounds_Lower_Upper, "0", failureUpperBound), nameof(fieldCount));
+                    static void ThrowArgumentException(string failureUpperBound) =>
+                        throw new ArgumentException(SR.Format(SR.ArgumentOutOfRange_Bounds_Lower_Upper, "0", failureUpperBound), nameof(fieldCount));
             }
 
             int totalCharsWritten = 0;

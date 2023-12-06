@@ -355,7 +355,8 @@ namespace System.Linq.Parallel
                     {
                         // Wake up all producers. Since the cancellation token has already been
                         // set, the producers will eventually stop after waking up.
-                        if (!ParallelEnumerable.SinglePartitionMode) {
+                        if (!ParallelEnumerable.SinglePartitionMode)
+                        {
                             object[] locks = _mergeHelper._bufferLocks;
                             for (int i = 0; i < locks.Length; i++)
                             {
@@ -476,7 +477,8 @@ namespace System.Linq.Parallel
             public override void Dispose()
             {
                 // Wake up any waiting producers
-                if (!ParallelEnumerable.SinglePartitionMode) {
+                if (!ParallelEnumerable.SinglePartitionMode)
+                {
                     int partitionCount = _mergeHelper._buffers.Length;
                     for (int producer = 0; producer < partitionCount; producer++)
                     {

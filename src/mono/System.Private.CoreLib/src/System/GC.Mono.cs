@@ -280,7 +280,8 @@ namespace System
 
         public static T[] AllocateArray<T>(int length, bool pinned = false)
         {
-            if (pinned) {
+            if (pinned)
+            {
                 return Unsafe.As<T[]>(AllocPinnedArray(typeof(T[]), length));
             }
 
@@ -289,19 +290,20 @@ namespace System
 
         internal static ulong GetGenerationSize(int generation)
         {
-            switch (generation) {
-            case 0 :
-                return EventPipeInternal.GetRuntimeCounterValue(EventPipeInternal.RuntimeCounters.GC_NURSERY_SIZE_BYTES);
-            case 1 :
-            case 2 :
-                return EventPipeInternal.GetRuntimeCounterValue(EventPipeInternal.RuntimeCounters.GC_MAJOR_SIZE_BYTES);
-            case 3 :
-                return EventPipeInternal.GetRuntimeCounterValue(EventPipeInternal.RuntimeCounters.GC_LARGE_OBJECT_SIZE_BYTES);
-            case 4:
-                // Pinned object heap.
-                return 0;
-            default:
-                return 0;
+            switch (generation)
+            {
+                case 0:
+                    return EventPipeInternal.GetRuntimeCounterValue(EventPipeInternal.RuntimeCounters.GC_NURSERY_SIZE_BYTES);
+                case 1:
+                case 2:
+                    return EventPipeInternal.GetRuntimeCounterValue(EventPipeInternal.RuntimeCounters.GC_MAJOR_SIZE_BYTES);
+                case 3:
+                    return EventPipeInternal.GetRuntimeCounterValue(EventPipeInternal.RuntimeCounters.GC_LARGE_OBJECT_SIZE_BYTES);
+                case 4:
+                    // Pinned object heap.
+                    return 0;
+                default:
+                    return 0;
             }
         }
 

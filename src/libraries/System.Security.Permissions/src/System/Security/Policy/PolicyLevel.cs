@@ -8,7 +8,7 @@ namespace System.Security.Policy
     public sealed partial class PolicyLevel
     {
         internal PolicyLevel() { }
-        [Obsolete("Because all GAC assemblies always get full trust, the full trust list is no longer meaningful. You should install any assemblies that are used in security policy in the GAC to ensure they are trusted.")]        public IList FullTrustAssemblies { get { return default(IList); } }
+        [Obsolete("Because all GAC assemblies always get full trust, the full trust list is no longer meaningful. You should install any assemblies that are used in security policy in the GAC to ensure they are trusted.")] public IList FullTrustAssemblies { get { return default(IList); } }
         public string Label { get { return null; } }
         public IList NamedPermissionSets { get { return default(IList); } }
         public CodeGroup RootCodeGroup { get; set; }

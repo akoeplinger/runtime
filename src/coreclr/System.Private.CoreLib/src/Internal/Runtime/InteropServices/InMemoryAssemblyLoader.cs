@@ -80,8 +80,8 @@ namespace Internal.Runtime.InteropServices
             {
                 var resolver = new AssemblyDependencyResolver(assemblyPathString);
                 AssemblyLoadContext.Default.Resolving +=
-                    [RequiresUnreferencedCode("C++/CLI is not trim-compatible", Url = "https://aka.ms/dotnet-illink/nativehost")]
-                    (context, assemblyName) =>
+                [RequiresUnreferencedCode("C++/CLI is not trim-compatible", Url = "https://aka.ms/dotnet-illink/nativehost")]
+                (context, assemblyName) =>
                     {
                         string? assemblyPath = resolver.ResolveAssemblyToPath(assemblyName);
                         return assemblyPath != null

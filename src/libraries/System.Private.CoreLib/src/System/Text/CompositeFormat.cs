@@ -321,17 +321,17 @@ namespace System.Text
                 // Continue parsing the rest of the format string.
             }
 
-            FailureUnexpectedClosingBrace:
+        FailureUnexpectedClosingBrace:
             failureReason = ExceptionResource.Format_UnexpectedClosingBrace;
             failureOffset = pos;
             return false;
 
-            FailureUnclosedFormatItem:
+        FailureUnclosedFormatItem:
             failureReason = ExceptionResource.Format_UnclosedFormatItem;
             failureOffset = pos;
             return false;
 
-            FailureExpectedAsciiDigit:
+        FailureExpectedAsciiDigit:
             failureReason = ExceptionResource.Format_ExpectedAsciiDigit;
             failureOffset = pos;
             return false;

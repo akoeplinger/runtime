@@ -124,17 +124,17 @@ namespace System.Buffers.Text
                 switch (c)
                 {
                     case Utf8Constants.Minus:
-                    {
-                        isNegative = true;
-                        goto case Utf8Constants.Plus;
-                    }
+                        {
+                            isNegative = true;
+                            goto case Utf8Constants.Plus;
+                        }
 
                     case Utf8Constants.Plus:
-                    {
-                        srcIndex++;
-                        remaining--;
-                        break;
-                    }
+                        {
+                            srcIndex++;
+                            remaining--;
+                            break;
+                        }
                 }
             }
 

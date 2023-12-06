@@ -60,9 +60,13 @@ namespace System.Buffers.Text
             answer = 0;
             index++;
             if ((uint)index >= (uint)source.Length)
+            {
                 goto FalseExit;
+            }
             if (source[index] != '0')
+            {
                 goto FalseExit;
+            }
 
         FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
@@ -141,9 +145,13 @@ namespace System.Buffers.Text
             answer = 0;
             index++;
             if ((uint)index >= (uint)source.Length)
+            {
                 goto FalseExit;
+            }
             if (source[index] != '0')
+            {
                 goto FalseExit;
+            }
 
         FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
@@ -222,9 +230,13 @@ namespace System.Buffers.Text
             answer = 0;
             index++;
             if ((uint)index >= (uint)source.Length)
+            {
                 goto FalseExit;
+            }
             if (source[index] != '0')
+            {
                 goto FalseExit;
+            }
 
         FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do
@@ -303,9 +315,13 @@ namespace System.Buffers.Text
             answer = 0;
             index++;
             if ((uint)index >= (uint)source.Length)
+            {
                 goto FalseExit;
+            }
             if (source[index] != '0')
+            {
                 goto FalseExit;
+            }
 
         FractionalDigits: // "N" format allows a fractional portion despite being an integer format but only if the post-fraction digits are all 0.
             do

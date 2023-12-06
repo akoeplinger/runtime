@@ -23,7 +23,7 @@ namespace System.Runtime.CompilerServices
             RuntimeTypeHandle targetTypeHandle,
             out int count)
         {
-            fixed (int *pCount = &count)
+            fixed (int* pCount = &count)
             {
                 return (void*)GetSpanDataFrom(fldHandle.Value, targetTypeHandle.Value, new IntPtr(pCount));
             }

@@ -39,14 +39,14 @@ internal static partial class Interop
         internal static unsafe partial bool X509StoreEnumerateCertificates(
             SafeX509StoreHandle storeHandle,
             delegate* unmanaged<void*, void*, Interop.AndroidCrypto.PAL_KeyAlgorithm, void*, void> callback,
-            void *callbackContext);
+            void* callbackContext);
 
         [LibraryImport(Libraries.AndroidCryptoNative, EntryPoint = "AndroidCryptoNative_X509StoreEnumerateTrustedCertificates")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static unsafe partial bool X509StoreEnumerateTrustedCertificates(
             byte systemOnly,
             delegate* unmanaged<void*, void*, void> callback,
-            void *callbackContext);
+            void* callbackContext);
 
         [LibraryImport(Libraries.AndroidCryptoNative, EntryPoint = "AndroidCryptoNative_X509StoreOpenDefault")]
         internal static unsafe partial SafeX509StoreHandle X509StoreOpenDefault();

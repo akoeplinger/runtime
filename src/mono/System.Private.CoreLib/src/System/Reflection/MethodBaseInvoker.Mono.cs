@@ -17,7 +17,7 @@ namespace System.Reflection
             _invokeFunc_RefArgs = InterpretedInvoke_Constructor;
         }
 
-        private unsafe object? InterpretedInvoke_Method(object? obj, IntPtr *args)
+        private unsafe object? InterpretedInvoke_Method(object? obj, IntPtr* args)
         {
             object? o = ((RuntimeMethodInfo)_method).InternalInvoke(obj, args, out Exception? exc);
 

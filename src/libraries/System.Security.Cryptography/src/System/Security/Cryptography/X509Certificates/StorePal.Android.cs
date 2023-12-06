@@ -71,39 +71,39 @@ namespace System.Security.Cryptography.X509Certificates
             switch (storeLocation)
             {
                 case StoreLocation.CurrentUser:
-                {
-                    // Matches Unix behaviour of getting a disallowed store that is always empty.
-                    if (ordinalIgnoreCase.Equals(X509Store.DisallowedStoreName, storeName))
                     {
-                        return new UnsupportedDisallowedStore(openFlags);
-                    }
-
-                    if (ordinalIgnoreCase.Equals(X509Store.MyStoreName, storeName))
-                    {
-                        return AndroidKeyStore.OpenDefault(openFlags);
-                    }
-
-                    if (ordinalIgnoreCase.Equals(X509Store.RootStoreName, storeName))
-                    {
-                        // Android only allows updating the trusted store through the built-in settings application
-                        if (isReadWrite)
+                        // Matches Unix behaviour of getting a disallowed store that is always empty.
+                        if (ordinalIgnoreCase.Equals(X509Store.DisallowedStoreName, storeName))
                         {
-                            throw new CryptographicException(SR.Security_AccessDenied);
+                            return new UnsupportedDisallowedStore(openFlags);
                         }
 
-                        return new TrustedStore(storeLocation);
-                    }
-                    break;
-                }
-                case StoreLocation.LocalMachine:
-                {
-                    if (ordinalIgnoreCase.Equals(X509Store.RootStoreName, storeName))
-                    {
-                        return new TrustedStore(storeLocation);
-                    }
+                        if (ordinalIgnoreCase.Equals(X509Store.MyStoreName, storeName))
+                        {
+                            return AndroidKeyStore.OpenDefault(openFlags);
+                        }
 
-                    break;
-                }
+                        if (ordinalIgnoreCase.Equals(X509Store.RootStoreName, storeName))
+                        {
+                            // Android only allows updating the trusted store through the built-in settings application
+                            if (isReadWrite)
+                            {
+                                throw new CryptographicException(SR.Security_AccessDenied);
+                            }
+
+                            return new TrustedStore(storeLocation);
+                        }
+                        break;
+                    }
+                case StoreLocation.LocalMachine:
+                    {
+                        if (ordinalIgnoreCase.Equals(X509Store.RootStoreName, storeName))
+                        {
+                            return new TrustedStore(storeLocation);
+                        }
+
+                        break;
+                    }
             }
 
             if ((openFlags & OpenFlags.OpenExistingOnly) == OpenFlags.OpenExistingOnly)

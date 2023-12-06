@@ -145,7 +145,7 @@ namespace System.Reflection.Metadata
             return new DeclarativeSecurityAttributeHandleCollection(_reader, Handle);
         }
 
-#region Projections
+        #region Projections
 
         private StringHandle GetProjectedName()
         {
@@ -212,6 +212,6 @@ namespace System.Reflection.Metadata
         {
             return 0;
         }
-#endregion
+        #endregion
     }
 }

@@ -282,26 +282,26 @@ namespace System.Security.Cryptography.X509Certificates
             out AsnEncodedData keyValue)
         {
             fixed (byte* ptr = &MemoryMarshal.GetReference(source))
-            using (MemoryManager<byte> manager = new PointerMemoryManager<byte>(ptr, source.Length))
-            {
-                AsnValueReader reader = new AsnValueReader(source, AsnEncodingRules.DER);
-
-                int read;
-                SubjectPublicKeyInfoAsn spki;
-
-                try
+                using (MemoryManager<byte> manager = new PointerMemoryManager<byte>(ptr, source.Length))
                 {
-                    read = reader.PeekEncodedValue().Length;
-                    SubjectPublicKeyInfoAsn.Decode(ref reader, manager.Memory, out spki);
-                }
-                catch (AsnContentException e)
-                {
-                    throw new CryptographicException(SR.Cryptography_Der_Invalid_Encoding, e);
-                }
+                    AsnValueReader reader = new AsnValueReader(source, AsnEncodingRules.DER);
 
-                DecodeSubjectPublicKeyInfo(ref spki, out oid, out parameters, out keyValue);
-                return read;
-            }
+                    int read;
+                    SubjectPublicKeyInfoAsn spki;
+
+                    try
+                    {
+                        read = reader.PeekEncodedValue().Length;
+                        SubjectPublicKeyInfoAsn.Decode(ref reader, manager.Memory, out spki);
+                    }
+                    catch (AsnContentException e)
+                    {
+                        throw new CryptographicException(SR.Cryptography_Der_Invalid_Encoding, e);
+                    }
+
+                    DecodeSubjectPublicKeyInfo(ref spki, out oid, out parameters, out keyValue);
+                    return read;
+                }
         }
 
         internal static PublicKey DecodeSubjectPublicKeyInfo(ref SubjectPublicKeyInfoAsn spki)

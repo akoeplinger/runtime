@@ -17,8 +17,8 @@ internal static partial class Interop
 
             internal byte* Name;
             internal byte* Password;
-            internal uint  UserId;
-            internal uint  GroupId;
+            internal uint UserId;
+            internal uint GroupId;
             internal byte* UserInfo;
             internal byte* HomeDirectory;
             internal byte* Shell;

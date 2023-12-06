@@ -2994,7 +2994,7 @@ namespace System
                             vlb.Append(info.NegativeSignTChar<TChar>());
                         }
 
-                        SkipSign:
+                    SkipSign:
                         FormatGeneral(ref vlb, ref number, nMaxDigits, info, (char)(format - ('G' - 'E')), noRounding);
 
                         break;
@@ -3120,7 +3120,7 @@ namespace System
 
                             case '\'':
                             case '"':
-                                while (src < format.Length && pFormat[src] != 0 && pFormat[src++] != ch);
+                                while (src < format.Length && pFormat[src] != 0 && pFormat[src++] != ch) ;
                                 break;
 
                             case '\\':
@@ -3135,7 +3135,7 @@ namespace System
                                 if ((src < format.Length && pFormat[src] == '0') ||
                                     (src + 1 < format.Length && (pFormat[src] == '+' || pFormat[src] == '-') && pFormat[src + 1] == '0'))
                                 {
-                                    while (++src < format.Length && pFormat[src] == '0');
+                                    while (++src < format.Length && pFormat[src] == '0') ;
                                     scientific = true;
                                 }
                                 break;

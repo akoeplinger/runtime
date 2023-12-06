@@ -73,11 +73,10 @@ namespace System.Security.Cryptography.Pkcs
         }
 
 #if NETSTANDARD2_0
-        internal
+        internal RSAEncryptionPadding? RSAEncryptionPadding { get; }
 #else
-        public
+        public RSAEncryptionPadding? RSAEncryptionPadding { get; }
 #endif
-        RSAEncryptionPadding? RSAEncryptionPadding { get; }
         public SubjectIdentifierType RecipientIdentifierType { get; }
         public X509Certificate2 Certificate { get; }
 

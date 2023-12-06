@@ -49,7 +49,7 @@ namespace System.Data.Odbc
         private IntPtr _boundBuffer;
         private IntPtr _boundIntbuffer;
         private TypeMap? _originalbindtype;         // the original type in case we had to change the bindtype
-                                                   // (e.g. decimal to string)
+                                                    // (e.g. decimal to string)
         private byte _internalPrecision;
         private bool _internalShouldSerializeSize;
         private int _internalSize;

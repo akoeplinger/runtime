@@ -703,7 +703,7 @@ namespace System.Runtime
             long keywords,
             uint eventVersion,
             uint level,
-            void *pMetadata,
+            void* pMetadata,
             uint metadataLength);
 
         [LibraryImport(RuntimeLibrary)]

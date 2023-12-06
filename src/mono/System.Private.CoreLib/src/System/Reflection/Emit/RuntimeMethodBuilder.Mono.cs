@@ -44,7 +44,7 @@ namespace System.Reflection.Emit
     [StructLayout(LayoutKind.Sequential)]
     internal sealed partial class RuntimeMethodBuilder : MethodBuilder
     {
-#region Sync with MonoReflectionMethodBuilder in object-internals.h
+        #region Sync with MonoReflectionMethodBuilder in object-internals.h
         private RuntimeMethodHandle mhandle;
         private Type? rtype;
         internal Type[]? parameters;
@@ -71,7 +71,7 @@ namespace System.Reflection.Emit
         private Type[]? returnModOpt;
         private Type[][]? paramModReq;
         private Type[][]? paramModOpt;
-#endregion
+        #endregion
 
         private RuntimeMethodInfo? created;
 

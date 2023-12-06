@@ -10,7 +10,7 @@ namespace System.Reflection
             _invokeFunc_RefArgs = InterpretedInvoke;
         }
 
-        private unsafe object? InterpretedInvoke(object? obj, IntPtr *args)
+        private unsafe object? InterpretedInvoke(object? obj, IntPtr* args)
         {
             object? o = _method.InternalInvoke(obj, args, out Exception? exc);
 

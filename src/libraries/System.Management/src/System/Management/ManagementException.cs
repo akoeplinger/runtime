@@ -590,7 +590,7 @@ namespace System.Management
     public class ManagementException : SystemException
     {
         private readonly ManagementBaseObject errorObject;
-        private readonly ManagementStatus     errorCode;
+        private readonly ManagementStatus errorCode;
 
         internal static void ThrowWithExtendedInfo(ManagementStatus errorCode)
         {

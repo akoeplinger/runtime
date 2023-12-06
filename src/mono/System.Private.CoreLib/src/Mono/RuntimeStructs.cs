@@ -60,9 +60,9 @@ namespace Mono
     //Maps to metadata-internals.h:: MonoAssemblyName
     internal unsafe struct MonoAssemblyName
     {
-        #pragma warning disable CA1823 // TODO: https://github.com/dotnet/roslyn/issues/37593
+#pragma warning disable CA1823 // TODO: https://github.com/dotnet/roslyn/issues/37593
         private const int MONO_PUBLIC_KEY_TOKEN_LENGTH = 17;
-        #pragma warning restore CA1823
+#pragma warning restore CA1823
 
         internal IntPtr name;
         internal IntPtr culture;

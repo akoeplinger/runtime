@@ -100,7 +100,7 @@ internal static partial class Interop
         [StructLayout(LayoutKind.Sequential)]
         internal struct proc_fdinfo
         {
-            internal int proc_fd;
+            internal int  proc_fd;
             internal uint proc_fdtype;
         }
 
@@ -112,8 +112,8 @@ internal static partial class Interop
         /// <returns>Returns the number of elements (PIDs) in the buffer</returns>
         [LibraryImport(Interop.Libraries.libproc, SetLastError = true)]
         private static unsafe partial int proc_listallpids(
-            int*    pBuffer,
-            int     buffersize);
+            int* pBuffer,
+            int buffersize);
 
         /// <summary>
         /// Queries the OS for the list of all running processes and returns the PID for each

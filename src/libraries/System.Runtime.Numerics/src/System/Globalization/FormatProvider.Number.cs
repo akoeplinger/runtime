@@ -1050,7 +1050,7 @@ namespace System.Globalization
                                     if ((src < format.Length && pFormat[src] == '0') ||
                                         (src + 1 < format.Length && (pFormat[src] == '+' || pFormat[src] == '-') && pFormat[src + 1] == '0'))
                                     {
-                                        while (++src < format.Length && pFormat[src] == '0');
+                                        while (++src < format.Length && pFormat[src] == '0') ;
                                         scientific = true;
                                     }
                                     break;

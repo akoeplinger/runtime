@@ -551,8 +551,8 @@ namespace System.Data.Odbc
 
             finally
             {
-                dataReader?.Dispose();;
-                command?.Dispose();;
+                dataReader?.Dispose();
+                command?.Dispose();
             }
             return resultTable;
         }
@@ -813,8 +813,8 @@ namespace System.Data.Odbc
 
             finally
             {
-                dataReader?.Dispose();;
-                command?.Dispose();;
+                dataReader?.Dispose();
+                command?.Dispose();
             }
             dataTypesTable.AcceptChanges();
             return dataTypesTable;
@@ -862,8 +862,8 @@ namespace System.Data.Odbc
 
             finally
             {
-                dataReader?.Dispose();;
-                command?.Dispose();;
+                dataReader?.Dispose();
+                command?.Dispose();
             }
             return resultTable;
         }
@@ -899,8 +899,8 @@ namespace System.Data.Odbc
 
             finally
             {
-                dataReader?.Dispose();;
-                command?.Dispose();;
+                dataReader?.Dispose();
+                command?.Dispose();
             }
             return resultTable;
         }
@@ -955,8 +955,8 @@ namespace System.Data.Odbc
 
             finally
             {
-                dataReader?.Dispose();;
-                command?.Dispose();;
+                dataReader?.Dispose();
+                command?.Dispose();
             }
             return resultTable;
         }
@@ -1039,8 +1039,8 @@ namespace System.Data.Odbc
 
             finally
             {
-                dataReader?.Dispose();;
-                command?.Dispose();;
+                dataReader?.Dispose();
+                command?.Dispose();
             }
             return resultTable;
         }

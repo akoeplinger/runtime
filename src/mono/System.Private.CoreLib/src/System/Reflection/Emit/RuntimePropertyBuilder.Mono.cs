@@ -43,7 +43,7 @@ namespace System.Reflection.Emit
     [StructLayout(LayoutKind.Sequential)]
     internal sealed partial class RuntimePropertyBuilder : PropertyBuilder
     {
-#region Sync with MonoReflectionPropertyBuilder in object-internals.h
+        #region Sync with MonoReflectionPropertyBuilder in object-internals.h
         private PropertyAttributes attrs;
         private string name;
         private Type type;
@@ -59,7 +59,7 @@ namespace System.Reflection.Emit
         private Type[][]? paramModReq;
         private Type[][]? paramModOpt;
         private CallingConventions callingConvention;
-#endregion
+        #endregion
 
         internal RuntimePropertyBuilder(RuntimeTypeBuilder tb, string name, PropertyAttributes attributes, CallingConventions callingConvention, Type returnType, Type[]? returnModReq, Type[]? returnModOpt, Type[]? parameterTypes, Type[][]? paramModReq, Type[][]? paramModOpt)
         {

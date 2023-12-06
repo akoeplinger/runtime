@@ -147,14 +147,16 @@ namespace System.Net.Sockets
             fixed (byte* sockAddr = &MemoryMarshal.GetReference(socketAddress))
             fixed (byte* b = &MemoryMarshal.GetReference(buffer))
             {
-                var iov = new Interop.Sys.IOVector {
+                var iov = new Interop.Sys.IOVector
+                {
                     Base = b,
                     Count = (UIntPtr)buffer.Length
                 };
 
                 Debug.Assert(socketAddress.Length != 0 || sockAddr == null);
 
-                var messageHeader = new Interop.Sys.MessageHeader {
+                var messageHeader = new Interop.Sys.MessageHeader
+                {
                     SocketAddress = sockAddr,
                     SocketAddressLen = socketAddress.Length,
                     IOVectors = &iov,
@@ -310,7 +312,8 @@ namespace System.Net.Sockets
                 fixed (byte* sockAddr = socketAddress)
                 fixed (Interop.Sys.IOVector* iov = iovecs)
                 {
-                    var messageHeader = new Interop.Sys.MessageHeader {
+                    var messageHeader = new Interop.Sys.MessageHeader
+                    {
                         SocketAddress = sockAddr,
                         SocketAddressLen = socketAddress.Length,
                         IOVectors = iov,
@@ -431,7 +434,8 @@ namespace System.Net.Sockets
                 fixed (byte* sockAddr = socketAddress)
                 fixed (Interop.Sys.IOVector* iov = iovecs)
                 {
-                    var messageHeader = new Interop.Sys.MessageHeader {
+                    var messageHeader = new Interop.Sys.MessageHeader
+                    {
                         SocketAddress = sockAddr,
                         SocketAddressLen = sockAddrLen,
                         IOVectors = iov,
@@ -480,14 +484,16 @@ namespace System.Net.Sockets
             fixed (byte* rawSocketAddress = socketAddress)
             fixed (byte* b = &MemoryMarshal.GetReference(buffer))
             {
-                var iov = new Interop.Sys.IOVector {
+                var iov = new Interop.Sys.IOVector
+                {
                     Base = b,
                     Count = (UIntPtr)buffer.Length
                 };
 
                 Debug.Assert(socketAddress.Length != 0 || rawSocketAddress == null);
 
-                messageHeader = new Interop.Sys.MessageHeader {
+                messageHeader = new Interop.Sys.MessageHeader
+                {
                     SocketAddress = rawSocketAddress,
                     SocketAddressLen = socketAddress.Length,
                     IOVectors = &iov,
@@ -1517,7 +1523,8 @@ namespace System.Net.Sockets
                 Interop.Sys.MulticastOption.MULTICAST_ADD :
                 Interop.Sys.MulticastOption.MULTICAST_DROP;
 
-            var opt = new Interop.Sys.IPv6MulticastOption {
+            var opt = new Interop.Sys.IPv6MulticastOption
+            {
                 Address = optionValue.Group.GetNativeIPAddress(),
                 InterfaceIndex = (int)optionValue.InterfaceIndex
             };
@@ -1528,7 +1535,8 @@ namespace System.Net.Sockets
 
         public static unsafe SocketError SetLingerOption(SafeSocketHandle handle, LingerOption optionValue)
         {
-            var opt = new Interop.Sys.LingerOption {
+            var opt = new Interop.Sys.LingerOption
+            {
                 OnOff = optionValue.Enabled ? 1 : 0,
                 Seconds = optionValue.LingerTime
             };
@@ -1664,7 +1672,8 @@ namespace System.Net.Sockets
 
             var multicastAddress = new IPAddress((long)opt.MulticastAddress);
             var localAddress = new IPAddress((long)opt.LocalAddress);
-            optionValue = new MulticastOption(multicastAddress, localAddress) {
+            optionValue = new MulticastOption(multicastAddress, localAddress)
+            {
                 InterfaceIndex = opt.InterfaceIndex
             };
 

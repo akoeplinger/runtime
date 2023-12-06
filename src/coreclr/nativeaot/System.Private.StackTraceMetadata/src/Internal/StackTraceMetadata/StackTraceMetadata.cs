@@ -201,10 +201,10 @@ namespace Internal.StackTraceMetadata
                     return;
                 }
 
-                byte *metadataBlob;
+                byte* metadataBlob;
                 uint metadataBlobSize;
 
-                byte *rvaToTokenMapBlob;
+                byte* rvaToTokenMapBlob;
                 uint rvaToTokenMapBlobSize;
 
                 if (nativeFormatModuleInfo.TryFindBlob(

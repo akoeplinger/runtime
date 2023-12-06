@@ -117,27 +117,27 @@ namespace System.Diagnostics.Tracing
                 switch (payload[i])
                 {
                     case string str:
-                    {
-                        sb.Append("\\\"");
-                        MinimalJsonserializer(str, ref sb);
-                        sb.Append("\\\"");
-                        break;
-                    }
-                    case byte[] byteArr:
-                    {
-                        sb.Append("\\\"");
-                        AppendByteArrayAsHexString(ref sb, byteArr);
-                        sb.Append("\\\"");
-                        break;
-                    }
-                    default:
-                    {
-                        if (payload[i] is object o)
                         {
-                            sb.Append(o.ToString());
+                            sb.Append("\\\"");
+                            MinimalJsonserializer(str, ref sb);
+                            sb.Append("\\\"");
+                            break;
                         }
-                        break;
-                    }
+                    case byte[] byteArr:
+                        {
+                            sb.Append("\\\"");
+                            AppendByteArrayAsHexString(ref sb, byteArr);
+                            sb.Append("\\\"");
+                            break;
+                        }
+                    default:
+                        {
+                            if (payload[i] is object o)
+                            {
+                                sb.Append(o.ToString());
+                            }
+                            break;
+                        }
                 }
             }
             sb.Append('}');

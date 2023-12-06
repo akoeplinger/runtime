@@ -1632,10 +1632,10 @@ namespace System.Globalization
                     else
                     {
 #if TARGET_BROWSER || TARGET_MACCATALYST || TARGET_IOS || TARGET_TVOS
-                if (GlobalizationMode.Hybrid)
-                {
-                    throw new PlatformNotSupportedException(GetPNSEText("SortVersion"));
-                }
+                        if (GlobalizationMode.Hybrid)
+                        {
+                            throw new PlatformNotSupportedException(GetPNSEText("SortVersion"));
+                        }
 #endif
                         m_SortVersion = GlobalizationMode.UseNls ? NlsGetSortVersion() : IcuGetSortVersion();
                     }

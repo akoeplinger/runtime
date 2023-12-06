@@ -71,13 +71,13 @@ namespace System.Numerics
             // Same as above, but we're writing the result directly to a and
             // stop execution, if we're out of b and c is already 0.
 
-            for ( ; i < right.Length; i++)
+            for (; i < right.Length; i++)
             {
                 long digit = (Unsafe.Add(ref leftPtr, i) + carry) + right[i];
                 Unsafe.Add(ref leftPtr, i) = unchecked((uint)digit);
                 carry = digit >> 32;
             }
-            for ( ; carry != 0 && i < left.Length; i++)
+            for (; carry != 0 && i < left.Length; i++)
             {
                 long digit = left[i] + carry;
                 left[i] = (uint)digit;

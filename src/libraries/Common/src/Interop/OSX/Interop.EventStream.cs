@@ -101,13 +101,13 @@ internal static partial class Interop
         /// <remarks>For *nix systems, the CLR maps ANSI to UTF-8, so be explicit about that</remarks>
         [LibraryImport(Interop.Libraries.CoreServicesLibrary, StringMarshalling = StringMarshalling.Utf8)]
         internal static unsafe partial SafeEventStreamHandle FSEventStreamCreate(
-            IntPtr                      allocator,
+            IntPtr allocator,
             delegate* unmanaged<FSEventStreamRef, IntPtr, size_t, byte**, FSEventStreamEventFlags*, FSEventStreamEventId*, void> callback,
-            FSEventStreamContext*       context,
-            SafeCreateHandle            pathsToWatch,
-            FSEventStreamEventId        sinceWhen,
-            CFTimeInterval              latency,
-            FSEventStreamCreateFlags    flags);
+            FSEventStreamContext* context,
+            SafeCreateHandle pathsToWatch,
+            FSEventStreamEventId sinceWhen,
+            CFTimeInterval latency,
+            FSEventStreamCreateFlags flags);
 
         /// <summary>
         /// Attaches an EventStream to a RunLoop so events can be received. This should usually be the current thread's RunLoop.
@@ -117,9 +117,9 @@ internal static partial class Interop
         /// <param name="runLoopMode">The mode of the RunLoop; this should usually be kCFRunLoopDefaultMode. See the documentation for RunLoops for more info.</param>
         [LibraryImport(Interop.Libraries.CoreServicesLibrary)]
         internal static partial void FSEventStreamScheduleWithRunLoop(
-            SafeEventStreamHandle   streamRef,
-            CFRunLoopRef            runLoop,
-            SafeCreateHandle        runLoopMode);
+            SafeEventStreamHandle streamRef,
+            CFRunLoopRef runLoop,
+            SafeCreateHandle runLoopMode);
 
         /// <summary>
         /// Starts receiving events on the specified stream.
@@ -160,9 +160,9 @@ internal static partial class Interop
         /// <param name="runLoopMode">The mode of the RunLoop; this should usually be kCFRunLoopDefaultMode. See the documentation for RunLoops for more info.</param>
         [LibraryImport(Interop.Libraries.CoreServicesLibrary)]
         internal static partial void FSEventStreamUnscheduleFromRunLoop(
-            SafeEventStreamHandle   streamRef,
-            CFRunLoopRef            runLoop,
-            SafeCreateHandle        runLoopMode);
+            SafeEventStreamHandle streamRef,
+            CFRunLoopRef runLoop,
+            SafeCreateHandle runLoopMode);
 
         /// <summary>
         /// Releases a reference count on the specified EventStream and, if necessary, cleans the stream up.

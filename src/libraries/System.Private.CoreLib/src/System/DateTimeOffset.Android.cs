@@ -57,7 +57,8 @@ namespace System
                         {
                             s_androidTZDataLoaded = 1;
                         }
-                    }) { IsBackground = true }.Start();
+                    })
+                    { IsBackground = true }.Start();
                 }
 
                 // Fast path obtained offset incorporated into ToLocalTime(DateTime.UtcNow, true) logic

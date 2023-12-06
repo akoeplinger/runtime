@@ -25,13 +25,13 @@ namespace System.Runtime.Serialization
         public const string CurrentPropertyName = "Current";
         public const string DataContractXsdBaseNamespace = "http://schemas.datacontract.org/2004/07/";
         public const string DefaultClrNamespace = "GeneratedNamespace";
-        public const bool   DefaultEmitDefaultValue = true;
+        public const bool DefaultEmitDefaultValue = true;
         public const string DefaultGeneratedMember = "GeneratedMember";
         public const string DefaultFieldSuffix = "Field";
-        public const bool   DefaultIsReference = false;
-        public const bool   DefaultIsRequired = false;
+        public const bool DefaultIsReference = false;
+        public const bool DefaultIsRequired = false;
         public const string DefaultMemberSuffix = "Member";
-        public const int    DefaultOrder = 0;
+        public const int DefaultOrder = 0;
         public const string DefaultTypeName = "GeneratedType";
         public const string DefaultValueLocalName = "DefaultValue";
         public const string EmitDefaultValueAttribute = "EmitDefaultValue";

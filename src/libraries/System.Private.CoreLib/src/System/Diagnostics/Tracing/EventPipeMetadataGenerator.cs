@@ -393,7 +393,7 @@ namespace System.Diagnostics.Tracing
             EventPipeMetadataGenerator.WriteToBuffer(pMetadataBlob, blobSize, ref offset, length);
 
             // Write the property name.
-            fixed (char *pPropertyName = name)
+            fixed (char* pPropertyName = name)
             {
                 EventPipeMetadataGenerator.WriteToBuffer(pMetadataBlob, blobSize, ref offset, (byte*)pPropertyName, ((uint)name.Length + 1) * 2);
             }

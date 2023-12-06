@@ -745,7 +745,7 @@ namespace System.Numerics
                 Impl result;
 
                 result.X = Vector4.UnitX;
-                result.Y = new Vector4(0,  c, s, 0);
+                result.Y = new Vector4(0, c, s, 0);
                 result.Z = new Vector4(0, -s, c, 0);
                 result.W = Vector4.UnitW;
 
@@ -769,9 +769,9 @@ namespace System.Numerics
                 Impl result;
 
                 result.X = Vector4.UnitX;
-                result.Y = new Vector4(0,  c, s, 0);
+                result.Y = new Vector4(0, c, s, 0);
                 result.Z = new Vector4(0, -s, c, 0);
-                result.W = new Vector4(0,  y, z, 1);
+                result.W = new Vector4(0, y, z, 1);
 
                 return result;
             }
@@ -791,7 +791,7 @@ namespace System.Numerics
 
                 result.X = new Vector4(c, 0, -s, 0);
                 result.Y = Vector4.UnitY;
-                result.Z = new Vector4(s, 0,  c, 0);
+                result.Z = new Vector4(s, 0, c, 0);
                 result.W = Vector4.UnitW;
 
                 return result;
@@ -815,8 +815,8 @@ namespace System.Numerics
 
                 result.X = new Vector4(c, 0, -s, 0);
                 result.Y = Vector4.UnitY;
-                result.Z = new Vector4(s, 0,  c, 0);
-                result.W = new Vector4(x, 0,  z, 1);
+                result.Z = new Vector4(s, 0, c, 0);
+                result.W = new Vector4(x, 0, z, 1);
 
                 return result;
             }
@@ -835,7 +835,7 @@ namespace System.Numerics
 
                 Impl result;
 
-                result.X = new Vector4( c, s, 0, 0);
+                result.X = new Vector4(c, s, 0, 0);
                 result.Y = new Vector4(-s, c, 0, 0);
                 result.Z = Vector4.UnitZ;
                 result.W = Vector4.UnitW;
@@ -859,7 +859,7 @@ namespace System.Numerics
 
                 Impl result;
 
-                result.X = new Vector4( c, s, 0, 0);
+                result.X = new Vector4(c, s, 0, 0);
                 result.Y = new Vector4(-s, c, 0, 0);
                 result.Z = Vector4.UnitZ;
                 result.W = new Vector4(x, y, 0, 1);

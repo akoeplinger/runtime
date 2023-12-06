@@ -52,7 +52,8 @@ namespace System.Security.Cryptography
             if (ansiKey.Length != 1 + fieldSize * fieldCount)
                 throw new CryptographicException(SR.Cryptography_NotValidPublicOrPrivateKey);
 
-            ret.Q = new ECPoint {
+            ret.Q = new ECPoint
+            {
                 X = ansiKey.Slice(1, fieldSize).ToArray(),
                 Y = ansiKey.Slice(1 + fieldSize, fieldSize).ToArray()
             };

@@ -175,9 +175,9 @@ namespace System
             // A NaN will never equal itself so this is an
             // easy and efficient way to check for NaN.
 
-            #pragma warning disable CS1718
+#pragma warning disable CS1718
             return d != d;
-            #pragma warning restore CS1718
+#pragma warning restore CS1718
         }
 
         /// <summary>Determines whether the specified value is negative.</summary>

@@ -272,9 +272,9 @@ namespace System.Runtime
             else
             {
                 // Copy the boxed fields into the new location.
-                fixed (byte *pData = &data)
-                    fixed (byte* pFields = &fields)
-                        InternalCalls.memmove(pData, pFields, pEEType->ValueTypeSize);
+                fixed (byte* pData = &data)
+                fixed (byte* pFields = &fields)
+                    InternalCalls.memmove(pData, pFields, pEEType->ValueTypeSize);
             }
         }
 

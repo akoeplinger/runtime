@@ -228,7 +228,7 @@ namespace System.Globalization
             Debug.Assert(GlobalizationMode.Invariant);
 
             fixed (char* pSource = &MemoryMarshal.GetReference(source))
-            fixed (char* pValue  = &MemoryMarshal.GetReference(value))
+            fixed (char* pValue = &MemoryMarshal.GetReference(value))
             {
                 char* pSourceLimit = pSource + (source.Length - value.Length);
                 char* pValueLimit = pValue + value.Length - 1;
@@ -236,8 +236,8 @@ namespace System.Globalization
 
                 while (pCurrentSource <= pSourceLimit)
                 {
-                    char *pVal = pValue;
-                    char *pSrc = pCurrentSource;
+                    char* pVal = pValue;
+                    char* pSrc = pCurrentSource;
 
                     while (pVal <= pValueLimit)
                     {
@@ -290,15 +290,15 @@ namespace System.Globalization
             Debug.Assert(GlobalizationMode.Invariant);
 
             fixed (char* pSource = &MemoryMarshal.GetReference(source))
-            fixed (char* pValue  = &MemoryMarshal.GetReference(value))
+            fixed (char* pValue = &MemoryMarshal.GetReference(value))
             {
                 char* pValueLimit = pValue + value.Length - 1;
                 char* pCurrentSource = pSource + (source.Length - value.Length);
 
                 while (pCurrentSource >= pSource)
                 {
-                    char *pVal = pValue;
-                    char *pSrc = pCurrentSource;
+                    char* pVal = pValue;
+                    char* pSrc = pCurrentSource;
 
                     while (pVal <= pValueLimit)
                     {

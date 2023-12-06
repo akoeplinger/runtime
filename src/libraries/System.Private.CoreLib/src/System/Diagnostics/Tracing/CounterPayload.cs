@@ -33,7 +33,7 @@ namespace System.Diagnostics.Tracing
 
         public string? DisplayUnits { get; set; }
 
-#region Implementation of the IEnumerable interface
+        #region Implementation of the IEnumerable interface
 
         public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
         {
@@ -64,7 +64,7 @@ namespace System.Diagnostics.Tracing
             }
         }
 
-#endregion // Implementation of the IEnumerable interface
+        #endregion // Implementation of the IEnumerable interface
     }
 
     [EventData]
@@ -88,7 +88,7 @@ namespace System.Diagnostics.Tracing
 
         public string? DisplayUnits { get; set; }
 
-#region Implementation of the IEnumerable interface
+        #region Implementation of the IEnumerable interface
 
         public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
         {
@@ -116,6 +116,6 @@ namespace System.Diagnostics.Tracing
             }
         }
 
-#endregion // Implementation of the IEnumerable interface
+        #endregion // Implementation of the IEnumerable interface
     }
 }

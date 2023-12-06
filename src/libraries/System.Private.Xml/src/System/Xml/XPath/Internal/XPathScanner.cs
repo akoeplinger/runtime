@@ -120,7 +120,7 @@ namespace MS.Internal.Xml.XPath
         private void SkipKnownSpace()
         {
             Debug.Assert(XmlCharType.IsWhiteSpace(CurrentChar));
-            while (NextChar() && XmlCharType.IsWhiteSpace(CurrentChar));
+            while (NextChar() && XmlCharType.IsWhiteSpace(CurrentChar)) ;
         }
 
         public bool NextLex()
@@ -334,7 +334,7 @@ namespace MS.Internal.Xml.XPath
             Debug.Assert(XmlCharType.IsNCNameSingleChar(span[0]));
 
             int i;
-            for (i = 1; i < span.Length && XmlCharType.IsNCNameSingleChar(span[i]); i++);
+            for (i = 1; i < span.Length && XmlCharType.IsNCNameSingleChar(span[i]); i++) ;
 
             if ((uint)i < (uint)span.Length)
             {

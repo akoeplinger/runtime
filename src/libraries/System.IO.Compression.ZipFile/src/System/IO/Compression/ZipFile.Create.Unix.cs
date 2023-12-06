@@ -29,7 +29,7 @@ namespace System.IO.Compression
                         {
                             Interop.Sys.FileTypes.S_IFREG => (fullPath, CreateEntryType.File),
                             Interop.Sys.FileTypes.S_IFDIR => (fullPath, CreateEntryType.Directory),
-                            _                             => (fullPath, CreateEntryType.Unsupported)
+                            _ => (fullPath, CreateEntryType.Unsupported)
                         };
                     },
                     new EnumerationOptions { RecurseSubdirectories = true, AttributesToSkip = 0, IgnoreInaccessible = false });

@@ -101,7 +101,7 @@ namespace System.ComponentModel
         private const char DEFAULT_PROMPT_CHAR = '_';
         private const char NULL_PASSWORD_CHAR = '\0';
         private const bool DEFAULT_ALLOW_PROMPT = true;
-        private const int  INVALID_INDEX = -1;
+        private const int INVALID_INDEX = -1;
         private const byte EDIT_ANY = 0;
         private const byte EDIT_UNASSIGNED = 1;
         private const byte EDIT_ASSIGNED = 2;

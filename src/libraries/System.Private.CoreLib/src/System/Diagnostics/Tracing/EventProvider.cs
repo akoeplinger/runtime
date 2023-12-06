@@ -785,7 +785,7 @@ namespace System.Diagnostics.Tracing
 
         protected override unsafe void HandleEnableNotification(
                                     EventProvider target,
-                                    byte *additionalData,
+                                    byte* additionalData,
                                     byte level,
                                     long matchAnyKeywords,
                                     long matchAllKeywords,
@@ -1189,7 +1189,7 @@ namespace System.Diagnostics.Tracing
 
         protected virtual unsafe void HandleEnableNotification(
                                     EventProvider target,
-                                    byte *additionalData,
+                                    byte* additionalData,
                                     byte level,
                                     long matchAnyKeywords,
                                     long matchAllKeywords,
@@ -1292,7 +1292,7 @@ namespace System.Diagnostics.Tracing
 
         protected unsafe void ProviderCallback(
                         EventProvider target,
-                        byte *additionalData,
+                        byte* additionalData,
                         int controlCode,
                         byte level,
                         long matchAnyKeywords,

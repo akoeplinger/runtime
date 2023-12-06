@@ -143,9 +143,13 @@ namespace System
             ref byte destEnd = ref Unsafe.Add(ref dest, (IntPtr)(nint)len);
 
             if (len <= 16)
+            {
                 goto MCPY02;
+            }
             if (len > 64)
+            {
                 goto MCPY05;
+            }
 
         MCPY00:
             // Copy bytes which are multiples of 16 and leave the remainder for MCPY01 to handle.

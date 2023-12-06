@@ -72,15 +72,15 @@ namespace System.Security.Cryptography.X509Certificates
                     return ReadPkcs12(rawData, password, ephemeralSpecified);
                 case X509ContentType.Cert:
                 default:
-                {
-                    ICertificatePal? cert;
-                    if (TryReadX509(rawData, out cert))
                     {
-                        return cert;
-                    }
+                        ICertificatePal? cert;
+                        if (TryReadX509(rawData, out cert))
+                        {
+                            return cert;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             // Unsupported

@@ -12,7 +12,7 @@ namespace System.Resources.Extensions
     {
         private bool _assumeBinaryFormatter;
 
-// Issue https://github.com/dotnet/runtime/issues/39292 tracks finding an alternative to BinaryFormatter
+        // Issue https://github.com/dotnet/runtime/issues/39292 tracks finding an alternative to BinaryFormatter
 #pragma warning disable SYSLIB0011
         private BinaryFormatter? _formatter;
 #pragma warning restore SYSLIB0011
@@ -37,7 +37,7 @@ namespace System.Resources.Extensions
             return false;
         }
 
-// Issue https://github.com/dotnet/runtime/issues/39292 tracks finding an alternative to BinaryFormatter
+        // Issue https://github.com/dotnet/runtime/issues/39292 tracks finding an alternative to BinaryFormatter
 #pragma warning disable SYSLIB0011
         private object ReadBinaryFormattedObject()
         {

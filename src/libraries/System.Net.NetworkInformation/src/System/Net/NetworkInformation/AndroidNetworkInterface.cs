@@ -13,7 +13,7 @@ namespace System.Net.NetworkInformation
         internal readonly int _mtu;
         private readonly AndroidIPInterfaceProperties _ipProperties;
 
-        internal unsafe AndroidNetworkInterface(string name, Interop.Sys.NetworkInterfaceInfo *networkInterfaceInfo)
+        internal unsafe AndroidNetworkInterface(string name, Interop.Sys.NetworkInterfaceInfo* networkInterfaceInfo)
             : base(name)
         {
             _index = networkInterfaceInfo->InterfaceIndex;
@@ -31,7 +31,7 @@ namespace System.Net.NetworkInformation
             NetworkInterfaceType = (NetworkInterfaceType)networkInterfaceInfo->HardwareType;
         }
 
-        internal unsafe void AddAddress(Interop.Sys.IpAddressInfo *addressInfo)
+        internal unsafe void AddAddress(Interop.Sys.IpAddressInfo* addressInfo)
         {
             var address = new IPAddress(new ReadOnlySpan<byte>(addressInfo->AddressBytes, addressInfo->NumAddressBytes));
             if (address.IsIPv6LinkLocal)

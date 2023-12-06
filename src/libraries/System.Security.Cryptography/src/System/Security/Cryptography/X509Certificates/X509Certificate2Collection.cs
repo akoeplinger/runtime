@@ -491,7 +491,8 @@ namespace System.Security.Cryptography.X509Certificates
         {
             int size = GetCertificatePemsSize();
 
-            return string.Create(size, this, static (destination, col) => {
+            return string.Create(size, this, static (destination, col) =>
+            {
                 if (!col.TryExportCertificatePems(destination, out int charsWritten) ||
                     charsWritten != destination.Length)
                 {

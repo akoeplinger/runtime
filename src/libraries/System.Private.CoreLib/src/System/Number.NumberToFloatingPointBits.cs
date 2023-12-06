@@ -1307,7 +1307,7 @@ namespace System
                 // computation that what we can provide cheaply. This is very, very unlikely.
                 //
                 bool insideSafeExponent = (q >= -27) && (q <= 55); // always good because 5**q <2**128 when q>=0,
-                                                                     // and otherwise, for q<0, we have 5**-q<2**64 and the 128-bit reciprocal allows for exact computation.
+                                                                   // and otherwise, for q<0, we have 5**-q<2**64 and the 128-bit reciprocal allows for exact computation.
                 if (!insideSafeExponent)
                 {
                     exponent = -1; // This (a negative value) indicates an error condition.

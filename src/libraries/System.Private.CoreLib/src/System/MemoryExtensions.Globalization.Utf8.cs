@@ -38,26 +38,26 @@ namespace System
             {
                 case StringComparison.CurrentCulture:
                 case StringComparison.CurrentCultureIgnoreCase:
-                {
-                    return CultureInfo.CurrentCulture.CompareInfo.IsPrefixUtf8(span, value, string.GetCaseCompareOfComparisonCulture(comparisonType));
-                }
+                    {
+                        return CultureInfo.CurrentCulture.CompareInfo.IsPrefixUtf8(span, value, string.GetCaseCompareOfComparisonCulture(comparisonType));
+                    }
 
                 case StringComparison.InvariantCulture:
                 case StringComparison.InvariantCultureIgnoreCase:
-                {
-                    return CompareInfo.Invariant.IsPrefixUtf8(span, value, string.GetCaseCompareOfComparisonCulture(comparisonType));
-                }
+                    {
+                        return CompareInfo.Invariant.IsPrefixUtf8(span, value, string.GetCaseCompareOfComparisonCulture(comparisonType));
+                    }
 
                 case StringComparison.Ordinal:
-                {
-                    return span.StartsWith(value);
-                }
+                    {
+                        return span.StartsWith(value);
+                    }
 
                 default:
-                {
-                    Debug.Assert(comparisonType == StringComparison.OrdinalIgnoreCase);
-                    return span.StartsWithOrdinalIgnoreCaseUtf8(value);
-                }
+                    {
+                        Debug.Assert(comparisonType == StringComparison.OrdinalIgnoreCase);
+                        return span.StartsWithOrdinalIgnoreCaseUtf8(value);
+                    }
             }
         }
 

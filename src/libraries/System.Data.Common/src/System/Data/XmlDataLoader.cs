@@ -696,8 +696,8 @@ namespace System.Data
             bool matchFound = false;                            // Assume we found no matching elements
 
             int entryDepth = _dataReader!.Depth - 1;              // Store current reader depth so we know when to stop reading
-                                                                 // Adjust depth by one as we've read top most element
-                                                                 // outside this method.
+                                                                  // Adjust depth by one as we've read top most element
+                                                                  // outside this method.
             string textNodeValue;                               // Value of a text node we might have
 
             Debug.Assert(entryDepth >= 0, "Wrong entry Depth for top most element.");

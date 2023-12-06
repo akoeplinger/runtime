@@ -887,8 +887,8 @@ namespace System.Threading
         {
             const uint DueTime = unchecked((uint)(-1)); // We want timer to be registered, but not activated.  Requires caller to call
             const uint Period = unchecked((uint)(-1));  // Change after a timer instance is created.  This is to avoid the potential
-                                // for a timer to be fired before the returned value is assigned to the variable,
-                                // potentially causing the callback to reference a bogus value (if passing the timer to the callback).
+                                                        // for a timer to be fired before the returned value is assigned to the variable,
+                                                        // potentially causing the callback to reference a bogus value (if passing the timer to the callback).
 
             TimerSetup(callback, this, DueTime, Period);
         }

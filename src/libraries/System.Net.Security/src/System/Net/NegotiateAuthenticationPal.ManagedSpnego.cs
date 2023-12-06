@@ -391,7 +391,8 @@ namespace System.Net
                 }
 
                 _isAuthenticated = state == NegState.AcceptCompleted || state == NegState.Reject;
-                statusCode = state switch {
+                statusCode = state switch
+                {
                     NegState.AcceptCompleted => NegotiateAuthenticationStatusCode.Completed,
                     NegState.AcceptIncomplete => NegotiateAuthenticationStatusCode.ContinueNeeded,
                     NegState.Reject => NegotiateAuthenticationStatusCode.UnknownCredentials,

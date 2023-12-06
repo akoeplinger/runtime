@@ -26,7 +26,7 @@ namespace System.Runtime.InteropServices.JavaScript
             holder.SynchronizationContext!.Send(static (JSHostImplementation.PromiseHolder holder) =>
             {
 #endif
-            _CancelPromise(holder.GCHandle);
+                _CancelPromise(holder.GCHandle);
 #if FEATURE_WASM_THREADS
             }, holder);
 #endif

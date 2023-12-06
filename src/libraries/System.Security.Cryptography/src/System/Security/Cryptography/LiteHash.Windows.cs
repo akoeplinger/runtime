@@ -118,15 +118,15 @@ namespace System.Security.Cryptography
         public readonly unsafe void Current(Span<byte> destination)
         {
             using (SafeBCryptHashHandle tmpHash = Interop.BCrypt.BCryptDuplicateHash(_hashHandle))
-            fixed (byte* pDestination = &Helpers.GetNonNullPinnableReference(destination))
-            {
-                NTSTATUS ntStatus = Interop.BCrypt.BCryptFinishHash(tmpHash, pDestination, destination.Length, dwFlags: 0);
-
-                if (ntStatus != NTSTATUS.STATUS_SUCCESS)
+                fixed (byte* pDestination = &Helpers.GetNonNullPinnableReference(destination))
                 {
-                    throw Interop.BCrypt.CreateCryptographicException(ntStatus);
+                    NTSTATUS ntStatus = Interop.BCrypt.BCryptFinishHash(tmpHash, pDestination, destination.Length, dwFlags: 0);
+
+                    if (ntStatus != NTSTATUS.STATUS_SUCCESS)
+                    {
+                        throw Interop.BCrypt.CreateCryptographicException(ntStatus);
+                    }
                 }
-            }
         }
 
         public readonly void Dispose()

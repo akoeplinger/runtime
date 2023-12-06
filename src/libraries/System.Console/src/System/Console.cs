@@ -242,9 +242,9 @@ namespace System
                     encoding: OutputEncoding.RemovePreamble(), // This ensures no prefix is written to the stream.
                     bufferSize: WriteBufferSize,
                     leaveOpen: true)
-                    {
-                        AutoFlush = true
-                    });
+                {
+                    AutoFlush = true
+                });
         }
 
         private static StrongBox<bool>? _isStdInRedirected;

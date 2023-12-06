@@ -423,9 +423,9 @@ namespace System.Reflection
                         object? arg = arguments[i];
                         shouldCopyBack[i] = CheckArgument(ref arg, i);
                         copyOfArgs[i] = arg;
-    #pragma warning disable CS8500
+#pragma warning disable CS8500
                         *(ByReference*)(pByRefStorage + i) = (_invokerArgFlags[i] & InvokerArgFlags.IsValueType) != 0 ?
-    #pragma warning restore CS8500
+#pragma warning restore CS8500
                             ByReference.Create(ref Unsafe.AsRef<object>(pStorage + i).GetRawData()) :
                             ByReference.Create(ref Unsafe.AsRef<object>(pStorage + i));
                     }

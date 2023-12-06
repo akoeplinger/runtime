@@ -60,8 +60,8 @@ namespace System
             }
             return -1;
 
-            // Based on http://0x80.pl/articles/simd-strfind.html#algorithm-1-generic-simd "Algorithm 1: Generic SIMD" by Wojciech Mula
-            // Some details about the implementation can also be found in https://github.com/dotnet/runtime/pull/63285
+        // Based on http://0x80.pl/articles/simd-strfind.html#algorithm-1-generic-simd "Algorithm 1: Generic SIMD" by Wojciech Mula
+        // Some details about the implementation can also be found in https://github.com/dotnet/runtime/pull/63285
         SEARCH_TWO_BYTES:
             if (Vector512.IsHardwareAccelerated && searchSpaceMinusValueTailLength - Vector512<byte>.Count >= 0)
             {
@@ -341,7 +341,7 @@ namespace System
                     // Overlap with the current chunk if there is not enough room for the next one
                     if (offset < 0)
                         offset = 0;
-                } while (true) ;
+                } while (true);
             }
             else if (Vector256.IsHardwareAccelerated && searchSpaceMinusValueTailLength >= Vector256<byte>.Count)
             {
@@ -951,11 +951,11 @@ namespace System
                 }
             }
 
-            // As there are so many true/false exit points the Jit will coalesce them to one location.
-            // We want them at the end so the conditional early exit jmps are all jmp forwards so the
-            // branch predictor in a uninitialized state will not take them e.g.
-            // - loops are conditional jmps backwards and predicted
-            // - exceptions are conditional forwards jmps and not predicted
+        // As there are so many true/false exit points the Jit will coalesce them to one location.
+        // We want them at the end so the conditional early exit jmps are all jmp forwards so the
+        // branch predictor in a uninitialized state will not take them e.g.
+        // - loops are conditional jmps backwards and predicted
+        // - exceptions are conditional forwards jmps and not predicted
         NotEqual:
             return false;
         }

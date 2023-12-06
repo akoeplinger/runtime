@@ -86,19 +86,19 @@ namespace System.Diagnostics
         {
             get
             {
-               long bootTimeTicks = Interlocked.Read(ref s_bootTimeTicks);
-               if (bootTimeTicks == 0)
-               {
+                long bootTimeTicks = Interlocked.Read(ref s_bootTimeTicks);
+                if (bootTimeTicks == 0)
+                {
                     bootTimeTicks = Interop.Sys.GetBootTimeTicks();
                     long oldValue = Interlocked.CompareExchange(ref s_bootTimeTicks, bootTimeTicks, 0);
                     if (oldValue != 0) // a different thread has managed to update the ticks first
                     {
                         bootTimeTicks = oldValue; // consistency
                     }
-               }
-               return new DateTime(bootTimeTicks);
-           }
-       }
+                }
+                return new DateTime(bootTimeTicks);
+            }
+        }
 
         /// <summary>Gets the parent process ID</summary>
         private int ParentProcessId =>

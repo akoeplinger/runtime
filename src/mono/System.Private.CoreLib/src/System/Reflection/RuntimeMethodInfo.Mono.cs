@@ -138,7 +138,7 @@ namespace System.Reflection
         }
     }
 
-#region Sync with _MonoReflectionMethod in object-internals.h
+    #region Sync with _MonoReflectionMethod in object-internals.h
     [StructLayout(LayoutKind.Sequential)]
     internal sealed unsafe partial class RuntimeMethodInfo : MethodInfo
     {
@@ -147,7 +147,7 @@ namespace System.Reflection
         private string? name;
         private Type? reftype;
 #pragma warning restore 649
-#endregion
+        #endregion
         private string? toString;
         private RuntimeType[]? parameterTypes;
         private MethodBaseInvoker? invoker;
@@ -378,7 +378,7 @@ namespace System.Reflection
          * Exceptions thrown by the called method propagate normally.
          */
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern object? InternalInvoke(object? obj, IntPtr *args, out Exception? exc);
+        internal extern object? InternalInvoke(object? obj, IntPtr* args, out Exception? exc);
 
         public override RuntimeMethodHandle MethodHandle
         {
@@ -704,7 +704,7 @@ namespace System.Reflection
 
         public sealed override bool HasSameMetadataDefinitionAs(MemberInfo other) => HasSameMetadataDefinitionAsCore<RuntimeMethodInfo>(other);
     }
-#region Sync with _MonoReflectionMethod in object-internals.h
+    #region Sync with _MonoReflectionMethod in object-internals.h
     [StructLayout(LayoutKind.Sequential)]
     internal sealed unsafe partial class RuntimeConstructorInfo : ConstructorInfo
     {
@@ -713,7 +713,7 @@ namespace System.Reflection
         private string? name;
         private Type? reftype;
 #pragma warning restore 649
-#endregion
+        #endregion
         private string? toString;
         private RuntimeType[]? parameterTypes;
         private MethodBaseInvoker? invoker;
@@ -808,7 +808,7 @@ namespace System.Reflection
          * to match the types of the method signature.
          */
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern object InternalInvoke(object? obj, IntPtr *args, out Exception? exc);
+        internal extern object InternalInvoke(object? obj, IntPtr* args, out Exception? exc);
 
         public override RuntimeMethodHandle MethodHandle
         {
