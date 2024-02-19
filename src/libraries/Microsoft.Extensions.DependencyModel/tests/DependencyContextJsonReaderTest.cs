@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.Extensions.DependencyModel.Tests
@@ -701,8 +700,9 @@ namespace Microsoft.Extensions.DependencyModel.Tests
         }
     }
 }");
+            context.RuntimeLibraries.Should().HaveCount(1);
+            var runtimeLibrary = context.RuntimeLibraries.Single();
 
-            var runtimeLibrary = context.RuntimeLibraries.Should().ContainSingle().Subject;
             runtimeLibrary.Type.Should().Be("runtimepack");
             runtimeLibrary.Serviceable.Should().Be(false);
         }

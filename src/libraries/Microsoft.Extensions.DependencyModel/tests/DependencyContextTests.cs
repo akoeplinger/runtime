@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.Extensions.DependencyModel.Tests

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -295,7 +294,7 @@ namespace Microsoft.Extensions.DependencyModel.Tests
             runtimeAssembly.Should().HavePropertyValue("fileVersion", "7.8.9");
         }
 
-        private JObject WritesRuntimeLibrariesToRuntimeTargetCore(RuntimeAssetGroup group)
+        private JToken WritesRuntimeLibrariesToRuntimeTargetCore(RuntimeAssetGroup group)
         {
             var result = Save(Create(
                             "Target",
@@ -536,7 +535,7 @@ namespace Microsoft.Extensions.DependencyModel.Tests
             file.Should().HavePropertyValue("fileVersion", "7.8.9");
         }
 
-        private JObject WritesRuntimeTarget(RuntimeAssetGroup group)
+        private JToken WritesRuntimeTarget(RuntimeAssetGroup group)
         {
             var result = Save(Create(
                             "Target",

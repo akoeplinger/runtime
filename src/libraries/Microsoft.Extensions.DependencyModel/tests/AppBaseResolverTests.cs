@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Xunit;
-using FluentAssertions;
 
 namespace Microsoft.Extensions.DependencyModel.Tests
 {

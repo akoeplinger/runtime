@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyModel.Resolution;
 using Xunit;
 using F = Microsoft.Extensions.DependencyModel.Tests.TestLibraryFactory;
