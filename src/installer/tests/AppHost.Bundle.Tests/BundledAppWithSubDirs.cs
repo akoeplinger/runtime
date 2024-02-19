@@ -24,7 +24,7 @@ namespace AppHost.Bundle.Tests
         {
             RunTheApp(path, selfContained ? null : TestContext.BuiltDotNet.BinPath)
                 .Should().Pass()
-                .And.HaveStdOutContaining("Wow! We now say hello to the big world and you.");
+                .HaveStdOutContaining("Wow! We now say hello to the big world and you.");
         }
 
         private CommandResult RunTheApp(string path, string dotnetRoot)
@@ -69,9 +69,9 @@ namespace AppHost.Bundle.Tests
                 RunTheApp(singleFile, dotnet.BinPath)
                     .Should()
                     .Fail()
-                    .And.HaveStdErrContaining("You must install or update .NET to run this application.")
-                    .And.HaveStdErrContaining("App host version:")
-                    .And.HaveStdErrContaining("apphost_version=");
+                    .HaveStdErrContaining("You must install or update .NET to run this application.")
+                    .HaveStdErrContaining("App host version:")
+                    .HaveStdErrContaining("apphost_version=");
             }
         }
 
@@ -106,9 +106,9 @@ namespace AppHost.Bundle.Tests
                 command
                     .WaitForExit(true)
                     .Should().Fail()
-                    .And.HaveStdErrContaining("Bundle header version compatibility check failed.")
-                    .And.HaveStdErrContaining($"Showing error dialog for application: '{Path.GetFileName(singleFile)}' - error code: 0x{expectedErrorCode}")
-                    .And.HaveStdErrContaining("apphost_version=");
+                    .HaveStdErrContaining("Bundle header version compatibility check failed.")
+                    .HaveStdErrContaining($"Showing error dialog for application: '{Path.GetFileName(singleFile)}' - error code: 0x{expectedErrorCode}")
+                    .HaveStdErrContaining("apphost_version=");
             }
         }
 

@@ -186,7 +186,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                     .WithApplyPatches(false)
                     .WithFramework(MicrosoftNETCoreApp, "5.1.0"))
                 .Should().Fail()
-                .And.HaveStdErrContaining("Did not roll forward because apply_patches=0, version_compatibility_range=patch chose [5.1.0]");
+                .HaveStdErrContaining("Did not roll forward because apply_patches=0, version_compatibility_range=patch chose [5.1.0]");
         }
 
         // Verifies that if both rollForwardOnNoCandidateFx=0 and applyPatches=0 there can still resolve exact match
@@ -213,7 +213,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                     .WithFramework(MicrosoftNETCoreApp, requestedVersion))
                 // Will still attempt roll forward to latest patch
                 .ShouldFailToFindCompatibleFrameworkVersion(MicrosoftNETCoreApp, requestedVersion)
-                .And.HaveStdErrContaining("Attempting FX roll forward");
+                .HaveStdErrContaining("Attempting FX roll forward");
         }
 
         // 3.0 change: In 2.* pre-release never rolled to release. In 3.* it will follow normal roll-forward rules.
@@ -224,7 +224,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                 runtimeConfig => runtimeConfig
                     .WithFramework(MicrosoftNETCoreApp, "5.1.0-preview.1"))
                 .Should().Pass()
-                .And.HaveResolvedFramework(MicrosoftNETCoreApp, "5.1.3");
+                .HaveResolvedFramework(MicrosoftNETCoreApp, "5.1.3");
         }
 
         private CommandResult RunTestWithOneFramework(Func<RuntimeConfig, RuntimeConfig> runtimeConfig)

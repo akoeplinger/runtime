@@ -30,14 +30,14 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdOut()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Hello World");
+                .HaveStdOutContaining("Hello World");
 
             dotnet.Exec("exec", appDll)
                 .CaptureStdErr()
                 .CaptureStdOut()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Hello World");
+                .HaveStdOutContaining("Hello World");
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining("has already been found but with a different file extension");
+                .HaveStdErrContaining("has already been found but with a different file extension");
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdOut()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Hello World");
+                .HaveStdOutContaining("Hello World");
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdOut()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Hello World");
+                .HaveStdOutContaining("Hello World");
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .MultilevelLookup(false)
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Hello World");
+                .HaveStdOutContaining("Hello World");
         }
 
         [Fact]
@@ -205,7 +205,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .EnableTracingAndCaptureOutputs()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdErrMatching($"Property TRUSTED_PLATFORM_ASSEMBLIES = .*[^{Path.PathSeparator}]$", System.Text.RegularExpressions.RegexOptions.Multiline);
+                .HaveStdErrMatching($"Property TRUSTED_PLATFORM_ASSEMBLIES = .*[^{Path.PathSeparator}]$", System.Text.RegularExpressions.RegexOptions.Multiline);
         }
 
         [Theory]
@@ -228,9 +228,9 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .MultilevelLookup(false)
                 .Execute()
                 .Should().Fail()
-                .And.HaveStdErrContaining($"The library '{Binaries.HostPolicy.FileName}' required to execute the application was not found")
-                .And.HaveStdErrContaining("Failed to run as a self-contained app")
-                .And.HaveStdErrContaining($"'{sharedTestState.MockApp.RuntimeConfigJson}' was not found");
+                .HaveStdErrContaining($"The library '{Binaries.HostPolicy.FileName}' required to execute the application was not found")
+                .HaveStdErrContaining("Failed to run as a self-contained app")
+                .HaveStdErrContaining($"'{sharedTestState.MockApp.RuntimeConfigJson}' was not found");
         }
 
         [Theory]
@@ -256,9 +256,9 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .MultilevelLookup(false)
                 .Execute()
                 .Should().Fail()
-                .And.HaveStdErrContaining($"The library '{Binaries.HostPolicy.FileName}' required to execute the application was not found")
-                .And.HaveStdErrContaining("Failed to run as a self-contained app")
-                .And.HaveStdErrContaining($"'{app.RuntimeConfigJson}' did not specify a framework");
+                .HaveStdErrContaining($"The library '{Binaries.HostPolicy.FileName}' required to execute the application was not found")
+                .HaveStdErrContaining("Failed to run as a self-contained app")
+                .HaveStdErrContaining($"'{app.RuntimeConfigJson}' did not specify a framework");
         }
 
         [Theory]
@@ -398,10 +398,10 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 string expectedErrorCode = Constants.ErrorCode.FrameworkMissingFailure.ToString("x");
                 command.WaitForExit(true)
                     .Should().Fail()
-                    .And.HaveStdErrContaining($"Showing error dialog for application: '{Path.GetFileName(appExe)}' - error code: 0x{expectedErrorCode}")
-                    .And.HaveStdErrContaining("You must install or update .NET to run this application.")
-                    .And.HaveStdErrContaining("App host version:")
-                    .And.HaveStdErrContaining("apphost_version=");
+                    .HaveStdErrContaining($"Showing error dialog for application: '{Path.GetFileName(appExe)}' - error code: 0x{expectedErrorCode}")
+                    .HaveStdErrContaining("You must install or update .NET to run this application.")
+                    .HaveStdErrContaining("App host version:")
+                    .HaveStdErrContaining("apphost_version=");
             }
         }
 
@@ -422,7 +422,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                     .EnvironmentVariable(Constants.DisableGuiErrors.EnvironmentVariable, "1")
                     .Execute()
                     .Should().Fail()
-                    .And.NotHaveStdErrContaining("Showing error dialog for application");
+                    .NotHaveStdErrContaining("Showing error dialog for application");
             }
         }
 

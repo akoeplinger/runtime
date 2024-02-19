@@ -27,8 +27,9 @@ namespace AppHost.Bundle.Tests
                 .CaptureStdOut()
                 .DotNetRoot(selfContained ? null : TestContext.BuiltDotNet.BinPath)
                 .Execute()
-                .Should().Pass()
-                .And.HaveStdOutContaining("Hello World!");
+                .Should()
+                .Pass()
+                .HaveStdOutContaining("Hello World!");
         }
 
         private string MakeUniversalBinary(string path, Architecture architecture)

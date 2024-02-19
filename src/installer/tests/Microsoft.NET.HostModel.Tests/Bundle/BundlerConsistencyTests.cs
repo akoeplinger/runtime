@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-using FluentAssertions;
 using Microsoft.DotNet.Cli.Build.Framework;
 using Microsoft.DotNet.CoreSetup.Test;
 using Xunit;
@@ -89,8 +88,8 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
             bundler.GenerateBundle(fileSpecs);
 
             // Exact duplicates are not duplicated in the bundle
-            bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/app.repeat.dll")).Single().Type.Should().Be(FileType.Assembly);
-            bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/system.repeat.dll")).Single().Type.Should().Be(FileType.Assembly);
+            Assert.Equal(FileType.Assembly, bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/app.repeat.dll")).Single().Type);
+            Assert.Equal(FileType.Assembly, bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/system.repeat.dll")).Single().Type);
         }
 
         [Fact]
@@ -105,10 +104,9 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
             };
 
             Bundler bundler = CreateBundlerInstance();
-            Assert.Throws<ArgumentException>(() => bundler.GenerateBundle(fileSpecs))
-                .Message
-                    .Should().Contain("rel/app.repeat")
-                    .And.Contain(sharedTestState.App.AppDll);
+            string message = Assert.Throws<ArgumentException>(() => bundler.GenerateBundle(fileSpecs)).Message;
+            Assert.Contains("rel/app.repeat", message);
+            Assert.Contains(sharedTestState.App.AppDll, message);
         }
 
         [Fact]
@@ -125,8 +123,8 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
             Bundler bundler = CreateBundlerInstance();
             bundler.GenerateBundle(fileSpecs);
 
-            bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/app.repeat.dll")).Single().Type.Should().Be(FileType.Assembly);
-            bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/app.Repeat.dll")).Single().Type.Should().Be(FileType.Assembly);
+            Assert.Equal(FileType.Assembly, bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/app.repeat.dll")).Single().Type);
+            Assert.Equal(FileType.Assembly, bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals("rel/app.Repeat.dll")).Single().Type);
         }
 
         private (string bundleFileName, string bundleId) CreateSampleBundle(bool bundleMultipleFiles)
@@ -152,10 +150,9 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
             var secondBundle = CreateSampleBundle(true);
             byte[] secondBundleContent = File.ReadAllBytes(secondBundle.bundleFileName);
 
-            firstBundle.bundleId.Should().BeEquivalentTo(secondBundle.bundleId,
-                "Deterministic/Reproducible build should produce identical bundle id for identical inputs");
-            firstBundleContent.Should().BeEquivalentTo(secondBundleContent,
-                "Deterministic/Reproducible build should produce identical binary for identical inputs");
+            Assert.True(firstBundle.bundleId == secondBundle.bundleId,
+                $"Deterministic/Reproducible build should produce identical bundle id for identical inputs. firstBundle ID: {firstBundle.bundleId}, secondBundle ID: {secondBundle.bundleId}");
+            Assert.Equal(firstBundleContent, secondBundleContent); // Deterministic/Reproducible build should produce identical binary for identical inputs
         }
 
         [Fact]
@@ -183,12 +180,11 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
             };
 
             Bundler bundler = CreateBundlerInstance();
-            Assert.Throws<ArgumentException>(() => bundler.GenerateBundle(fileSpecs))
-                .Message
-                    .Should().Contain("rel/system.repeat.dll")
-                    .And.NotContain("rel/app.repeat.dll")
-                    .And.Contain(appPath)
-                    .And.Contain(systemLibPath);
+            string message = Assert.Throws<ArgumentException>(() => bundler.GenerateBundle(fileSpecs)).Message;
+            Assert.Contains("rel/system.repeat.dll", message);
+            Assert.DoesNotContain("rel/app.repeat.dll", message);
+            Assert.Contains(appPath, message);
+            Assert.Contains(systemLibPath, message);
         }
 
         [Fact]
@@ -217,8 +213,8 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
                 bundler.GenerateBundle(fileSpecs);
 
 
-                bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals(depsJsonName)).Single().Type.Should().Be(FileType.DepsJson);
-                bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals(runtimeConfigName)).Single().Type.Should().Be(FileType.RuntimeConfigJson);
+                Assert.Equal(FileType.DepsJson, bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals(depsJsonName)).Single().Type);
+                Assert.Equal(FileType.RuntimeConfigJson, bundler.BundleManifest.Files.Where(entry => entry.RelativePath.Equals(runtimeConfigName)).Single().Type);
                 bundleDir.Should().NotHaveFile(depsJsonName);
                 bundleDir.Should().NotHaveFile(runtimeConfigName);
             }
@@ -260,13 +256,13 @@ namespace Microsoft.NET.HostModel.Bundle.Tests
             Assert.False(bundler.BundleManifest.Contains(devJsonName));
 
             // Symbols should only be bundled if option is explicitly set
-            bundler.BundleManifest.Contains(appSymbolName).Should().Be(options.HasFlag(BundleOptions.BundleSymbolFiles));
+            Assert.Equal(options.HasFlag(BundleOptions.BundleSymbolFiles), bundler.BundleManifest.Contains(appSymbolName));
 
             // Native libararies should only be bundled if option is explicitly set
-            bundler.BundleManifest.Contains(Binaries.CoreClr.FileName).Should().Be(options.HasFlag(BundleOptions.BundleNativeBinaries));
+            Assert.Equal(options.HasFlag(BundleOptions.BundleNativeBinaries), bundler.BundleManifest.Contains(Binaries.CoreClr.FileName));
 
             // Other files should only be bundled if option is explicitly set
-            bundler.BundleManifest.Contains(otherContentName).Should().Be(options.HasFlag(BundleOptions.BundleOtherFiles));
+            Assert.Equal(options.HasFlag(BundleOptions.BundleOtherFiles), bundler.BundleManifest.Contains(otherContentName));
         }
 
         [Fact]

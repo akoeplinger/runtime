@@ -160,7 +160,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.NativeHosting
             {
                 result.Should()
                     .ExecuteFunctionPointer(comp1Name, i * 2 - 1, i)
-                    .And.ExecuteFunctionPointer(sharedState.ComponentEntryPoint2, i * 2, i);
+                    .ExecuteFunctionPointer(sharedState.ComponentEntryPoint2, i * 2, i);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.NativeHosting
             {
                 result.Should()
                     .ExecuteFunctionPointer(sharedState.ComponentEntryPoint1, i, i)
-                    .And.ExecuteFunctionPointer(sharedState.ComponentEntryPoint2, i, i);
+                    .ExecuteFunctionPointer(sharedState.ComponentEntryPoint2, i, i);
             }
         }
 

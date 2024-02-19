@@ -3,9 +3,8 @@
 
 using System;
 using System.Text.RegularExpressions;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.DotNet.Cli.Build.Framework;
+using Xunit;
 
 namespace Microsoft.DotNet.CoreSetup.Test
 {
@@ -13,137 +12,139 @@ namespace Microsoft.DotNet.CoreSetup.Test
     {
         public CommandResult Result { get; }
 
+        public CommandResultAssertions And => this;
+
         public CommandResultAssertions(CommandResult commandResult)
         {
             Result = commandResult;
         }
 
-        public AndConstraint<CommandResultAssertions> ExitWith(int expectedExitCode)
+        public CommandResultAssertions ExitWith(int expectedExitCode)
         {
-            Execute.Assertion.ForCondition(Result.ExitCode == expectedExitCode)
-                .FailWith($"Expected command to exit with {expectedExitCode} but it did not.{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Result.ExitCode == expectedExitCode,
+                $"Expected command to exit with {expectedExitCode} but it did not.{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> Pass()
+        public CommandResultAssertions Pass()
         {
-            Execute.Assertion.ForCondition(Result.ExitCode == 0)
-                .FailWith($"Expected command to pass but it did not.{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Result.ExitCode == 0,
+                $"Expected command to pass but it did not.{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> Fail()
+        public CommandResultAssertions Fail()
         {
-            Execute.Assertion.ForCondition(Result.ExitCode != 0)
-                .FailWith($"Expected command to fail but it did not.{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Result.ExitCode != 0,
+                $"Expected command to fail but it did not.{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdOut()
+        public CommandResultAssertions HaveStdOut()
         {
-            Execute.Assertion.ForCondition(!string.IsNullOrEmpty(Result.StdOut))
-                .FailWith($"Command did not output anything to stdout{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(!string.IsNullOrEmpty(Result.StdOut),
+               $"Command did not output anything to stdout{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdOut(string expectedOutput)
+        public CommandResultAssertions HaveStdOut(string expectedOutput)
         {
-            Execute.Assertion.ForCondition(Result.StdOut.Equals(expectedOutput, StringComparison.Ordinal))
-                .FailWith($"Command did not output with Expected Output. Expected: '{expectedOutput}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Result.StdOut.Equals(expectedOutput, StringComparison.Ordinal),
+               $"Command did not output with Expected Output. Expected: '{expectedOutput}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdOutContaining(string pattern)
+        public CommandResultAssertions HaveStdOutContaining(string pattern)
         {
-            Execute.Assertion.ForCondition(Result.StdOut.Contains(pattern))
-                .FailWith($"The command output did not contain expected result: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Result.StdOut.Contains(pattern),
+                $"The command output did not contain expected result: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> NotHaveStdOutContaining(string pattern)
+        public CommandResultAssertions NotHaveStdOutContaining(string pattern)
         {
-            Execute.Assertion.ForCondition(!Result.StdOut.Contains(pattern))
-                .FailWith($"The command output contained a result it should not have contained: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(!Result.StdOut.Contains(pattern),
+                $"The command output contained a result it should not have contained: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdOutMatching(string pattern, RegexOptions options = RegexOptions.None)
+        public CommandResultAssertions HaveStdOutMatching(string pattern, RegexOptions options = RegexOptions.None)
         {
-            Execute.Assertion.ForCondition(Regex.IsMatch(Result.StdOut, pattern, options))
-                .FailWith($"Matching the command output failed. Pattern: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Regex.IsMatch(Result.StdOut, pattern, options),
+                $"Matching the command output failed. Pattern: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> NotHaveStdOutMatching(string pattern, RegexOptions options = RegexOptions.None)
+        public CommandResultAssertions NotHaveStdOutMatching(string pattern, RegexOptions options = RegexOptions.None)
         {
-            Execute.Assertion.ForCondition(!Regex.IsMatch(Result.StdOut, pattern, options))
-                .FailWith($"The command output matched a pattern is should not have matched. Pattern: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.False(Regex.IsMatch(Result.StdOut, pattern, options),
+                $"The command output matched a pattern is should not have matched. Pattern: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdErr()
+        public CommandResultAssertions HaveStdErr()
         {
-            Execute.Assertion.ForCondition(!string.IsNullOrEmpty(Result.StdErr))
-                .FailWith($"Command did not output anything to stderr.{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(!string.IsNullOrEmpty(Result.StdErr),
+                $"Command did not output anything to stderr.{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdErrContaining(string pattern)
+        public CommandResultAssertions HaveStdErrContaining(string pattern)
         {
-            Execute.Assertion.ForCondition(Result.StdErr.Contains(pattern))
-                .FailWith($"The command error output did not contain expected result: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Result.StdErr.Contains(pattern),
+                $"The command error output did not contain expected result: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> NotHaveStdErrContaining(string pattern)
+        public CommandResultAssertions NotHaveStdErrContaining(string pattern)
         {
-            Execute.Assertion.ForCondition(!Result.StdErr.Contains(pattern))
-                .FailWith($"The command error output contained a result it should not have contained: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(!Result.StdErr.Contains(pattern),
+                $"The command error output contained a result it should not have contained: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveStdErrMatching(string pattern, RegexOptions options = RegexOptions.None)
+        public CommandResultAssertions HaveStdErrMatching(string pattern, RegexOptions options = RegexOptions.None)
         {
-            Execute.Assertion.ForCondition(Regex.IsMatch(Result.StdErr, pattern, options))
-                .FailWith($"Matching the command error output failed. Pattern: '{pattern}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(Regex.IsMatch(Result.StdErr, pattern, options),
+                $"Matching the command error output failed. Pattern: '{pattern}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> NotHaveStdOut()
+        public CommandResultAssertions NotHaveStdOut()
         {
-            Execute.Assertion.ForCondition(string.IsNullOrEmpty(Result.StdOut))
-                .FailWith($"Expected command to not output to stdout but it was not:{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(string.IsNullOrEmpty(Result.StdOut),
+                $"Expected command to not output to stdout but it was not:{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> NotHaveStdErr()
+        public CommandResultAssertions NotHaveStdErr()
         {
-            Execute.Assertion.ForCondition(string.IsNullOrEmpty(Result.StdErr))
-                .FailWith($"Expected command to not output to stderr but it was not:{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(string.IsNullOrEmpty(Result.StdErr),
+                $"Expected command to not output to stderr but it was not:{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> FileExists(string path)
+        public CommandResultAssertions FileExists(string path)
         {
-            Execute.Assertion.ForCondition(System.IO.File.Exists(path))
-                .FailWith($"The command did not write the expected file: '{path}'{GetDiagnosticsInfo()}");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(System.IO.File.Exists(path),
+                $"The command did not write the expected file: '{path}'{GetDiagnosticsInfo()}");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> FileContains(string path, string pattern)
+        public CommandResultAssertions FileContains(string path, string pattern)
         {
             string fileContent = System.IO.File.ReadAllText(path);
-            Execute.Assertion.ForCondition(fileContent.Contains(pattern))
-                .FailWith($"The command did not write the expected result '{pattern}' to the file: '{path}'{GetDiagnosticsInfo()}{Environment.NewLine}file content: >>{fileContent}<<");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(fileContent.Contains(pattern),
+                $"The command did not write the expected result '{pattern}' to the file: '{path}'{GetDiagnosticsInfo()}{Environment.NewLine}file content: >>{fileContent}<<");
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> NotFileContains(string path, string pattern)
+        public CommandResultAssertions NotFileContains(string path, string pattern)
         {
             string fileContent = System.IO.File.ReadAllText(path);
-            Execute.Assertion.ForCondition(!fileContent.Contains(pattern))
-                .FailWith($"The command did not write the expected result '{pattern}' to the file: '{path}'{GetDiagnosticsInfo()}{Environment.NewLine}file content: >>{fileContent}<<");
-            return new AndConstraint<CommandResultAssertions>(this);
+            Assert.True(!fileContent.Contains(pattern),
+                $"The command did not write the expected result '{pattern}' to the file: '{path}'{GetDiagnosticsInfo()}{Environment.NewLine}file content: >>{fileContent}<<");
+            return this;
         }
 
         public string GetDiagnosticsInfo()
@@ -156,18 +157,18 @@ namespace Microsoft.DotNet.CoreSetup.Test
                 $"StdErr:{Environment.NewLine}{Result.StdErr}{Environment.NewLine}";
         }
 
-        public AndConstraint<CommandResultAssertions> HaveSkippedProjectCompilation(string skippedProject, string frameworkFullName)
+        public CommandResultAssertions HaveSkippedProjectCompilation(string skippedProject, string frameworkFullName)
         {
-            Result.StdOut.Should().Contain("Project {0} ({1}) was previously compiled. Skipping compilation.", skippedProject, frameworkFullName);
+            Assert.Contains($"Project {skippedProject} ({frameworkFullName}) was previously compiled. Skipping compilation.", Result.StdOut);
 
-            return new AndConstraint<CommandResultAssertions>(this);
+            return this;
         }
 
-        public AndConstraint<CommandResultAssertions> HaveCompiledProject(string compiledProject, string frameworkFullName)
+        public CommandResultAssertions HaveCompiledProject(string compiledProject, string frameworkFullName)
         {
-            Result.StdOut.Should().Contain($"Project {0} ({1}) will be compiled", compiledProject, frameworkFullName);
+            Assert.Contains($"Project {compiledProject} ({frameworkFullName}) will be compiled", Result.StdOut);
 
-            return new AndConstraint<CommandResultAssertions>(this);
+            return this;
         }
     }
 }

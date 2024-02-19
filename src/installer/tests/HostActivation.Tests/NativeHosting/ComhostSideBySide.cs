@@ -36,7 +36,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.NativeHosting
                 .Execute();
 
             result.Should().Pass()
-                .And.HaveStdOutContaining("New instance of Server created");
+                .HaveStdOutContaining("New instance of Server created");
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.NativeHosting
                 .Execute();
 
             result.Should().Pass()
-                .And.HaveStdOutContaining("Located type library by typeid.");
+                .HaveStdOutContaining("Located type library by typeid.");
         }
 
         [Theory]
@@ -74,9 +74,9 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.NativeHosting
                 .Execute();
 
             result.Should().Pass()
-                .And.HaveStdOutContaining("New instance of Server created")
-                .And.HaveStdOutContaining($"Activation of {sharedState.ClsidString} succeeded.")
-                .And.ExecuteSelfContained(selfContained);
+                .HaveStdOutContaining("New instance of Server created")
+                .HaveStdOutContaining($"Activation of {sharedState.ClsidString} succeeded.")
+                .ExecuteSelfContained(selfContained);
         }
 
         public class SharedTestState : Comhost.SharedTestState

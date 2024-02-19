@@ -28,7 +28,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining($"The application to execute does not exist: '{assemblyName}'");
+                .HaveStdErrContaining($"The application to execute does not exist: '{assemblyName}'");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining($"The application to execute does not exist: '{assemblyName}'");
+                .HaveStdErrContaining($"The application to execute does not exist: '{assemblyName}'");
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining($"dotnet exec needs a managed .dll or .exe extension. The application specified was '{assemblyName}'");
+                .HaveStdErrContaining($"dotnet exec needs a managed .dll or .exe extension. The application specified was '{assemblyName}'");
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining($"Failed to parse supported options or their values:");
+                .HaveStdErrContaining($"Failed to parse supported options or their values:");
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining($"The application '{fileName}' does not exist")
-                .And.FindAnySdk(false);
+                .HaveStdErrContaining($"The application '{fileName}' does not exist")
+                .FindAnySdk(false);
         }
 
         [Fact]

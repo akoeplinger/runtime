@@ -33,9 +33,9 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .EnableTracingAndCaptureOutputs()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdErrContaining($"Property STARTUP_HOOKS = {startupHookDll}")
-                .And.HaveStdOutContaining("Hello from startup hook!")
-                .And.HaveStdOutContaining("Hello World");
+                .HaveStdErrContaining($"Property STARTUP_HOOKS = {startupHookDll}")
+                .HaveStdOutContaining("Hello from startup hook!")
+                .HaveStdOutContaining("Hello World");
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Hello World")
-                .And.NotHaveStdErr();
+                .HaveStdOutContaining("Hello World")
+                .NotHaveStdErr();
         }
 
         // Run the app with a startup hook assembly that depends on assemblies not on the TPA list
@@ -98,7 +98,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute(expectedToFail: true)
                 .Should().Fail()
-                .And.HaveStdErrContaining("System.IO.FileNotFoundException: Could not load file or assembly 'SharedLibrary");
+                .HaveStdErrContaining("System.IO.FileNotFoundException: Could not load file or assembly 'SharedLibrary");
         }
 
         // Run startup hook that adds an assembly resolver
@@ -138,8 +138,8 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdErr()
                 .Execute()
                 .Should().Pass()
-                .And.NotHaveStdOutContaining("Hello from startup hook!")
-                .And.HaveStdOutContaining("Hello World");
+                .NotHaveStdOutContaining("Hello from startup hook!")
+                .HaveStdOutContaining("Hello World");
         }
 
         public class SharedTestState : IDisposable

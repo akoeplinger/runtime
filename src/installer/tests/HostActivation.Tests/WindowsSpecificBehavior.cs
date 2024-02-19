@@ -27,7 +27,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation
                 .CaptureStdOut()
                 .Execute()
                 .Should().Pass()
-                .And.HaveStdOutContaining("Reported OS version is newer or equal to the true OS version - no shims.");
+                .HaveStdOutContaining("Reported OS version is newer or equal to the true OS version - no shims.");
         }
 
         [Fact]

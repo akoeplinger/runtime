@@ -98,9 +98,9 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.NativeHosting
                 .Execute();
 
             result.Should().Pass()
-                .And.HaveStdOutContaining("[C++/CLI] NativeEntryPoint: calling managed class")
-                .And.HaveStdOutContaining("[C++/CLI] ManagedClass: AssemblyLoadContext = \"Default\" System.Runtime.Loader.DefaultAssemblyLoadContext")
-                .And.ExecuteSelfContained(selfContained);
+                .HaveStdOutContaining("[C++/CLI] NativeEntryPoint: calling managed class")
+                .HaveStdOutContaining("[C++/CLI] ManagedClass: AssemblyLoadContext = \"Default\" System.Runtime.Loader.DefaultAssemblyLoadContext")
+                .ExecuteSelfContained(selfContained);
         }
 
         public class SharedTestState : SharedTestStateBase

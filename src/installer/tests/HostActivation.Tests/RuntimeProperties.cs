@@ -94,7 +94,7 @@ namespace HostActivation.Tests
                 .EnableTracingAndCaptureOutputs()
                 .Execute()
                 .Should().Fail()
-                .And.HaveStdErrContaining($"Duplicate runtime property found: {name}");
+                .HaveStdErrContaining($"Duplicate runtime property found: {name}");
         }
 
         [Fact]

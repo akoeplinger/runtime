@@ -53,7 +53,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                     .WithFramework(MicrosoftNETCoreApp, requestedVersion),
                 multiLevelLookup)
                 .ShouldHaveResolvedFramework(MicrosoftNETCoreApp, resolvedVersion)
-                .And.HaveStdErrContaining($"Ignoring FX version [{requestedVersion}] without .deps.json");
+                .HaveStdErrContaining($"Ignoring FX version [{requestedVersion}] without .deps.json");
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                 multiLevelLookup,
                 testApp: null)
                 .Should().HaveStdOut(expectedOutput)
-                .And.HaveStdErrContaining("Ignoring FX version [9999.9.9] without .deps.json");
+                .HaveStdErrContaining("Ignoring FX version [9999.9.9] without .deps.json");
         }
 
         [Theory]
@@ -183,7 +183,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                 multiLevelLookup,
                 testApp: null)
                 .Should().HaveStdOutContaining(expectedOutput)
-                .And.HaveStdErrContaining("Ignoring FX version [9999.9.9] without .deps.json");
+                .HaveStdErrContaining("Ignoring FX version [9999.9.9] without .deps.json");
         }
 
         [Theory]
@@ -212,9 +212,9 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                     .WithFramework(MicrosoftNETCoreApp, "9999.9.9"),
                 multiLevelLookup)
                 .Should().Fail()
-                .And.HaveStdErrContaining(expectedOutput)
-                .And.HaveStdErrContaining("https://aka.ms/dotnet/app-launch-failed")
-                .And.HaveStdErrContaining("Ignoring FX version [9999.9.9] without .deps.json");
+                .HaveStdErrContaining(expectedOutput)
+                .HaveStdErrContaining("https://aka.ms/dotnet/app-launch-failed")
+                .HaveStdErrContaining("Ignoring FX version [9999.9.9] without .deps.json");
         }
 
         private CommandResult RunTest(Func<RuntimeConfig, RuntimeConfig> runtimeConfig, bool? multiLevelLookup = true)

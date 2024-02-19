@@ -27,7 +27,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                         .WithFramework(MicrosoftNETCoreApp, "5.1.2")
                         .WithIncludedFramework(MicrosoftNETCoreApp, "5.1.2")))
                 .Should().Fail()
-                .And.HaveStdErrContaining("It's invalid to specify both `framework`/`frameworks` and `includedFrameworks` properties.");
+                .HaveStdErrContaining("It's invalid to specify both `framework`/`frameworks` and `includedFrameworks` properties.");
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                     .WithRuntimeConfigCustomizer(runtimeConfig => runtimeConfig
                         .WithIncludedFramework(MicrosoftNETCoreApp, "5.1.2")))
                 .Should().Pass()
-                .And.HaveStdOutContaining("mock is_framework_dependent: 0");
+                .HaveStdOutContaining("mock is_framework_dependent: 0");
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                     .WithRuntimeConfigCustomizer(runtimeConfig => runtimeConfig
                         .WithIncludedFramework(null, "5.1.2")))
                 .Should().Fail()
-                .And.HaveStdErrContaining("No framework name specified.");
+                .HaveStdErrContaining("No framework name specified.");
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Microsoft.DotNet.CoreSetup.Test.HostActivation.FrameworkResolution
                             .WithRollForward("invalid") // in case of included frameworks. (so invalid values will be accepted)
                             .WithRollForwardOnNoCandidateFx(42))))
                 .Should().Pass()
-                .And.HaveStdOutContaining("mock is_framework_dependent: 0");
+                .HaveStdOutContaining("mock is_framework_dependent: 0");
         }
 
         private CommandResult RunFrameworkDependentTest(TestSettings testSettings) =>

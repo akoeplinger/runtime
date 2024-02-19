@@ -4,7 +4,6 @@
 using System;
 using System.IO;
 
-using FluentAssertions;
 using Microsoft.DotNet.Cli.Build.Framework;
 using Microsoft.DotNet.CoreSetup.Test;
 using Microsoft.NET.HostModel.AppHost;
@@ -36,12 +35,12 @@ namespace HostActivation.Tests
             const int AppHostExeNotBoundFailure = unchecked((int)0x80008095);
             if (OperatingSystem.IsWindows())
             {
-                exitCode.Should().Be(AppHostExeNotBoundFailure);
+                Assert.Equal(AppHostExeNotBoundFailure, exitCode);
             }
             else
             {
                 // Some Unix flavors filter exit code to ubyte.
-                (exitCode & 0xFF).Should().Be(AppHostExeNotBoundFailure & 0xFF);
+                Assert.Equal(AppHostExeNotBoundFailure & 0xFF, exitCode & 0xFF);
             }
         }
 
@@ -90,12 +89,12 @@ namespace HostActivation.Tests
             const int EntryPointFailure = unchecked((int)0x80008084);
             if (OperatingSystem.IsWindows())
             {
-                exitCode.Should().Be(EntryPointFailure);
+                Assert.Equal(EntryPointFailure, exitCode);
             }
             else
             {
                 // Some Unix flavors filter exit code to ubyte.
-                (exitCode & 0xFF).Should().Be(EntryPointFailure & 0xFF);
+                Assert.Equal(EntryPointFailure & 0xFF, exitCode & 0xFF);
             }
         }
 
