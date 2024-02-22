@@ -906,6 +906,7 @@ const gchar *g_get_tmp_dir     (void);
 
 gboolean g_ensure_directory_exists (const gchar *filename);
 
+#if false
 /*
  * Timer
  */
@@ -916,6 +917,7 @@ void g_timer_destroy (GTimer *timer);
 gdouble g_timer_elapsed (GTimer *timer, gulong *microseconds);
 void g_timer_stop (GTimer *timer);
 void g_timer_start (GTimer *timer);
+#endif
 
 /*
  * Date and time
