@@ -201,11 +201,13 @@
 #define g_strsplit monoeg_g_strsplit
 #define g_strsplit_set monoeg_g_strsplit_set
 #define g_strv_length monoeg_g_strv_length
+#if false
 #define g_timer_destroy monoeg_g_timer_destroy
 #define g_timer_elapsed monoeg_g_timer_elapsed
 #define g_timer_new monoeg_g_timer_new
 #define g_timer_start monoeg_g_timer_start
 #define g_timer_stop monoeg_g_timer_stop
+#endif
 #define g_ucs4_to_utf16 monoeg_g_ucs4_to_utf16
 #define g_usleep monoeg_g_usleep
 #define g_utf16_to_ucs4 monoeg_g_utf16_to_ucs4

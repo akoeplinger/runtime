@@ -233,6 +233,19 @@ parse_debug_options (const char* p)
 	return TRUE;
 }
 
+/**
+ * mono_parse_default_optimizations:
+ */
+int
+mono_parse_default_optimizations (const char* p)
+{
+	guint32 opt;
+
+	opt = parse_optimizations (DEFAULT_OPTIMIZATIONS, p, TRUE);
+	return opt;
+}
+
+#if false
 typedef struct {
 	char name [6];
 	char desc [18];
@@ -263,18 +276,6 @@ mono_parse_graph_options (const char* p)
 
 	fprintf (stderr, "Invalid graph name provided: %s\n", p);
 	exit (1);
-}
-
-/**
- * mono_parse_default_optimizations:
- */
-int
-mono_parse_default_optimizations (const char* p)
-{
-	guint32 opt;
-
-	opt = parse_optimizations (DEFAULT_OPTIMIZATIONS, p, TRUE);
-	return opt;
 }
 
 char*
@@ -855,7 +856,7 @@ mono_interp_regression_list (int verbose, int count, char *images [])
 
 	return total;
 }
-
+#endif
 
 #ifdef MONO_JIT_INFO_TABLE_TEST
 typedef struct _JitInfoData
@@ -1528,6 +1529,7 @@ load_agent (MonoDomain *domain, char *desc)
 	return 0;
 }
 
+#if false
 static void
 mini_usage_jitdeveloper (void)
 {
@@ -1563,6 +1565,7 @@ mini_usage_jitdeveloper (void)
 		fprintf (stdout, "                           %-10s %s\n", graph_names [i].name, graph_names [i].desc);
 	}
 }
+#endif
 
 static void
 mini_usage_list_opt (void)
@@ -1918,6 +1921,7 @@ mono_check_interp_supported (void)
 #endif
 }
 
+#if false
 static int
 mono_exec_regression_internal (int verbose_level, int count, char *images [], gboolean single_method)
 {
@@ -1956,6 +1960,7 @@ mono_regression_test_step (int verbose_level, const char *image, const char *met
 
 	return mono_exec_regression_internal (verbose_level, 1, images, FALSE) == 0;
 }
+#endif
 
 #ifdef ENABLE_ICALL_SYMBOL_MAP
 /* Print the icall table as JSON */
@@ -2083,9 +2088,11 @@ mono_main (int argc, char* argv[])
 		} else if (strcmp (argv [i], "--help-trace") == 0){
 			mini_trace_usage ();
 			return 0;
+#if false
 		} else if (strcmp (argv [i], "--help-devel") == 0){
 			mini_usage_jitdeveloper ();
 			return 0;
+#endif
 		} else if (strcmp (argv [i], "--help-debug") == 0){
 			mini_debug_usage ();
 			return 0;
@@ -2238,10 +2245,12 @@ mono_main (int argc, char* argv[])
 			mini_add_profiler_argument (NULL);
 		} else if (strncmp (argv [i], "--profile=", 10) == 0) {
 			mini_add_profiler_argument (argv [i] + 10);
+#if false
 		} else if (strncmp (argv [i], "--agent=", 8) == 0) {
 			if (agents == NULL)
 				agents = g_ptr_array_new ();
 			g_ptr_array_add (agents, argv [i] + 8);
+#endif
 		} else if (strncmp (argv [i], "--attach=", 9) == 0) {
 			g_warning ("--attach= option no longer supported.");
 		} else if (strcmp (argv [i], "--compile") == 0) {
@@ -2253,6 +2262,7 @@ mono_main (int argc, char* argv[])
 			mname = argv [++i];
 			action = DO_BENCH;
 #ifndef DISABLE_JIT
+#if false
 		} else if (strncmp (argv [i], "--graph=", 8) == 0) {
 			if (i + 1 >= argc){
 				fprintf (stderr, "error: --graph option requires a method name argument\n");
@@ -2271,6 +2281,7 @@ mono_main (int argc, char* argv[])
 			mname = argv [++i];
 			mono_graph_options = MONO_GRAPH_CFG;
 			action = DO_DRAW;
+#endif
 #endif
 		} else if (strcmp (argv [i], "--debug") == 0) {
 			enable_debugging = TRUE;
@@ -2487,6 +2498,7 @@ mono_main (int argc, char* argv[])
 
 	mono_gc_set_stack_end (&domain);
 
+#if false
 	if (agents) {
 		for (guint agent_idx = 0; agent_idx < agents->len; ++agent_idx) {
 			int res = load_agent (domain, (char*)g_ptr_array_index (agents, agent_idx));
@@ -2499,8 +2511,10 @@ mono_main (int argc, char* argv[])
 
 		g_ptr_array_free (agents, TRUE);
 	}
+#endif
 
 	switch (action) {
+#if false
 	case DO_SINGLE_METHOD_REGRESSION:
 	case DO_REGRESSION:
 		 return mono_exec_regression_internal (mini_verbose_level, argc -i, argv + i, action == DO_SINGLE_METHOD_REGRESSION);
@@ -2513,6 +2527,7 @@ mono_main (int argc, char* argv[])
 		}
 		aname = argv [i];
 		break;
+#endif
 	case DO_COMPILE:
 		if (argc - i != 1) {
 			mini_usage ();
@@ -2521,6 +2536,7 @@ mono_main (int argc, char* argv[])
 		}
 		aname = argv [i];
 		break;
+#if false
 	case DO_DRAW:
 		if (argc - i != 1 || mname == NULL) {
 			mini_usage ();
@@ -2529,6 +2545,7 @@ mono_main (int argc, char* argv[])
 		}
 		aname = argv [i];
 		break;
+#endif
 	default:
 		if (argc - i < 1) {
 			mini_usage ();
@@ -2614,6 +2631,7 @@ mono_main (int argc, char* argv[])
 
 #ifndef DISABLE_JIT
 	MonoCompile *cfg;
+#if false
 	if (action == DO_DRAW) {
 		int part = 0;
 
@@ -2702,9 +2720,12 @@ mono_main (int argc, char* argv[])
 			}
 		}
 	} else {
+#endif
 		cfg = mini_method_compile (method, opt, (JitFlags)0, 0, -1);
 		mono_destroy_compile (cfg);
+#if false
 	}
+#endif
 #endif
 
 	mini_cleanup (domain);
