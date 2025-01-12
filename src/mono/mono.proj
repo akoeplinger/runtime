@@ -872,7 +872,6 @@ JS_ENGINES = [NODE_JS]
     <PropertyGroup Condition="'$(TargetsBrowser)' == 'true' or '$(TargetsWasi)' == 'true'">
       <MonoAotAbi Condition="'$(TargetsBrowser)' == 'true'">wasm32-unknown-none</MonoAotAbi>
       <MonoAotAbi Condition="'$(TargetsWasi)' == 'true'">wasm32-unknown-wasip2</MonoAotAbi>
-      <_ForceRelease Condition="$([MSBuild]::IsOSPlatform('Windows')) and '$(TargetArchitecture)' == 'wasm' and '$(Configuration)' == 'Debug'">true</_ForceRelease>
     </PropertyGroup>
 
     <!-- Windows specific options -->
@@ -884,8 +883,8 @@ JS_ENGINES = [NODE_JS]
       <!--<_MonoAOTCPPFLAGS Include="-D_WINDOWS" />--> <!-- set in monow.vcxproj, not sure we really need it -->
       <_MonoAOTCPPFLAGS Condition="'$(Platform)' == 'x64' or '$(Platform)' == 'arm64'" Include="-DWIN64" />
       <_MonoAOTCPPFLAGS Condition="'$(AotHostArchitecture)' == 'arm64'" Include="-DUSE_SOFT_INTRINSICS" />
-      <_MonoAOTCPPFLAGS Condition="'$(Configuration)' == 'Release' or '$(_ForceRelease)' == 'true'" Include="-DNDEBUG" />
-      <_MonoAOTCPPFLAGS Condition="'$(Configuration)' == 'Debug' and '$(_ForceRelease)' != 'true'" Include="-D_DEBUG" />
+      <_MonoAOTCPPFLAGS Condition="'$(Configuration)' == 'Release'" Include="-DNDEBUG" />
+      <_MonoAOTCPPFLAGS Condition="'$(Configuration)' == 'Debug'" Include="-D_DEBUG" />
       <!-- <_MonoAOTCPPFLAGS Include="-D__default_codegen__" /> --> <!-- doesn't seem to be used -->
       <_MonoAOTCPPFLAGS Include="-D_CRT_SECURE_NO_WARNINGS" />
       <_MonoAOTCPPFLAGS Include="-D_CRT_NONSTDC_NO_DEPRECATE" />
@@ -927,8 +926,8 @@ JS_ENGINES = [NODE_JS]
     </PropertyGroup>
 
     <ItemGroup>
-      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid.Replace('-', '_'))_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
-      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid.Replace('-', '_'))_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
+      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
+      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -988,8 +987,7 @@ JS_ENGINES = [NODE_JS]
       <MonoAOTCMakeArgs Include="-DAOT_TARGET_TRIPLE=$(MonoAotAbi)"/>
       <MonoAOTCMakeArgs Condition="'$(_MonoUseNinja)' == 'true'" Include="-G Ninja"/>
       <MonoAOTCMakeArgs Include="-DCMAKE_INSTALL_PREFIX=$([MSBuild]::NormalizePath('$(MonoObjCrossDir)', 'out'))"/>
-      <MonoAOTCMakeArgs Condition="'$(_ForceRelease)' != 'true'" Include="-DCMAKE_BUILD_TYPE=$(Configuration)"/>
-      <MonoAOTCMakeArgs Condition="'$(_ForceRelease)' == 'true'" Include="-DCMAKE_BUILD_TYPE=Release"/>
+      <MonoAOTCMakeArgs Include="-DCMAKE_BUILD_TYPE=$(Configuration)"/>
       <!-- FIXME: Disable more -->
       <MonoAOTCMakeArgs Include="-DENABLE_MINIMAL=" />
       <MonoAOTCMakeArgs Include="-DENABLE_ICALL_SYMBOL_MAP=1" />
