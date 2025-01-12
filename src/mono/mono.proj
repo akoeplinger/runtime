@@ -56,9 +56,8 @@
     <_CompilerTargetArch Condition="'$(AotHostArchitecture)' != ''">$(AotHostArchitecture)</_CompilerTargetArch>
     <RepositoryEngineeringCommonDir>$([MSBuild]::NormalizeDirectory('$(RepositoryEngineeringDir)', 'common'))</RepositoryEngineeringCommonDir>
     <CrossToolchainFile>$([MSBuild]::NormalizePath('$(RepositoryEngineeringCommonDir)', 'cross', 'toolchain.cmake'))</CrossToolchainFile>
-    <MonoLLVMMajorVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMSdkVersion.Substring(0, $(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMSdkVersion.IndexOf('.'))))</MonoLLVMMajorVersion>
     <MonoLLVMLibclangVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMLibclangVersion)</MonoLLVMLibclangVersion>
-    <MonoUseLibCxx Condition="'$(MonoLLVMMajorVersion)' >= '16.0'">true</MonoUseLibCxx>
+    <MonoLLVMSdkVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMSdkVersion)</MonoLLVMSdkVersion>
   </PropertyGroup>
 
   <!-- default thread suspend for specific platforms -->
@@ -423,7 +422,7 @@ JS_ENGINES = [NODE_JS]
       <_MonoCMakeArgs Include="-DMONO_SHARED_LIB_NAME=$(MonoSharedLibName)" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(HostOS)' == 'Linux' and '$(MonoEnableLLVM)' == 'true' and '$(TargetArchitecture)' != 'wasm' and '$(MonoUseLibCxx)' == 'true'">
+    <ItemGroup Condition="'$(HostOS)' == 'Linux' and '$(MonoEnableLLVM)' == 'true' and '$(TargetArchitecture)' != 'wasm'">
       <_MonoCXXFLAGS Include="-isystem $(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)\include\c++\v1" />
       <_MonoCXXFLAGS Include="-L$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)\lib" />
       <_MonoCXXFLAGS Include="-lc++;-lc++abi" />
@@ -821,7 +820,7 @@ JS_ENGINES = [NODE_JS]
       <_MonoLLVMHostArchitecture>$(AotHostArchitecture)</_MonoLLVMHostArchitecture>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(HostOS)' == 'Linux' and (('$(MonoAOTEnableLLVM)' == 'true' and '$(MonoUseLibCxx)' == 'true') or '$(TargetArchitecture)' == 'wasm')">
+    <ItemGroup Condition="'$(HostOS)' == 'Linux' and ('$(MonoAOTEnableLLVM)' == 'true' or '$(TargetArchitecture)' == 'wasm')">
       <_MonoAOTCXXFLAGS Include="-I$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\include\c++\v1" />
       <_MonoAOTCXXFLAGS Include="-L$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\lib" />
       <_MonoAOTCXXFLAGS Include="-stdlib=libc++" />
@@ -1098,16 +1097,16 @@ JS_ENGINES = [NODE_JS]
       <_MonoRuntimeArtifacts Include="@(_MonoRuntimeComponentsSharedFilePath)">
         <Destination>$(RuntimeBinDir)%(_MonoRuntimeComponentsSharedFilePath.Filename)%(_MonoRuntimeComponentsSharedFilePath.Extension)</Destination>
       </_MonoRuntimeArtifacts>
-      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoBundleLLVMOptimizer)' == 'true' or '$(MonoEnableLLVM)' == 'true') and '$(TargetArchitecture)' != 'wasm' and '$(MonoUseLibCxx)' == 'true'" Include="$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)\lib\libc++.so.1">
+      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoBundleLLVMOptimizer)' == 'true' or '$(MonoEnableLLVM)' == 'true') and '$(TargetArchitecture)' != 'wasm'" Include="$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)\lib\libc++.so.1">
         <Destination>$(RuntimeBinDir)libc++.so.1</Destination>
       </_MonoRuntimeArtifacts>
-      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoBundleLLVMOptimizer)' == 'true' or '$(MonoEnableLLVM)' == 'true') and '$(TargetArchitecture)' != 'wasm' and '$(MonoUseLibCxx)' == 'true'" Include="$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)\lib\libc++abi.so.1">
+      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoBundleLLVMOptimizer)' == 'true' or '$(MonoEnableLLVM)' == 'true') and '$(TargetArchitecture)' != 'wasm'" Include="$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)\lib\libc++abi.so.1">
         <Destination>$(RuntimeBinDir)libc++abi.so.1</Destination>
       </_MonoRuntimeArtifacts>
-      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ((('$(MonoAOTBundleLLVMOptimizer)' == 'true' or '$(MonoAOTEnableLLVM)' == 'true') and '$(MonoUseLibCxx)' == 'true') or '$(TargetArchitecture)' == 'wasm')" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\lib\libc++.so.1">
+      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoAOTBundleLLVMOptimizer)' == 'true' or '$(MonoAOTEnableLLVM)' == 'true' or '$(TargetArchitecture)' == 'wasm')" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\lib\libc++.so.1">
         <Destination>$(MonoAotCrossDir)libc++.so.1</Destination>
       </_MonoRuntimeArtifacts>
-      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ((('$(MonoAOTBundleLLVMOptimizer)' == 'true' or '$(MonoAOTEnableLLVM)' == 'true') and '$(MonoUseLibCxx)' == 'true') or '$(TargetArchitecture)' == 'wasm')" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\lib\libc++abi.so.1">
+      <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoAOTBundleLLVMOptimizer)' == 'true' or '$(MonoAOTEnableLLVM)' == 'true' or '$(TargetArchitecture)' == 'wasm')" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\lib\libc++abi.so.1">
         <Destination>$(MonoAotCrossDir)libc++abi.so.1</Destination>
       </_MonoRuntimeArtifacts>
       <_MonoRuntimeArtifacts Condition="'$(MonoBundleLLVMOptimizer)' == 'true'" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\bin\llc$(ExeSuffix)">
