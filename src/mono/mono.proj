@@ -36,6 +36,8 @@
     <LibrariesTesthostRuntimeDir>$([MSBuild]::NormalizeDirectory('$(LibrariesTesthostRoot)', 'shared', 'Microsoft.NETCore.App', '$(ProductVersion)'))</LibrariesTesthostRuntimeDir>
     <AotHostOS Condition="'$(AotHostOS)' == ''">$(HostOS)</AotHostOS>
     <AotHostArchitecture Condition="'$(AotHostArchitecture)' == ''">$(BuildArchitecture)</AotHostArchitecture>
+    <AotRid>$(AotHostOS)-$(AotHostArchitecture)</AotRid>
+    <AotRid Condition="'$(AotHostOS)' == 'windows'">win-$(AotHostArchitecture)</AotRid>
     <MonoAOTEnableLLVM Condition="'$(TargetsiOS)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetstvOS)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetsMacCatalyst)' == 'true'">true</MonoAOTEnableLLVM>
@@ -71,7 +73,7 @@
     <MonoLLVMLibclangVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMLibclangVersion)</MonoLLVMLibclangVersion>
     <MonoLLVMSdkVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMSdkVersion)</MonoLLVMSdkVersion>
     <MonoLLVMToolsVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMToolsVersion)</MonoLLVMToolsVersion>
-    <MonoLLVMSdkDebugSuffix Condition="'$(AotHostOS)' == 'win' and '$(Configuration)' == 'Debug'" >.Debug</MonoLLVMSdkDebugSuffix>
+    <MonoLLVMSdkDebugSuffix Condition="'$(AotHostOS)' == 'windows' and '$(Configuration)' == 'Debug'" >.Debug</MonoLLVMSdkDebugSuffix>
   </PropertyGroup>
 
   <!-- default thread suspend for specific platforms -->
@@ -131,12 +133,12 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(MonoAOTEnableLLVM)' == 'true'">
-    <PackageReference Include="runtime.$(AotHostOS)-$(AotHostArchitecture).Microsoft.NETCore.Runtime.Mono.LLVM.Sdk$(MonoLLVMSdkDebugSuffix)"
+    <PackageReference Include="runtime.$(AotRid).Microsoft.NETCore.Runtime.Mono.LLVM.Sdk$(MonoLLVMSdkDebugSuffix)"
                       PrivateAssets="all"
                       Version="$(MonoLLVMSdkVersion)"
                       PackageArch="$(AotHostArchitecture)"
                       GeneratePathProperty="true" />
-    <PackageReference Include="runtime.$(AotHostOS)-$(AotHostArchitecture).Microsoft.NETCore.Runtime.Mono.LLVM.Tools"
+    <PackageReference Include="runtime.$(AotRid).Microsoft.NETCore.Runtime.Mono.LLVM.Tools"
                       PrivateAssets="all"
                       Version="$(MonoLLVMToolsVersion)"
                       PackageArch="$(AotHostArchitecture)"
@@ -925,13 +927,13 @@ JS_ENGINES = [NODE_JS]
     </PropertyGroup>
 
     <ItemGroup>
-      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(AotHostOS)-$(AotHostArchitecture)_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
-      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(AotHostOS)-$(AotHostArchitecture)_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
+      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid.Replace('-', '_'))_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
+      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid.Replace('-', '_'))_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
     </ItemGroup>
 
     <PropertyGroup>
-      <_llvmSdkPath>$(%(_llvmSdkPackageReferencePathPropertyName.Identity))\tools\$(AotHostOS)-$(AotHostArchitecture)</_llvmSdkPath>
-      <_llvmToolsPath>$(%(_llvmToolsPackageReferencePathPropertyName.Identity))\tools\$(AotHostOS)-$(AotHostArchitecture)</_llvmToolsPath>
+      <_llvmSdkPath>$(%(_llvmSdkPackageReferencePathPropertyName.Identity))\tools\$(AotRid)</_llvmSdkPath>
+      <_llvmToolsPath>$(%(_llvmToolsPackageReferencePathPropertyName.Identity))\tools\$(AotRid)</_llvmToolsPath>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(MonoUseCrossTool)' == 'true'">
