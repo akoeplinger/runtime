@@ -46,10 +46,6 @@
       <MonoAotHostArchitecture>$(TargetArchitecture)</MonoAotHostArchitecture>
     </PropertyGroup>
 
-    <MSBuild Targets="Build"
-             Projects="$(MSBuildThisFileDirectory)llvm\llvm-init.proj"
-             Properties="TargetArchitecture=$(MonoAotTargetArchitecture);TargetOS=$(MonoAotTargetOS);AotHostOS=$(MonoAotHostOS);AotHostArchitecture=$(MonoAotHostArchitecture)" />
-
     <MSBuild Targets="BuildMono"
              Projects="$(MSBuildThisFileDirectory)mono.proj"
              Properties="AotHostOS=$(MonoAotHostOS);AotHostArchitecture=$(MonoAotHostArchitecture);BuildMonoAOTCrossCompilerOnly=true;TargetArchitecture=$(MonoAotTargetArchitecture);TargetOS=$(MonoAotTargetOS)" />

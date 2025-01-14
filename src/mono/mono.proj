@@ -4,7 +4,6 @@
       Build properties:
       - MonoForceInterpreter - enable the interpreter
       - MonoEnableLLVM - enable LLVM
-      - MonoLLVMDir - [optional] the directory where LLVM is located
       - MonoAOTEnableLLVM - enable LLVM for an AOT-only Mono
       - MonoVerboseBuild - enable verbose build
       - MonoThreadSuspend - coop,hybrid,preemptive - default thread suspend mode
@@ -38,16 +37,14 @@
     <AotHostArchitecture Condition="'$(AotHostArchitecture)' == ''">$(BuildArchitecture)</AotHostArchitecture>
     <AotRid>$(AotHostOS)-$(AotHostArchitecture)</AotRid>
     <AotRid Condition="'$(AotHostOS)' == 'windows'">win-$(AotHostArchitecture)</AotRid>
+    <MonoHostRid>$(HostOS)-$(BuildArchitecture)</MonoHostRid>
+    <MonoHostRid Condition="'$(HostOS)' == 'windows'">win-$(BuildArchitecture)</MonoHostRid>
     <MonoAOTEnableLLVM Condition="'$(TargetsiOS)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetstvOS)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetsMacCatalyst)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetsBrowser)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetsAndroid)' == 'true'">true</MonoAOTEnableLLVM>
     <MonoAOTEnableLLVM Condition="'$(TargetsWasi)' == 'true'">true</MonoAOTEnableLLVM>
-
-
-    <MonoUseLLVMPackage Condition="'$(MonoLLVMDir)' == '' and ('$(MonoEnableLLVM)' == 'true' or $(MonoAOTEnableLLVM) == 'true')">true</MonoUseLLVMPackage>
-
     <BuildMonoAOTCrossCompiler Condition="'$(TargetsiOS)' == 'true'">true</BuildMonoAOTCrossCompiler>
     <BuildMonoAOTCrossCompiler Condition="'$(TargetstvOS)' == 'true'">true</BuildMonoAOTCrossCompiler>
     <BuildMonoAOTCrossCompiler Condition="'$(TargetsMacCatalyst)' == 'true'">true</BuildMonoAOTCrossCompiler>
@@ -73,7 +70,7 @@
     <MonoLLVMLibclangVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMLibclangVersion)</MonoLLVMLibclangVersion>
     <MonoLLVMSdkVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMSdkVersion)</MonoLLVMSdkVersion>
     <MonoLLVMToolsVersion>$(runtimelinuxx64MicrosoftNETCoreRuntimeMonoLLVMToolsVersion)</MonoLLVMToolsVersion>
-    <MonoLLVMSdkDebugSuffix Condition="'$(AotHostOS)' == 'windows' and '$(Configuration)' == 'Debug'" >.Debug</MonoLLVMSdkDebugSuffix>
+    <MonoLLVMSdkDebugSuffix Condition="('$(HostOS)' == 'windows' or '$(AotHostOS)' == 'windows') and '$(Configuration)' == 'Debug'" >.Debug</MonoLLVMSdkDebugSuffix>
   </PropertyGroup>
 
   <!-- default thread suspend for specific platforms -->
@@ -128,6 +125,19 @@
     <PackageReference Include="runtime.$(_portableHostOS)-$(BuildArchitecture).Microsoft.NETCore.Runtime.Mono.LLVM.Libclang"
                       PrivateAssets="all"
                       Version="$(MonoLLVMLibclangVersion)"
+                      PackageArch="$(BuildArchitecture)"
+                      GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(MonoEnableLLVM)' == 'true'">
+    <PackageReference Include="runtime.$(MonoHostRid).Microsoft.NETCore.Runtime.Mono.LLVM.Sdk$(MonoLLVMSdkDebugSuffix)"
+                      PrivateAssets="all"
+                      Version="$(MonoLLVMSdkVersion)"
+                      PackageArch="$(BuildArchitecture)"
+                      GeneratePathProperty="true" />
+    <PackageReference Include="runtime.$(MonoHostRid).Microsoft.NETCore.Runtime.Mono.LLVM.Tools"
+                      PrivateAssets="all"
+                      Version="$(MonoLLVMToolsVersion)"
                       PackageArch="$(BuildArchitecture)"
                       GeneratePathProperty="true" />
   </ItemGroup>
@@ -432,11 +442,20 @@ JS_ENGINES = [NODE_JS]
 
   <!-- Mono runtime build -->
   <Target Name="BuildMonoRuntime">
-    <PropertyGroup Condition="'$(MonoUseLLVMPackage)' == 'true'">
+
+    <ItemGroup Condition="'$(MonoEnableLLVM)' == 'true'">
+      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(MonoHostRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
+      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(MonoHostRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(MonoEnableLLVM)' == 'true'">
       <_MonoLLVMTargetArchitecture Condition="'$(TargetArchitecture)' == 'wasm'">$(BuildArchitecture)</_MonoLLVMTargetArchitecture>
       <_MonoLLVMTargetArchitecture Condition="'$(TargetArchitecture)' != 'wasm'">$(TargetArchitecture)</_MonoLLVMTargetArchitecture>
       <_MonoLLVMHostArchitecture Condition="'$(AotHostArchitecture)' != ''">$(AotHostArchitecture)</_MonoLLVMHostArchitecture>
+      <_llvmSdkPath>$(%(_llvmSdkPackageReferencePathPropertyName.Identity))\tools\$(MonoHostRid)</_llvmSdkPath>
+      <_llvmToolsPath>$(%(_llvmToolsPackageReferencePathPropertyName.Identity))\tools\$(MonoHostRid)</_llvmToolsPath>
     </PropertyGroup>
+
     <ItemGroup>
       <_MonoCMakeArgs Condition="'$(_MonoUseNinja)' == 'true'" Include="-G Ninja"/>
       <_MonoCMakeArgs Include="-DCMAKE_INSTALL_PREFIX=&quot;$(MonoObjDir.Replace('\','/'))out&quot;"/>
@@ -444,7 +463,7 @@ JS_ENGINES = [NODE_JS]
       <_MonoCMakeArgs Include="-DCMAKE_BUILD_TYPE=$(Configuration)"/>
       <_MonoCMakeArgs Include="-DCLR_CMAKE_KEEP_NATIVE_SYMBOLS=true" Condition="'$(KeepNativeSymbols)' == 'true'" />
       <_MonoCMakeArgs Condition="'$(CMakeArgs)' != ''" Include="$(CMakeArgs)"/>
-      <_MonoCMakeArgs Condition="'$(MonoEnableLLVM)' == 'true'" Include="-DLLVM_PREFIX=$(MonoLLVMDir)\$(_MonoLLVMTargetArchitecture)" />
+      <_MonoCMakeArgs Condition="'$(MonoEnableLLVM)' == 'true'" Include="-DLLVM_PREFIX=&quot;$(_llvmSdkPath)&quot;" />
       <_MonoCMakeArgs Condition="'$(BuildDarwinFrameworks)' == 'true'" Include="-DBUILD_DARWIN_FRAMEWORKS=1" />
       <_MonoCMakeArgs Include="-DGC_SUSPEND=$(MonoThreadSuspend)" />
       <_MonoCMakeArgs Include="-DMONO_LIB_NAME=$(MonoLibName)" />
@@ -838,9 +857,16 @@ JS_ENGINES = [NODE_JS]
       <MonoAotOffsetsPrefix>$(MonoCrossDir)/usr/lib/gcc/aarch64-linux-gnu/7</MonoAotOffsetsPrefix>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(MonoUseLLVMPackage)' == 'true'">
+    <ItemGroup Condition="'$(MonoAOTEnableLLVM)' == 'true'">
+      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
+      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(MonoAOTEnableLLVM)' == 'true'">
       <_MonoLLVMTargetArchitecture>$(TargetArchitecture)</_MonoLLVMTargetArchitecture>
       <_MonoLLVMHostArchitecture>$(AotHostArchitecture)</_MonoLLVMHostArchitecture>
+      <_llvmSdkPath>$(%(_llvmSdkPackageReferencePathPropertyName.Identity))\tools\$(AotRid)</_llvmSdkPath>
+      <_llvmToolsPath>$(%(_llvmToolsPackageReferencePathPropertyName.Identity))\tools\$(AotRid)</_llvmToolsPath>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(HostOS)' == 'Linux' and ('$(MonoAOTEnableLLVM)' == 'true' or '$(TargetArchitecture)' == 'wasm')">
@@ -923,16 +949,6 @@ JS_ENGINES = [NODE_JS]
     <PropertyGroup>
       <MonoAotOffsetsFile Condition="'$(MonoAotOffsetsFile)' == ''">$(MonoProjectRoot)mono/offsets/$(MonoAotAbi).h</MonoAotOffsetsFile>
       <MonoAotCMakeSysroot Condition="'$(MonoAotCMakeSysroot)' == ''">$(MonoCrossDir)</MonoAotCMakeSysroot>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <_llvmSdkPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Sdk$(MonoLLVMSdkDebugSuffix.Replace('.', '_'))" />
-      <_llvmToolsPackageReferencePathPropertyName Include="Pkgruntime_$(AotRid)_Microsoft_NETCore_Runtime_Mono_LLVM_Tools" />
-    </ItemGroup>
-
-    <PropertyGroup>
-      <_llvmSdkPath>$(%(_llvmSdkPackageReferencePathPropertyName.Identity))\tools\$(AotRid)</_llvmSdkPath>
-      <_llvmToolsPath>$(%(_llvmToolsPackageReferencePathPropertyName.Identity))\tools\$(AotRid)</_llvmToolsPath>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(MonoUseCrossTool)' == 'true'">
@@ -1134,10 +1150,10 @@ JS_ENGINES = [NODE_JS]
       <_MonoRuntimeArtifacts Condition="'$(HostOS)' == 'Linux' and ('$(MonoAOTBundleLLVMOptimizer)' == 'true' or '$(MonoAOTEnableLLVM)' == 'true' or '$(TargetArchitecture)' == 'wasm')" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\lib\libc++abi.so.1">
         <Destination>$(MonoAotCrossDir)libc++abi.so.1</Destination>
       </_MonoRuntimeArtifacts>
-      <_MonoRuntimeArtifacts Condition="'$(MonoBundleLLVMOptimizer)' == 'true'" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\bin\llc$(ExeSuffix)">
+      <_MonoRuntimeArtifacts Condition="'$(MonoBundleLLVMOptimizer)' == 'true'" Include="$(_llvmToolsPath)\bin\llc$(ExeSuffix)">
         <Destination>$(RuntimeBinDir)\llc$(ExeSuffix)</Destination>
       </_MonoRuntimeArtifacts>
-      <_MonoRuntimeArtifacts Condition="'$(MonoBundleLLVMOptimizer)' == 'true'" Include="$(MonoLLVMDir)\$(_MonoLLVMHostArchitecture)\bin\opt$(ExeSuffix)">
+      <_MonoRuntimeArtifacts Condition="'$(MonoBundleLLVMOptimizer)' == 'true'" Include="$(_llvmToolsPath)\bin\opt$(ExeSuffix)">
         <Destination>$(RuntimeBinDir)\opt$(ExeSuffix)</Destination>
       </_MonoRuntimeArtifacts>
       <_MonoRuntimeArtifacts Condition="'$(MonoAOTBundleLLVMOptimizer)' == 'true'" Include="$(_llvmToolsPath)\bin\llc$(ExeSuffix)">
