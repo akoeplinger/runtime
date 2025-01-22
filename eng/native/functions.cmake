@@ -375,31 +375,34 @@ function(generate_exports_file_prefix inputFilename outputFilename prefix)
                               PROPERTIES GENERATED TRUE)
 endfunction()
 
-function (get_symbol_file_name targetName outputSymbolFilename)
+function (get_symbol_file_name targetName outputSymbolFilepath outputSymbolFilename)
   if (CLR_CMAKE_HOST_UNIX)
     if (CLR_CMAKE_TARGET_APPLE)
       if (CLR_CMAKE_APPLE_DSYM)
-        set(strip_destination_file $<TARGET_FILE:${targetName}>.dSYM)
+        set(outputSymbolFilepath $<TARGET_FILE:${targetName}>.dSYM PARENT_SCOPE)
+        set(outputSymbolFilename $<TARGET_FILE_NAME:${targetName}>.dSYM PARENT_SCOPE)
       else ()
-        set(strip_destination_file $<TARGET_FILE:${targetName}>.dwarf)
+        set(outputSymbolFilepath $<TARGET_FILE:${targetName}>.dwarf PARENT_SCOPE)
+        set(outputSymbolFilename $<TARGET_FILE_NAME:${targetName}>.dwarf PARENT_SCOPE)
       endif ()
     else ()
-      set(strip_destination_file $<TARGET_FILE:${targetName}>.dbg)
+      set(outputSymbolFilepath $<TARGET_FILE:${targetName}>.dbg PARENT_SCOPE)
+      set(outputSymbolFilename $<TARGET_FILE_NAME:${targetName}>.dbg PARENT_SCOPE)
     endif ()
-
-    set(${outputSymbolFilename} ${strip_destination_file} PARENT_SCOPE)
   elseif(CLR_CMAKE_HOST_WIN32)
     # We can't use the $<TARGET_PDB_FILE> generator expression here since
     # the generator expression isn't supported on resource DLLs.
-    set(${outputSymbolFilename} $<TARGET_FILE_DIR:${targetName}>/$<TARGET_FILE_PREFIX:${targetName}>$<TARGET_FILE_BASE_NAME:${targetName}>.pdb PARENT_SCOPE)
+    set(${outputSymbolFilepath} $<TARGET_FILE_DIR:${targetName}>/$<TARGET_FILE_PREFIX:${targetName}>$<TARGET_FILE_BASE_NAME:${targetName}>.pdb PARENT_SCOPE)
+    set(${outputSymbolFilename} $<TARGET_FILE_PREFIX:${targetName}>$<TARGET_FILE_BASE_NAME:${targetName}>.pdb PARENT_SCOPE)
   endif()
 endfunction()
 
 function(strip_symbols targetName outputFilename)
-  get_symbol_file_name(${targetName} strip_destination_file)
-  set(${outputFilename} ${strip_destination_file} PARENT_SCOPE)
+  get_symbol_file_name(${targetName} strip_destination_filepath strip_destination_filename)
+  set(${outputFilename} ${strip_destination_filepath} PARENT_SCOPE)
   if (CLR_CMAKE_HOST_UNIX)
-    set(strip_source_file $<TARGET_FILE:${targetName}>)
+    set(strip_source_filepath $<TARGET_FILE:${targetName}>)
+    set(strip_source_filename $<TARGET_FILE_NAME:${targetName}>)
 
     if (CLR_CMAKE_TARGET_APPLE)
 
@@ -414,13 +417,13 @@ function(strip_symbols targetName outputFilename)
         message(FATAL_ERROR "strip not found")
       endif()
 
-      set(strip_command ${STRIP} -no_code_signature_warning -S ${strip_source_file})
+      set(strip_command ${STRIP} -no_code_signature_warning -S ${strip_source_filepath})
 
       if (CLR_CMAKE_TARGET_OSX)
         # codesign release build
         string(TOLOWER "${CMAKE_BUILD_TYPE}" LOWERCASE_CMAKE_BUILD_TYPE)
         if (LOWERCASE_CMAKE_BUILD_TYPE STREQUAL release)
-          set(strip_command ${strip_command} && codesign -f -s - ${strip_source_file})
+          set(strip_command ${strip_command} && codesign -f -s - ${strip_source_filepath})
         endif ()
       endif ()
 
@@ -440,8 +443,8 @@ function(strip_symbols targetName outputFilename)
         TARGET ${targetName}
         POST_BUILD
         VERBATIM
-        COMMAND sh -c "echo Stripping symbols from $(basename '${strip_source_file}') into $(basename '${strip_destination_file}')"
-        COMMAND ${DSYMUTIL} ${DSYMUTIL_OPTS} ${strip_source_file}
+        COMMAND echo Stripping symbols from ${strip_source_filename} into ${strip_destination_filename}
+        COMMAND ${DSYMUTIL} ${DSYMUTIL_OPTS} ${strip_source_filepath}
         COMMAND ${strip_command}
         )
     else (CLR_CMAKE_TARGET_APPLE)
@@ -450,10 +453,10 @@ function(strip_symbols targetName outputFilename)
         TARGET ${targetName}
         POST_BUILD
         VERBATIM
-        COMMAND sh -c "echo Stripping symbols from $(basename '${strip_source_file}') into $(basename '${strip_destination_file}')"
-        COMMAND ${CMAKE_OBJCOPY} --only-keep-debug ${strip_source_file} ${strip_destination_file}
-        COMMAND ${CMAKE_OBJCOPY} --strip-debug --strip-unneeded ${strip_source_file}
-        COMMAND ${CMAKE_OBJCOPY} --add-gnu-debuglink=${strip_destination_file} ${strip_source_file}
+        COMMAND echo Stripping symbols from ${strip_source_filename} into ${strip_destination_filename}
+        COMMAND ${CMAKE_OBJCOPY} --only-keep-debug ${strip_source_filepath} ${strip_destination_filepath}
+        COMMAND ${CMAKE_OBJCOPY} --strip-debug --strip-unneeded ${strip_source_filepath}
+        COMMAND ${CMAKE_OBJCOPY} --add-gnu-debuglink=${strip_destination_filepath} ${strip_source_filepath}
         )
     endif (CLR_CMAKE_TARGET_APPLE)
   endif(CLR_CMAKE_HOST_UNIX)
@@ -551,7 +554,7 @@ function(install_clr)
     endif()
     get_target_property(targetType ${targetName} TYPE)
     if (NOT CLR_CMAKE_KEEP_NATIVE_SYMBOLS AND NOT "${targetType}" STREQUAL "STATIC_LIBRARY")
-      get_symbol_file_name(${targetName} symbolFile)
+      get_symbol_file_name(${targetName} symbolFile symbolFileName)
     endif()
 
     foreach(destination ${destinations})

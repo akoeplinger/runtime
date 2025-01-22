@@ -38,6 +38,7 @@ if /i [%1] == [wasm]        ( set __BuildArch=wasm&&shift&goto Arg_Loop)
 
 if /i [%1] == [outconfig] ( set __outConfig=%2&&shift&&shift&goto Arg_Loop)
 
+if /i [%1] == [wasi] ( set __TargetOS=android&&shift&goto Arg_Loop)
 if /i [%1] == [browser] ( set __TargetOS=browser&&shift&goto Arg_Loop)
 if /i [%1] == [wasi] ( set __TargetOS=wasi&&shift&goto Arg_Loop)
 
@@ -109,6 +110,8 @@ if NOT [%errorlevel%] == [0] goto :Failure
 :: Build the project created by Cmake
 set __generatorArgs=
 if [%__Ninja%] == [1] (
+    set __generatorArgs=
+) else if [%__TargetOS%] == [android] (
     set __generatorArgs=
 ) else if [%__TargetOS%] == [browser] (
     set __generatorArgs=

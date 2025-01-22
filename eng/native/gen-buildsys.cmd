@@ -37,6 +37,20 @@ if /i "%__Ninja%" == "1" (
     )
 )
 
+if "%__Os%" == "android" (
+    set __ExtraCmakeParams=-C "%__repoRoot%/eng/native/tryrun.cmake" %__ExtraCmakeParams%
+
+check ANDROID_NDK_ROOT
+
+    :: keep ANDROID_PLATFORM in sync with SetOSTargetMinVersions in the root Directory.Build.props
+    set __ExtraCmakeParams=-DCMAKE_TOOLCHAIN_FILE="%ANDROID_NDK_ROOT%/build/cmake/android.toolchain.cmake" -DANDROID_PLATFORM=android-21  %__ExtraCmakeParams%
+
+    if /i "%__Arch%" == "x64" (set __ExtraCmakeParams=%__ExtraCmakeParams% -DANDROID_ABI=x86_64)
+    if /i "%__Arch%" == "x86" (set __ExtraCmakeParams=%__ExtraCmakeParams% -DANDROID_ABI=x86)
+    if /i "%__Arch%" == "arm64" (set __ExtraCmakeParams=%__ExtraCmakeParams% -DANDROID_ABI=arm64-v8a)
+    if /i "%__Arch%" == "arm" (set __ExtraCmakeParams=%__ExtraCmakeParams% -DANDROID_ABI=armeabi-v7a)
+)
+
 if /i "%__Arch%" == "wasm" (
 
     if "%__Os%" == "" (

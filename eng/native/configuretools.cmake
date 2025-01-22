@@ -95,7 +95,7 @@ if (NOT CLR_CMAKE_HOST_WIN32)
 endif()
 
 # This introspection depends on CMAKE_STRINGS, which is why it's in this file instead of configureplatform
-if (CLR_CMAKE_HOST_LINUX)
+if (CLR_CMAKE_HOST_LINUX AND NOT CLR_CMAKE_HOST_ANDROID)
   execute_process(
     COMMAND bash -c "if ${CMAKE_STRINGS} \"${CMAKE_SYSROOT}/usr/bin/ldd\" 2>&1 | grep -q musl; then echo musl; fi"
     OUTPUT_VARIABLE CLR_CMAKE_LINUX_MUSL

@@ -641,8 +641,8 @@ JS_ENGINES = [NODE_JS]
       <_MonoSkipInitCompiler>true</_MonoSkipInitCompiler>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetsAndroid)' == 'true' or '$(TargetsLinuxBionic)' == 'true'">
-      <_MonoCMakeArgs Include="-DCMAKE_TOOLCHAIN_FILE=$(ANDROID_NDK_ROOT)/build/cmake/android.toolchain.cmake"/>
-      <_MonoCMakeArgs Include="-DANDROID_NDK=$(ANDROID_NDK_ROOT)"/>
+      <_MonoCMakeArgs Include="-DCMAKE_TOOLCHAIN_FILE=&quot;$(ANDROID_NDK_ROOT)/build/cmake/android.toolchain.cmake&quot;"/>
+      <_MonoCMakeArgs Include="-DANDROID_NDK=&quot;$(ANDROID_NDK_ROOT)&quot;"/>
       <_MonoCMakeArgs Include="-DANDROID_STL=none"/>
       <_MonoCMakeArgs Include="-DANDROID_CPP_FEATURES=&quot;no-rtti no-exceptions&quot;"/>
       <_MonoCMakeArgs Include="-DANDROID_PLATFORM=android-$(AndroidApiLevelMin)"/>

@@ -76,8 +76,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="('$(TargetsAndroid)' == 'true' or '$(TargetsLinuxBionic)' == 'true') and '$(ANDROID_NDK_ROOT)' != ''">
-      <_CoreClrBuildArg Include="-DCMAKE_TOOLCHAIN_FILE=$(ANDROID_NDK_ROOT)/build/cmake/android.toolchain.cmake"/>
-      <_CoreClrBuildArg Include="-DANDROID_NDK=$(ANDROID_NDK_ROOT)"/>
+      <_CoreClrBuildArg Include="-DCMAKE_TOOLCHAIN_FILE=&quot;$(ANDROID_NDK_ROOT)/build/cmake/android.toolchain.cmake&quot;"/>
+      <_CoreClrBuildArg Include="-DANDROID_NDK=&quot;$(ANDROID_NDK_ROOT)&quot;"/>
       <_CoreClrBuildArg Include="-DANDROID_STL=none"/>
       <_CoreClrBuildArg Include="-DANDROID_CPP_FEATURES=&quot;no-rtti no-exceptions&quot;"/>
       <_CoreClrBuildArg Include="-DANDROID_PLATFORM=android-$(AndroidApiLevelMin)"/>
