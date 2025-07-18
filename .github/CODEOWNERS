@@ -84,7 +84,6 @@
 /src/mono/nuget/*WebAssembly*/ @lewing @akoeplinger
 /src/mono/nuget/*MonoTargets*/ @lewing @akoeplinger
 /src/mono/nuget/*BrowserDebugHost*/ @lewing @akoeplinger
-/src/mono/nuget/*Workload.Mono.Toolchain*/ @lewing @akoeplinger
 /src/mono/nuget/*MonoAOTCompiler*/ @lewing @akoeplinger
 
 /src/mono/wasm/Wasm* @maraf @ilonatommy

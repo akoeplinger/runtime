@@ -103,9 +103,6 @@
                              RelativeBlobPath="packages/$(Configuration)/Shipping/%(Filename)%(Extension)" />
       <ItemsToPushToBlobFeed Condition="'%(ItemsToPushToBlobFeed.Kind)' == 'Blob' and '%(ItemsToPushToBlobFeed.IsShipping)' != 'true'"
                              RelativeBlobPath="packages/$(Configuration)/NonShipping/%(Filename)%(Extension)" />
-
-      <Artifact Condition="'%(Artifact.IsVSSetup)' == 'true'"
-                RelativeBlobPath="VSSetup/%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 </Project>

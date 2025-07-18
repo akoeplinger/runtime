@@ -103,10 +103,6 @@
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>1bdc5cdcf4cf408e00aa3c60f58520083bf2474f</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Build.Tasks.Workloads" Version="11.0.0-beta.25520.104">
-      <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>1bdc5cdcf4cf408e00aa3c60f58520083bf2474f</Sha>
-    </Dependency>
     <Dependency Name="Microsoft.DotNet.CodeAnalysis" Version="11.0.0-beta.25520.104">
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>1bdc5cdcf4cf408e00aa3c60f58520083bf2474f</Sha>

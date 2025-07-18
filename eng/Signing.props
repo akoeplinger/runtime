@@ -78,17 +78,6 @@
 
   <ItemGroup Condition="'$(EnableBlobArtifacts)' == 'true'">
     <Artifact Include="@(BlobArtifact)" />
-
-    <!-- this is built in the SDK repo now -->
-    <!--
-    <Artifact Include="$(ArtifactsDir)VSSetup\**\*.zip"
-              Condition="Exists('$(ArtifactsDir)VSSetup')"
-              Kind="Blob"
-              ChecksumPath="%(FullPath).sha512"
-              IsVSSetup="true"
-              IsShipping="true"
-              SubBlobFolder="workloads/" />
-    -->
   </ItemGroup>
 
   <!--
@@ -133,8 +122,7 @@
                   $(ArtifactsPackagesDir)**\Microsoft.NETCore.BrowserDebugHost.Transport.*.nupkg;
                   $(ArtifactsPackagesDir)**\Microsoft.NET.Runtime.WebAssembly.Sdk.*.nupkg;
                   $(ArtifactsPackagesDir)**\Microsoft.NET.Runtime.WebAssembly.Templates.net10.*.nupkg;
-                  $(ArtifactsPackagesDir)**\Microsoft.NET.Sdk.WebAssembly.Pack.*.nupkg;
-                  $(ArtifactsPackagesDir)**\Microsoft.NET.Workload.Mono.ToolChain.*.nupkg" />
+                  $(ArtifactsPackagesDir)**\Microsoft.NET.Sdk.WebAssembly.Pack.*.nupkg;" />
       </ItemGroup>
 
       <ItemGroup>
