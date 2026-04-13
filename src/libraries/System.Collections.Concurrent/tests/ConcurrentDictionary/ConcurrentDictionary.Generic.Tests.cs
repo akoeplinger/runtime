@@ -73,14 +73,28 @@ namespace System.Collections.Concurrent.Tests
             static Func<string, int> GetHashCodeFunc(ConcurrentDictionary<string, string> cd)
             {
                 // If the layout of ConcurrentDictionary changes, this will need to change as well.
+                IEqualityComparer<string> comparer;
 
-                FieldInfo tablesField = AssertNotNull(typeof(ConcurrentDictionary<string, string>).GetField("_tables", BindingFlags.Instance | BindingFlags.NonPublic));
-                Type tablesType = Type.GetType("System.Collections.Concurrent.ConcurrentDictionary`2+Tables, System.Collections.Concurrent", throwOnError: true);
-                object tables = AssertNotNull(tablesField.GetValue(cd));
+                if (PlatformDetection.IsMultithreadingSupported)
+                {
+                    // Multi-threaded implementation: comparer is in _tables._comparer
+                    FieldInfo tablesField = AssertNotNull(typeof(ConcurrentDictionary<string, string>).GetField("_tables", BindingFlags.Instance | BindingFlags.NonPublic));
+                    Type tablesType = Type.GetType("System.Collections.Concurrent.ConcurrentDictionary`2+Tables, System.Collections.Concurrent", throwOnError: true);
+                    object tables = AssertNotNull(tablesField.GetValue(cd));
 
-                FieldInfo comparerField = AssertNotNull(tablesType.GetField("_comparer", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public));
-                comparerField = AssertNotNull((FieldInfo)tables.GetType().GetMemberWithSameMetadataDefinitionAs(comparerField));
-                IEqualityComparer<string> comparer = AssertNotNull((IEqualityComparer<string>)comparerField.GetValue(tables));
+                    FieldInfo comparerField = AssertNotNull(tablesType.GetField("_comparer", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public));
+                    comparerField = AssertNotNull((FieldInfo)tables.GetType().GetMemberWithSameMetadataDefinitionAs(comparerField));
+                    comparer = AssertNotNull((IEqualityComparer<string>)comparerField.GetValue(tables));
+                }
+                else
+                {
+                    // Single-threaded implementation: comparer is in _dictionary's internal _comparer field
+                    FieldInfo dictField = AssertNotNull(typeof(ConcurrentDictionary<string, string>).GetField("_dictionary", BindingFlags.Instance | BindingFlags.NonPublic));
+                    Dictionary<string, string> dict = AssertNotNull((Dictionary<string, string>)dictField.GetValue(cd));
+
+                    FieldInfo comparerField = AssertNotNull(typeof(Dictionary<string, string>).GetField("_comparer", BindingFlags.Instance | BindingFlags.NonPublic));
+                    comparer = AssertNotNull((IEqualityComparer<string>)comparerField.GetValue(dict));
+                }
 
                 return comparer.GetHashCode;
 

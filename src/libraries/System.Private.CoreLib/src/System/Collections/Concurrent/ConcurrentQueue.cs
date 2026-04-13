@@ -17,9 +17,7 @@ namespace System.Collections.Concurrent
     /// All public and protected members of <see cref="ConcurrentQueue{T}"/> are thread-safe and may be used
     /// concurrently from multiple threads.
     /// </remarks>
-    [DebuggerDisplay("Count = {Count}")]
-    [DebuggerTypeProxy(typeof(IProducerConsumerCollectionDebugView<>))]
-    public class ConcurrentQueue<T> : IProducerConsumerCollection<T>, IReadOnlyCollection<T>
+    public partial class ConcurrentQueue<T>
     {
         // This implementation provides an unbounded, multi-producer multi-consumer queue
         // that supports the standard Enqueue/TryDequeue operations, as well as support for
@@ -105,100 +103,6 @@ namespace System.Collections.Concurrent
                 Enqueue(item);
             }
         }
-
-        /// <summary>
-        /// Copies the elements of the <see cref="ICollection"/> to an <see
-        /// cref="Array"/>, starting at a particular <see cref="Array"/> index.
-        /// </summary>
-        /// <param name="array">
-        /// The one-dimensional <see cref="Array">Array</see> that is the destination of the
-        /// elements copied from the <see cref="ConcurrentQueue{T}"/>. <paramref name="array"/> must have
-        /// zero-based indexing.
-        /// </param>
-        /// <param name="index">The zero-based index in <paramref name="array"/> at which copying begins.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="array"/> is a null reference (Nothing in
-        /// Visual Basic).</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> is less than
-        /// zero.</exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="array"/> is multidimensional. -or-
-        /// <paramref name="array"/> does not have zero-based indexing. -or-
-        /// <paramref name="index"/> is equal to or greater than the length of the <paramref name="array"/>
-        /// -or- The number of elements in the source <see cref="ICollection"/> is
-        /// greater than the available space from <paramref name="index"/> to the end of the destination
-        /// <paramref name="array"/>. -or- The type of the source <see
-        /// cref="ICollection"/> cannot be cast automatically to the type of the
-        /// destination <paramref name="array"/>.
-        /// </exception>
-        void ICollection.CopyTo(Array array, int index)
-        {
-            // Special-case when the Array is actually a T[], taking a faster path
-            if (array is T[] szArray)
-            {
-                CopyTo(szArray, index);
-                return;
-            }
-
-            // Validate arguments.
-            if (array == null)
-            {
-                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array);
-            }
-
-            // Otherwise, fall back to the slower path that first copies the contents
-            // to an array, and then uses that array's non-generic CopyTo to do the copy.
-            ToArray().CopyTo(array, index);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether access to the <see cref="ICollection"/> is
-        /// synchronized with the SyncRoot.
-        /// </summary>
-        /// <value>true if access to the <see cref="ICollection"/> is synchronized
-        /// with the SyncRoot; otherwise, false. For <see cref="ConcurrentQueue{T}"/>, this property always
-        /// returns false.</value>
-        bool ICollection.IsSynchronized => false; // always false, as true implies synchronization via SyncRoot
-
-        /// <summary>
-        /// Gets an object that can be used to synchronize access to the <see
-        /// cref="ICollection"/>. This property is not supported.
-        /// </summary>
-        /// <exception cref="NotSupportedException">The SyncRoot property is not supported.</exception>
-        object ICollection.SyncRoot { get { ThrowHelper.ThrowNotSupportedException(ExceptionResource.ConcurrentCollection_SyncRoot_NotSupported); return default; } }
-
-        /// <summary>Returns an enumerator that iterates through a collection.</summary>
-        /// <returns>An <see cref="IEnumerator"/> that can be used to iterate through the collection.</returns>
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
-
-        /// <summary>
-        /// Attempts to add an object to the <see cref="IProducerConsumerCollection{T}"/>.
-        /// </summary>
-        /// <param name="item">The object to add to the <see
-        /// cref="IProducerConsumerCollection{T}"/>. The value can be a null
-        /// reference (<see langword="Nothing" /> in Visual Basic) for reference types.
-        /// </param>
-        /// <returns>true if the object was added successfully; otherwise, false.</returns>
-        /// <remarks>For <see cref="ConcurrentQueue{T}"/>, this operation will always add the object to the
-        /// end of the <see cref="ConcurrentQueue{T}"/>
-        /// and return true.</remarks>
-        bool IProducerConsumerCollection<T>.TryAdd(T item)
-        {
-            Enqueue(item);
-            return true;
-        }
-
-        /// <summary>
-        /// Attempts to remove and return an object from the <see cref="IProducerConsumerCollection{T}"/>.
-        /// </summary>
-        /// <param name="item">
-        /// When this method returns, if the operation was successful, <paramref name="item"/> contains the
-        /// object removed. If no object was available to be removed, the value is unspecified.
-        /// </param>
-        /// <returns>true if an element was removed and returned successfully; otherwise, false.</returns>
-        /// <remarks>For <see cref="ConcurrentQueue{T}"/>, this operation will attempt to remove the object
-        /// from the beginning of the <see cref="ConcurrentQueue{T}"/>.
-        /// </remarks>
-        bool IProducerConsumerCollection<T>.TryTake([MaybeNullWhen(false)] out T item) => TryDequeue(out item);
 
         /// <summary>
         /// Gets a value that indicates whether the <see cref="ConcurrentQueue{T}"/> is empty.

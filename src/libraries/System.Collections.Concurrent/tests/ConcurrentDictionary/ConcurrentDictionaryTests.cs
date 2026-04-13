@@ -1283,19 +1283,179 @@ namespace System.Collections.Concurrent.Tests
             Assert.Equal(1, dict.Count);
         }
 
+        [Fact]
+        public static void Enumerate_ThenModify_DoesNotThrow()
+        {
+            var cd = new ConcurrentDictionary<int, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                cd.TryAdd(i, i);
+            }
+
+            // ConcurrentDictionary's enumerator must not throw when the dictionary is
+            // modified during enumeration (unlike Dictionary<TKey,TValue>).
+            int count = 0;
+            foreach (KeyValuePair<int, int> kvp in cd)
+            {
+                if (kvp.Key % 2 == 0)
+                {
+                    cd.TryRemove(kvp.Key, out _);
+                }
+                count++;
+            }
+
+            Assert.True(count > 0);
+            Assert.Equal(5, cd.Count);
+        }
+
+        [Fact]
+        public static void Enumerate_AddDuringEnumeration_DoesNotThrow()
+        {
+            var cd = new ConcurrentDictionary<int, int>();
+            cd.TryAdd(0, 0);
+
+            // Adding elements during enumeration must not throw.
+            foreach (KeyValuePair<int, int> kvp in cd)
+            {
+                if (kvp.Key < 5)
+                {
+                    cd.TryAdd(kvp.Key + 10, kvp.Value + 10);
+                }
+            }
+
+            Assert.True(cd.Count > 1);
+        }
+
+        [Fact]
+        public static void Enumerate_ClearDuringEnumeration_DoesNotThrow()
+        {
+            var cd = new ConcurrentDictionary<int, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                cd.TryAdd(i, i);
+            }
+
+            int count = 0;
+            foreach (KeyValuePair<int, int> kvp in cd)
+            {
+                if (count == 3)
+                {
+                    cd.Clear();
+                }
+                count++;
+            }
+
+            // Enumerator should have continued past the clear.
+            Assert.True(count > 3);
+            Assert.Equal(0, cd.Count);
+        }
+
+        [Fact]
+        public static void Enumerate_NestedEnumeration_WithModification()
+        {
+            var cd = new ConcurrentDictionary<int, int>();
+            for (int i = 0; i < 5; i++)
+            {
+                cd.TryAdd(i, i);
+            }
+
+            int outerCount = 0;
+            int innerTotal = 0;
+            foreach (KeyValuePair<int, int> outer in cd)
+            {
+                outerCount++;
+                foreach (KeyValuePair<int, int> inner in cd)
+                {
+                    innerTotal++;
+                }
+                // Modify between inner and next outer iteration.
+                cd[outer.Key] = outer.Value + 100;
+            }
+
+            Assert.True(outerCount > 0);
+            Assert.True(innerTotal > 0);
+        }
+
+        [Fact]
+        public static void Enumerate_GetOrAddDuringEnumeration()
+        {
+            var cd = new ConcurrentDictionary<string, int>();
+            cd.TryAdd("a", 1);
+            cd.TryAdd("b", 2);
+
+            foreach (KeyValuePair<string, int> kvp in cd)
+            {
+                cd.GetOrAdd("c", 3);
+            }
+
+            Assert.Equal(3, cd.Count);
+            Assert.Equal(3, cd["c"]);
+        }
+
+        [Fact]
+        public static void TryUpdate_MatchingValue_Succeeds()
+        {
+            var cd = new ConcurrentDictionary<string, int>();
+            cd.TryAdd("key", 1);
+
+            Assert.True(cd.TryUpdate("key", 2, 1));
+            Assert.Equal(2, cd["key"]);
+        }
+
+        [Fact]
+        public static void TryUpdate_NonMatchingValue_Fails()
+        {
+            var cd = new ConcurrentDictionary<string, int>();
+            cd.TryAdd("key", 1);
+
+            Assert.False(cd.TryUpdate("key", 2, 99));
+            Assert.Equal(1, cd["key"]);
+        }
+
+        [Fact]
+        public static void TryRemoveKeyValuePair_MatchingValue_Succeeds()
+        {
+            var cd = new ConcurrentDictionary<string, int>();
+            cd.TryAdd("key", 42);
+
+            Assert.True(cd.TryRemove(new KeyValuePair<string, int>("key", 42)));
+            Assert.False(cd.ContainsKey("key"));
+        }
+
+        [Fact]
+        public static void TryRemoveKeyValuePair_NonMatchingValue_Fails()
+        {
+            var cd = new ConcurrentDictionary<string, int>();
+            cd.TryAdd("key", 42);
+
+            Assert.False(cd.TryRemove(new KeyValuePair<string, int>("key", 99)));
+            Assert.True(cd.ContainsKey("key"));
+        }
+
         #region Helper Classes and Methods
 
         private static int GetCapacity(ConcurrentDictionary<int, int> dictionary)
         {
-            var tables = typeof(ConcurrentDictionary<int, int>)
-                .GetField("_tables", BindingFlags.Instance | BindingFlags.NonPublic)!
-                .GetValue(dictionary);
+            if (PlatformDetection.IsMultithreadingSupported)
+            {
+                var tables = typeof(ConcurrentDictionary<int, int>)
+                    .GetField("_tables", BindingFlags.Instance | BindingFlags.NonPublic)!
+                    .GetValue(dictionary);
 
-            var buckets = (ICollection)tables.GetType()
-                .GetField("_buckets", BindingFlags.Instance | BindingFlags.NonPublic)!
-                .GetValue(tables);
+                var buckets = (ICollection)tables.GetType()
+                    .GetField("_buckets", BindingFlags.Instance | BindingFlags.NonPublic)!
+                    .GetValue(tables);
 
-            return buckets.Count;
+                return buckets.Count;
+            }
+            else
+            {
+                var innerDict = (Dictionary<int, int>)typeof(ConcurrentDictionary<int, int>)
+                    .GetField("_dictionary", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(dictionary);
+
+                return innerDict.Capacity;
+            }
         }
 
         private sealed class CreateThrowsComparer : IEqualityComparer<string>, IAlternateEqualityComparer<ReadOnlySpan<char>, string>

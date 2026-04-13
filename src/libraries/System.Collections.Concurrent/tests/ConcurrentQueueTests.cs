@@ -401,6 +401,27 @@ namespace System.Collections.Concurrent.Tests
             })).ToArray());
         }
 
+        [Fact]
+        public static void Enumerate_ModifyDuringEnumeration_DoesNotThrow()
+        {
+            var q = new ConcurrentQueue<int>(Enumerable.Range(0, 10));
+
+            // ConcurrentQueue's enumerator is a snapshot and must not throw
+            // when the queue is modified during enumeration.
+            int count = 0;
+            foreach (int item in q)
+            {
+                if (item % 2 == 0)
+                {
+                    q.TryDequeue(out _);
+                }
+                q.Enqueue(item + 100);
+                count++;
+            }
+
+            Assert.Equal(10, count);
+        }
+
         /// <summary>Sets an event when finalized.</summary>
         private sealed class Finalizable
         {
