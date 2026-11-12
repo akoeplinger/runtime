@@ -1261,42 +1261,6 @@ extends:
                 eq(stageDependencies.EvaluatePaths.evaluate_paths.outputs['SetPathVars_installer.containsChange'], true),
                 eq(variables['isRollingBuild'], true))
 
-      # WebAssembly legs
-      #
-      - template: /eng/pipelines/common/templates/wasm-library-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm
-          alwaysRun: ${{ variables.isRollingBuild }}
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
-          scenarios:
-            - WasmTestOnChrome
-            - WasmTestOnFirefox
-
-      - template: /eng/pipelines/common/templates/wasm-library-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm_win
-          alwaysRun: ${{ variables.isRollingBuild }}
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
-          scenarios:
-            - WasmTestOnChrome
-
-      - template: /eng/pipelines/common/templates/wasm-library-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm_mac
-          alwaysRun: ${{ variables.isRollingBuild }}
-          runOnlyOnChromeVersionUpdate: true
-          shouldRunSmokeOnly: 'true'
-          nameSuffix: _SmokeMac
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
-          scenarios:
-            - WasmTestOnChrome
-
       # WebAssembly CoreCLR
       - template: /eng/pipelines/common/templates/wasm-coreclr-library-tests.yml
         parameters:
@@ -1336,34 +1300,7 @@ extends:
             - WasmTestOnFirefox
             - WasmTestOnV8
 
-      # EAT Library tests - only run on linux
-      - template: /eng/pipelines/common/templates/wasm-library-aot-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm
-          nameSuffix: _EAT
-          buildAOTOnHelix: false
-          runAOT: false
-          shouldRunSmokeOnly: false
-          alwaysRun: ${{ variables.isRollingBuild }}
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS) /maxcpucount:2
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
-
-      # AOT Library tests
-      - template: /eng/pipelines/common/templates/wasm-library-aot-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm
-            - browser_wasm_win
-          nameSuffix: _Smoke_AOT
-          runAOT: true
-          buildAOTOnHelix: false
-          shouldRunSmokeOnly: true
-          alwaysRun: ${{ variables.isRollingBuild }}
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
-
-      # For Wasm.Build.Tests - runtime pack builds
+      # Workload packages required by CoreCLR Wasm.Build.Tests
       - template: /eng/pipelines/common/templates/wasm-build-only.yml
         parameters:
           platforms:
@@ -1373,7 +1310,7 @@ extends:
           nameSuffix: SingleThreaded
           extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
           publishArtifactsForWorkload: true
-          publishWBT: true
+          publishWBT: false
 
       - template: /eng/pipelines/common/templates/wasm-build-only.yml
         parameters:
@@ -1385,28 +1322,6 @@ extends:
           extraBuildArgs: /p:WasmEnableThreads=true /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
           publishArtifactsForWorkload: true
           publishWBT: false
-
-      # Browser Wasm.Build.Tests
-      - template: /eng/pipelines/common/templates/browser-wasm-build-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm
-            - browser_wasm_win
-          alwaysRun: ${{ variables.isRollingBuild }}
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
-          # This pipeline builds the CoreCLR browser-wasm runtime (nameSuffix: CoreCLR),
-          # so stage its runtime pack for the wasm-tools workload install.
-          includeCoreClrRuntimePack: true
-
-      # Wasm runtime tests
-      - template: /eng/pipelines/common/templates/wasm-runtime-tests.yml
-        parameters:
-          platforms:
-            - browser_wasm
-          alwaysRun: ${{ variables.isRollingBuild }}
-          extraBuildArgs: /p:AotHostArchitecture=x64 /p:AotHostOS=$(_hostedOS)
-          useHelixMonitor: ${{ variables.enableHelixJobMonitor }}
 
       # WASI/WASM
 
